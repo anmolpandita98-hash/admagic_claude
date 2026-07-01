@@ -1272,8 +1272,17 @@ function handleSubmit() {
     }, 2000);
     return;
   }
-  document.getElementById('form-wrap').style.display = 'none';
-  document.getElementById('success-msg').classList.add('visible');
+  fetch('https://app.loops.so/api/v1/contacts/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 216c4bf3f254d5727a939a6a35b54850'
+      },
+      body: JSON.stringify({ email: email })
+    }).finally(function() {
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('success-msg').classList.add('visible');
+    });
 }
 
 document.getElementById('email-input').addEventListener('keydown', e => {
