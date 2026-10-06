@@ -23,20 +23,22 @@ body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--i
 /* ── PARTICLE CANVAS ── */
 #motes{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;}
 
-/* ── NAV ── */
-nav{
+/* ── HEADER ── one flex row: spacer | dock (center) | corner links (right) */
+.site-header{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:center;align-items:center;
-  padding:20px 0;
-  pointer-events:none;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;pointer-events:none;
 }
-nav > *{pointer-events:auto;}
+.site-header > *{pointer-events:auto;}
+/* invisible left spacer mirrors the corner links so dock stays centred */
+.header-spacer{visibility:hidden;display:flex;align-items:center;gap:2px;}
 
-/* top-right corner links — above the dock, clearly separate */
+/* ── NAV (kept for smooth-scroll JS targeting) ── */
+nav{display:contents;}
+
+/* top-right corner links */
 .corner-links{
-  position:fixed;top:6px;right:16px;z-index:102;
   display:flex;align-items:center;gap:2px;
-  padding:4px 6px;
 }
 .corner-link{
   display:inline-flex;align-items:center;height:30px;padding:0 11px;
@@ -355,27 +357,39 @@ footer{padding:36px 80px;background:#181c14;border-top:1px solid rgba(255,255,25
 <!-- ORGANIC PARTICLE CANVAS (motes / pollen — Sylva-style) -->
 <canvas id="motes"></canvas>
 
-<!-- ── CORNER LINKS (top-right, outside dock) ── -->
-<div class="corner-links">
-  <a class="corner-link" href="privacy-terms.html" target="_blank" rel="noopener">Privacy &amp; Terms</a>
-  <div class="corner-sep"></div>
-  <a class="corner-link" href="csr.html" target="_blank" rel="noopener">CSR</a>
-  <div class="corner-sep"></div>
-  <a class="corner-link" href="mailto:anmol@admagic.cloud">Contact</a>
-</div>
-
-<!-- ── NAV ── -->
-<nav>
-  <div class="dock">
-    <a class="nav-mark" href="#top" aria-label="AdMagic">
-      <svg viewBox="0 0 22 24"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/><circle cx="11" cy="12" r="2.6" style="fill:white"/></svg>
-    </a>
-    <a class="nav-link" href="#features">Features</a>
-    <a class="nav-link" href="#how">How It Works</a>
-    <a class="nav-link" href="#waitlist">Intelligence</a>
-    <a class="nav-link nav-cta" href="#waitlist">Join Waitlist →</a>
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <!-- invisible spacer so dock stays centred -->
+  <div class="header-spacer" aria-hidden="true">
+    <span class="corner-link">Privacy &amp; Terms</span>
+    <div class="corner-sep"></div>
+    <span class="corner-link">CSR</span>
+    <div class="corner-sep"></div>
+    <span class="corner-link">Contact</span>
   </div>
-</nav>
+
+  <!-- dock pill — centre -->
+  <nav>
+    <div class="dock">
+      <a class="nav-mark" href="#top" aria-label="AdMagic">
+        <svg viewBox="0 0 22 24"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/><circle cx="11" cy="12" r="2.6" style="fill:white"/></svg>
+      </a>
+      <a class="nav-link" href="#features">Features</a>
+      <a class="nav-link" href="#how">How It Works</a>
+      <a class="nav-link" href="#waitlist">Intelligence</a>
+      <a class="nav-link nav-cta" href="#waitlist">Join Waitlist →</a>
+    </div>
+  </nav>
+
+  <!-- corner links — right -->
+  <div class="corner-links">
+    <a class="corner-link" href="privacy-terms.html" target="_blank" rel="noopener">Privacy &amp; Terms</a>
+    <div class="corner-sep"></div>
+    <a class="corner-link" href="csr.html" target="_blank" rel="noopener">CSR</a>
+    <div class="corner-sep"></div>
+    <a class="corner-link" href="mailto:anmol@admagic.cloud">Contact</a>
+  </div>
+</header>
 
 <!-- ── HERO ── -->
 <section class="hero" id="top">
