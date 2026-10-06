@@ -3,1282 +3,1206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AdMagic — Tribe V2 Brain Mapper</title>
+<title>AdMagic — AI-Powered Ad Creative Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --void: #03020a;
-    --deep: #07050f;
-    --surface: #0d0b1a;
-    --glass: rgba(255,255,255,0.04);
-    --glass-border: rgba(255,255,255,0.08);
-    --neural-cyan: #00e5ff;
-    --neural-violet: #7c3aed;
-    --neural-magenta: #e040fb;
-    --neural-green: #00ff88;
-    --text-primary: #f0eeff;
-    --text-secondary: rgba(240,238,255,0.5);
-    --text-dim: rgba(240,238,255,0.25);
-    --glow-cyan: 0 0 40px rgba(0,229,255,0.35);
-    --glow-violet: 0 0 40px rgba(124,58,237,0.35);
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'DM Mono', monospace;
-    background: var(--void);
-    color: var(--text-primary);
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed;
-    width: 10px; height: 10px;
-    background: var(--neural-cyan);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: screen;
-    transition: transform 0.1s ease;
-    box-shadow: 0 0 20px var(--neural-cyan), 0 0 40px rgba(0,229,255,0.4);
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(0,229,255,0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.15s ease;
-  }
-
-  /* NEURAL CANVAS */
-  #neural-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.6;
-  }
-
-  /* GRAIN OVERLAY */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.5;
-  }
-
-  /* MAIN LAYOUT */
-  .wrapper {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* NAV */
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 28px 60px;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    backdrop-filter: blur(20px);
-    background: rgba(3,2,10,0.6);
-  }
-
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-dot {
-    width: 8px; height: 8px;
-    background: var(--neural-cyan);
-    border-radius: 50%;
-    box-shadow: var(--glow-cyan);
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.7; }
-  }
-
-  .nav-badge {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--neural-cyan);
-    border: 1px solid rgba(0,229,255,0.3);
-    padding: 6px 14px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 140px 60px 80px;
-    text-align: center;
-    position: relative;
-  }
-
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fade-up 0.8s ease forwards 0.2s;
-  }
-
-  .hero-eyebrow span {
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--neural-cyan));
-  }
-
-  .hero-headline {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(52px, 8vw, 110px);
-    line-height: 0.92;
-    letter-spacing: -3px;
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fade-up 0.9s ease forwards 0.4s;
-  }
-
-  .hero-headline .line-1 {
-    display: block;
-    color: var(--text-primary);
-  }
-
-  .hero-headline .line-2 {
-    display: block;
-    background: linear-gradient(135deg, var(--neural-cyan) 0%, var(--neural-violet) 50%, var(--neural-magenta) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-style: italic;
-  }
-
-  .hero-sub {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: clamp(17px, 2.2vw, 22px);
-    color: var(--text-secondary);
-    max-width: 560px;
-    line-height: 1.6;
-    margin-bottom: 52px;
-    opacity: 0;
-    animation: fade-up 0.9s ease forwards 0.6s;
-  }
-
-  .hero-cta-group {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    opacity: 0;
-    animation: fade-up 0.9s ease forwards 0.8s;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--neural-cyan);
-    color: var(--void);
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    padding: 16px 32px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--neural-cyan), var(--neural-violet));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .btn-primary:hover::before { opacity: 1; }
-  .btn-primary:hover { box-shadow: 0 0 60px rgba(0,229,255,0.5); transform: translateY(-2px); }
-  .btn-primary span { position: relative; z-index: 1; }
-
-  .btn-ghost {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    transition: color 0.3s ease;
-  }
-
-  .btn-ghost:hover { color: var(--neural-cyan); }
-
-  /* SCAN INDICATOR */
-  .scan-line {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fade-up 1s ease forwards 1.2s;
-  }
-
-  .scan-line span {
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  .scroll-indicator {
-    width: 1px;
-    height: 50px;
-    background: linear-gradient(to bottom, var(--neural-cyan), transparent);
-    animation: scan-down 2s ease-in-out infinite;
-  }
-
-  @keyframes scan-down {
-    0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
-    50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-    51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
-    100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
-  }
-
-  /* FEATURE SECTION */
-  .features {
-    padding: 140px 60px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--neural-cyan);
-    margin-bottom: 60px;
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(0,229,255,0.3), transparent);
-  }
-
-  .features-headline {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(36px, 4.5vw, 58px);
-    font-weight: 700;
-    letter-spacing: -2px;
-    line-height: 1.05;
-    max-width: 700px;
-    margin-bottom: 80px;
-  }
-
-  .features-headline em {
-    font-style: italic;
-    color: var(--neural-cyan);
-  }
-
-  /* WORKFLOW STEPS */
-  .workflow {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2px;
-    margin-bottom: 100px;
-    position: relative;
-  }
-
-  .workflow::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--neural-cyan), var(--neural-violet), var(--neural-magenta), transparent);
-    opacity: 0.3;
-    z-index: 0;
-  }
-
-  .step {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    padding: 48px 40px;
-    position: relative;
-    transition: all 0.4s ease;
-    overflow: hidden;
-  }
-
-  .step::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,229,255,0.03), transparent);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .step:hover {
-    border-color: rgba(0,229,255,0.2);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-  }
-
-  .step:hover::before { opacity: 1; }
-
-  .step-num {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    margin-bottom: 32px;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .step-icon {
-    width: 52px; height: 52px;
-    margin-bottom: 24px;
-    position: relative;
-  }
-
-  .step-icon svg {
-    width: 100%; height: 100%;
-  }
-
-  .step-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    letter-spacing: -0.5px;
-  }
-
-  .step-desc {
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text-secondary);
-  }
-
-  .step-highlight {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--neural-cyan), var(--neural-violet));
-    transform: scaleX(0);
-    transition: transform 0.4s ease;
-    transform-origin: left;
-  }
-
-  .step:hover .step-highlight { transform: scaleX(1); }
-
-  /* BRAIN VISUAL */
-  .brain-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    padding: 0 0 140px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .brain-canvas-wrap {
-    position: relative;
-    height: 480px;
-  }
-
-  #brain-canvas {
-    width: 100%; height: 100%;
-  }
-
-  .brain-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-  }
-
-  .brain-label {
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--neural-cyan);
-    border: 1px solid rgba(0,229,255,0.2);
-    padding: 6px 14px;
-    background: rgba(0,229,255,0.05);
-    animation: flicker 4s ease-in-out infinite;
-  }
-
-  @keyframes flicker {
-    0%, 95%, 100% { opacity: 1; }
-    96% { opacity: 0.5; }
-    97% { opacity: 1; }
-    98% { opacity: 0.3; }
-    99% { opacity: 1; }
-  }
-
-  .brain-info {
-    padding: 20px 0;
-  }
-
-  .brain-stat {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--glass-border);
-  }
-
-  .brain-stat:last-child { border-bottom: none; }
-
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 42px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--neural-cyan), var(--neural-violet));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -2px;
-  }
-
-  .stat-label {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    max-width: 200px;
-  }
-
-  /* DATA TAGS */
-  .data-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 32px;
-  }
-
-  .tag {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--neural-cyan);
-    border: 1px solid rgba(0,229,255,0.2);
-    padding: 6px 12px;
-    background: rgba(0,229,255,0.04);
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* WAITLIST */
-  .waitlist-section {
-    padding: 100px 60px 140px;
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .waitlist-headline {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(40px, 5vw, 64px);
-    letter-spacing: -2px;
-    line-height: 1.0;
-    margin-bottom: 20px;
-  }
-
-  .waitlist-sub {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-bottom: 52px;
-    line-height: 1.6;
-  }
-
-  .waitlist-card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    padding: 52px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .waitlist-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--neural-cyan), var(--neural-violet), transparent);
-  }
-
-  .form-row {
-    display: flex;
-    gap: 0;
-    margin-bottom: 20px;
-  }
-
-  .form-input {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--glass-border);
-    border-right: none;
-    padding: 18px 24px;
-    color: var(--text-primary);
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-
-  .form-input::placeholder { color: var(--text-dim); }
-  .form-input:focus { border-color: rgba(0,229,255,0.4); background: rgba(0,229,255,0.04); }
-
-  .form-btn {
-    background: var(--neural-cyan);
-    color: var(--void);
-    border: none;
-    padding: 18px 32px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    cursor: none;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .form-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--neural-cyan), var(--neural-violet));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .form-btn:hover::before { opacity: 1; }
-  .form-btn:hover { box-shadow: 0 0 40px rgba(0,229,255,0.4); }
-  .form-btn span { position: relative; z-index: 1; }
-
-  .form-note {
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-  }
-
-  /* SOCIAL PROOF */
-  .social-proof {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 52px;
-    padding-top: 40px;
-    border-top: 1px solid var(--glass-border);
-  }
-
-  .proof-item {
-    text-align: center;
-  }
-
-  .proof-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--neural-cyan), var(--neural-magenta));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -1px;
-  }
-
-  .proof-label {
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
-
-  /* SUCCESS STATE */
-  .success-msg {
-    display: none;
-    text-align: center;
-    padding: 20px;
-  }
-
-  .success-msg.visible { display: block; }
-
-  .success-code {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--neural-cyan);
-    letter-spacing: 0.2em;
-    margin-bottom: 12px;
-  }
-
-  .success-text {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: 24px;
-    color: var(--text-primary);
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 40px 60px;
-    border-top: 1px solid var(--glass-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .footer-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .footer-meta {
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-  }
-
-  .footer-tech {
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-    text-align: right;
-    line-height: 1.8;
-  }
-
-  .footer-tech strong {
-    color: var(--neural-cyan);
-    font-weight: 400;
-  }
-
-  /* ANIMATIONS */
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* SCANLINE EFFECT */
-  .scanlines {
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.08) 2px,
-      rgba(0,0,0,0.08) 4px
-    );
-    pointer-events: none;
-    z-index: 3;
-    opacity: 0.4;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 20px 24px; }
-    .hero { padding: 120px 24px 60px; }
-    .features { padding: 80px 24px; }
-    .workflow { grid-template-columns: 1fr; gap: 2px; }
-    .brain-section { grid-template-columns: 1fr; padding: 0 24px 80px; gap: 40px; }
-    .waitlist-section { padding: 60px 24px 80px; }
-    .waitlist-card { padding: 32px 24px; }
-    .form-row { flex-direction: column; }
-    .form-input { border-right: 1px solid var(--glass-border); border-bottom: none; }
-    .social-proof { gap: 20px; }
-    footer { flex-direction: column; text-align: center; gap: 16px; }
-    .footer-tech { text-align: center; }
-    .brain-canvas-wrap { height: 300px; }
-  }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f9f7ff;
+  --bg-card: #f3f0ff;
+  --border: #e8e3ff;
+  --border-mid: #d4cbff;
+  --accent: #7c3aed;
+  --accent-light: #a855f7;
+  --accent-soft: #ede9fe;
+  --accent-grad: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
+  --cta: #ec4899;
+  --cta-hover: #db2777;
+  --text-head: #0f0a1e;
+  --text-body: #3d3558;
+  --text-muted: #8b7fb8;
+  --text-dim: #b8aed4;
+  --nav-h: 72px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-card: 0 4px 24px rgba(124,58,237,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lifted: 0 20px 60px rgba(124,58,237,0.15), 0 4px 16px rgba(0,0,0,0.06);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  z-index: 200;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--text-head);
+  text-decoration: none;
+}
+
+.logo-mark {
+  width: 34px; height: 34px;
+  background: var(--accent-grad);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-mark svg { width: 18px; height: 18px; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 5px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--border-mid);
+}
+
+.btn-nav {
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-nav:hover { background: var(--accent-light); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,58,237,0.3); }
+
+/* ── HERO ── */
+.hero {
+  padding: calc(var(--nav-h) + 72px) 48px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 50% 40% at 80% 60%, rgba(236,72,153,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border-mid);
+  border-radius: 100px;
+  padding: 6px 16px 6px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 28px;
+  animation: fade-up 0.6s ease forwards;
+}
+
+.pill-dot {
+  width: 20px; height: 20px;
+  background: var(--accent-grad);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.pill-dot::after {
+  content: '✦';
+  font-size: 10px;
+  color: white;
+}
+
+.hero-headline {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(44px, 7vw, 86px);
+  font-weight: 800;
+  color: var(--text-head);
+  line-height: 1.0;
+  letter-spacing: -2.5px;
+  max-width: 900px;
+  margin: 0 auto 24px;
+  opacity: 0;
+  animation: fade-up 0.7s ease forwards 0.1s;
+}
+
+.hero-headline .gradient-text {
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--text-muted);
+  max-width: 560px;
+  margin: 0 auto 40px;
+  line-height: 1.65;
+  font-weight: 400;
+  opacity: 0;
+  animation: fade-up 0.7s ease forwards 0.2s;
+}
+
+/* HERO EMAIL FORM */
+.hero-form {
+  display: flex;
+  gap: 0;
+  max-width: 480px;
+  margin: 0 auto 20px;
+  border-radius: 100px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--border-mid), 0 8px 32px rgba(124,58,237,0.12);
+  opacity: 0;
+  animation: fade-up 0.7s ease forwards 0.3s;
+}
+
+.hero-input {
+  flex: 1;
+  border: none;
+  padding: 16px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-head);
+  background: #fff;
+  outline: none;
+}
+
+.hero-input::placeholder { color: var(--text-dim); }
+
+.hero-btn {
+  background: var(--accent-grad);
+  color: #fff;
+  border: none;
+  padding: 16px 28px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.hero-btn:hover { opacity: 0.9; }
+
+.hero-note {
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fade-up 0.7s ease forwards 0.4s;
+}
+
+.hero-note a { color: var(--accent); text-decoration: none; }
+
+/* SUCCESS BANNER */
+.success-banner {
+  display: none;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1px solid #86efac;
+  border-radius: 100px;
+  padding: 14px 28px;
+  max-width: 480px;
+  margin: 0 auto;
+  font-size: 15px;
+  font-weight: 500;
+  color: #166534;
+  text-align: center;
+}
+
+.success-banner.visible { display: block; }
+
+/* SOCIAL PROOF ROW */
+.social-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0;
+  animation: fade-up 0.7s ease forwards 0.5s;
+}
+
+.avatars {
+  display: flex;
+}
+
+.avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  margin-left: -8px;
+  background: var(--accent-grad);
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.avatar:first-child { margin-left: 0; }
+
+/* ── VIDEO SLIDESHOW ── */
+.video-section {
+  padding: 16px 48px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  opacity: 0;
+  animation: fade-up 0.8s ease forwards 0.7s;
+}
+
+.video-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lifted), 0 0 0 1px var(--border);
+  background: var(--text-head);
+  aspect-ratio: 16/9;
+}
+
+.video-frame::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  background: var(--accent-grad);
+  z-index: -1;
+  opacity: 0.4;
+}
+
+.slide-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.slide-video.active { opacity: 1; }
+
+/* Video top bar chrome */
+.video-chrome {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 36px;
+  background: rgba(15,10,30,0.85);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 6px;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
+.cd-red { background: #ff5f57; }
+.cd-yellow { background: #febc2e; }
+.cd-green { background: #28c840; }
+
+.video-label {
+  position: absolute;
+  top: 44px; left: 16px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  transition: opacity 0.3s ease;
+}
+
+/* Slide dots */
+.slide-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 100px;
+  background: var(--border-mid);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0;
+}
+
+.dot.active {
+  background: var(--accent);
+  width: 24px;
+}
+
+/* Slide arrows */
+.slide-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  font-size: 16px;
+  color: var(--text-head);
+}
+
+.slide-arrow:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.slide-arrow.prev { left: -20px; }
+.slide-arrow.next { right: -20px; }
+
+/* ── LOGO STRIP ── */
+.logo-strip {
+  padding: 48px 48px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+
+.strip-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.logos-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.logo-pill {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: -0.5px;
+  transition: color 0.2s ease;
+}
+
+.logo-pill:hover { color: var(--text-muted); }
+
+/* ── FEATURES ── */
+.features {
+  padding: 100px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.section-headline {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(32px, 4vw, 50px);
+  font-weight: 800;
+  color: var(--text-head);
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 17px;
+  color: var(--text-muted);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 60px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent-grad);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feat-card:hover { box-shadow: var(--shadow-lifted); transform: translateY(-4px); border-color: var(--border-mid); }
+.feat-card:hover::before { opacity: 1; }
+
+.feat-icon {
+  width: 44px; height: 44px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.feat-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-head);
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
+}
+
+.feat-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* ── HOW IT WORKS ── */
+.how {
+  padding: 80px 48px 100px;
+  background: var(--bg-soft);
+  text-align: center;
+}
+
+.how-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 60px;
+  position: relative;
+}
+
+.steps-row::before {
+  content: '';
+  position: absolute;
+  top: 32px; left: calc(50% / 3 + 16%); right: calc(50% / 3 + 16%);
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--cta));
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.step-item {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.step-num {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--border-mid);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.step-num::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px dashed var(--border-mid);
+}
+
+.step-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-head);
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── WAITLIST SECTION ── */
+.waitlist {
+  padding: 100px 48px;
+  text-align: center;
+  background: var(--text-head);
+  position: relative;
+  overflow: hidden;
+}
+
+.waitlist-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 30% 50%, rgba(124,58,237,0.25) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 70% at 80% 30%, rgba(236,72,153,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.waitlist-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+
+.waitlist-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 28px;
+}
+
+.live-dot {
+  width: 8px; height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #4ade80;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.waitlist-headline {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+}
+
+.waitlist-headline .wl-gradient {
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.waitlist-sub {
+  font-size: 17px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+  margin-bottom: 44px;
+}
+
+.waitlist-form-wrap {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 36px;
+  backdrop-filter: blur(20px);
+}
+
+.wl-input-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-radius: 100px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+.wl-input {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  padding: 16px 24px;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  outline: none;
+}
+
+.wl-input::placeholder { color: rgba(255,255,255,0.35); }
+
+.wl-btn {
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  color: white;
+  border: none;
+  padding: 16px 28px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.wl-btn:hover { opacity: 0.85; }
+
+.wl-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+
+/* Waitlist success */
+.wl-success {
+  display: none;
+  text-align: center;
+  padding: 8px;
+}
+.wl-success.visible { display: block; }
+
+.wl-success-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.wl-success-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.wl-success-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Proof bar */
+.proof-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.proof-item { text-align: center; }
+
+.proof-num {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.proof-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.proof-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 40px 48px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-copy {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-links a {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover { color: var(--accent); }
+
+/* ── ANIMATIONS ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 0 20px; }
+  .hero, .video-section, .features, .how, .waitlist { padding-left: 20px; padding-right: 20px; }
+  .hero-headline { letter-spacing: -1.5px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps-row { grid-template-columns: 1fr; }
+  .steps-row::before { display: none; }
+  .proof-bar { gap: 20px; }
+  footer { flex-direction: column; text-align: center; }
+  .slide-arrow { display: none; }
+  .logos-row { gap: 24px; }
+  .logo-strip { padding: 32px 20px; }
+  .waitlist-form-wrap { padding: 24px 16px; }
+  .wl-input-row { flex-direction: column; border-radius: 12px; }
+  .wl-input { border-radius: 0; }
+  .wl-btn { border-radius: 0; padding: 14px 20px; }
+  .hero-form { flex-direction: column; border-radius: 12px; }
+  .hero-input { border-radius: 0; }
+  .hero-btn { border-radius: 0; padding: 14px 20px; }
+}
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="scanlines"></div>
-
-<canvas id="neural-bg"></canvas>
-
-<div class="wrapper">
-
-  <nav>
-    <div class="logo">
-      <div class="logo-dot"></div>
-      AdMagic
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 2L15 6V12L9 16L3 12V6L9 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="9" cy="9" r="2.5" fill="white"/>
+      </svg>
     </div>
-    <div class="nav-badge">TRIBE V2 · PRIVATE BETA</div>
-  </nav>
+    AdMagic
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge">✦ Private Beta</span>
+    <a href="#waitlist" class="btn-nav">Join Waitlist →</a>
+  </div>
+</nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-eyebrow">
-      <span></span>
-      Meta Tribe V2 Research Data · Neural Stimulus Analysis
-      <span style="background: linear-gradient(90deg, var(--neural-cyan), transparent);"></span>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-pill">
+    <div class="pill-dot"></div>
+    AI-Powered Ad Creative Intelligence
+  </div>
+
+  <h1 class="hero-headline">
+    See How the Human Brain<br>
+    <span class="gradient-text">Reacts to Your Ads</span>
+  </h1>
+
+  <p class="hero-sub">
+    Upload any creative asset — video or static — and get real-time analysis of how your audience's brain processes your messaging, emotions, and calls to action.
+  </p>
+
+  <div class="hero-form" id="hero-form-wrap">
+    <input type="email" class="hero-input" id="hero-email" placeholder="Enter your work email" />
+    <button class="hero-btn" onclick="heroSubmit()">Get Early Access →</button>
+  </div>
+  <div class="success-banner" id="hero-success">
+    🎉 You're on the list! We'll reach out before launch.
+  </div>
+
+  <p class="hero-note">No credit card required · <a href="#waitlist">Join 2,847+ marketers</a> on the waitlist</p>
+
+  <div class="social-row">
+    <div class="avatars">
+      <div class="avatar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">S</div>
+      <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#f97316)">M</div>
+      <div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">A</div>
+      <div class="avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6)">R</div>
+    </div>
+    <span>Joined by growth teams at top brands worldwide</span>
+  </div>
+</section>
+
+<!-- VIDEO SLIDESHOW -->
+<div class="video-section">
+  <div style="position:relative;">
+    <div class="video-frame" id="videoFrame">
+      <div class="video-chrome">
+        <div class="chrome-dot cd-red"></div>
+        <div class="chrome-dot cd-yellow"></div>
+        <div class="chrome-dot cd-green"></div>
+      </div>
+
+      <video class="slide-video active" id="video0" autoplay muted loop playsinline preload="metadata">
+        <source src="admagic_54sec_video.mp4" type="video/mp4">
+      </video>
+      <video class="slide-video" id="video1" muted loop playsinline preload="metadata">
+        <source src="admagic_product_demo.mp4" type="video/mp4">
+      </video>
+
+      <div class="video-label" id="videoLabel">Predict Consumer Behaviour</div>
+
+      <button class="slide-arrow prev" onclick="changeSlide(-1)">‹</button>
+      <button class="slide-arrow next" onclick="changeSlide(1)">›</button>
     </div>
 
-    <h1 class="hero-headline">
-      <span class="line-1">Decode What Your</span>
-      <span class="line-2">Ads Actually Do</span>
-    </h1>
-
-    <p class="hero-sub">
-      Proprietary creative intelligence powered by Meta's Tribe V2 research.<br>
-      See exactly how the human brain processes your messaging — before you spend a dollar.
-    </p>
-
-    <div class="hero-cta-group">
-      <a href="#waitlist" class="btn-primary">
-        <span>Request Early Access</span>
-        <span>→</span>
-      </a>
-      <a href="#how" class="btn-ghost">See how it works ↓</a>
+    <div class="slide-dots">
+      <button class="dot active" onclick="goSlide(0)" id="dot0"></button>
+      <button class="dot" onclick="goSlide(1)" id="dot1"></button>
     </div>
+  </div>
+</div>
 
-    <div class="scan-line">
-      <span>Scroll</span>
-      <div class="scroll-indicator"></div>
+<!-- LOGO STRIP -->
+<div class="logo-strip">
+  <p class="strip-label">Trusted by marketing teams at</p>
+  <div class="logos-row">
+    <span class="logo-pill">Nexstar</span>
+    <span class="logo-pill">Omnicom</span>
+    <span class="logo-pill">Dentsu</span>
+    <span class="logo-pill">IPG</span>
+    <span class="logo-pill">Havas</span>
+    <span class="logo-pill">TBWA</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-eyebrow reveal">What AdMagic Does</p>
+  <h2 class="section-headline reveal reveal-delay-1">Your All-in-One Creative<br>Intelligence Platform</h2>
+  <p class="section-sub reveal reveal-delay-2">From ad creatives and product visuals to competitor analysis — everything you need to optimize your marketing creative.</p>
+
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">🧠</div>
+      <div class="feat-title">Neural Stimulus Analysis</div>
+      <div class="feat-desc">Analyze real-time brain activity and emotional stimulus for video and static assets using proprietary AI intelligence powered by cutting-edge brain research data.</div>
     </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section class="features" id="how">
-    <div class="section-label">
-      BRAIN MAPPER PROTOCOL
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Emotional Response Mapping</div>
+      <div class="feat-desc">Get frame-by-frame heatmaps and emotion curves showing exactly where attention peaks, drops, and what drives your viewers to act.</div>
     </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Real-Time Processing</div>
+      <div class="feat-desc">Upload your creative and receive actionable intelligence in seconds — not days. Know before you spend, not after.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🎯</div>
+      <div class="feat-title">Attention Zone Detection</div>
+      <div class="feat-desc">Identify exactly which visual elements capture and hold attention, and which ones cause viewers to disengage.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-icon">🎬</div>
+      <div class="feat-title">Video & Static Support</div>
+      <div class="feat-desc">Supports MP4, MOV, JPG, PNG, GIF and more. Analyze everything from 6-second bumpers to long-form brand videos.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon">📈</div>
+      <div class="feat-title">Predictive Performance</div>
+      <div class="feat-desc">Predict how your ad will perform before launch with 94% accuracy vs. traditional A/B testing — and cut creative testing costs by up to 70%.</div>
+    </div>
+  </div>
+</section>
 
-    <h2 class="features-headline reveal">
-      Three steps.<br>
-      <em>Infinite clarity</em> on<br>
-      what works.
-    </h2>
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-inner">
+    <p class="section-eyebrow reveal">How It Works</p>
+    <h2 class="section-headline reveal reveal-delay-1" style="margin:0 auto 16px; text-align:center;">Three Steps to<br>Creative Clarity</h2>
+    <p class="section-sub reveal reveal-delay-2" style="margin:0 auto 0; text-align:center;">No PhD required. Upload, analyze, optimize — in minutes.</p>
 
-    <div class="workflow reveal">
-      <div class="step">
-        <div class="step-num">01 / UPLOAD</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="4" width="44" height="44" rx="2" stroke="#00e5ff" stroke-width="1"/>
-            <path d="M26 34V18M19 25l7-7 7 7" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="4" y="38" width="44" height="10" fill="rgba(0,229,255,0.08)"/>
-          </svg>
-        </div>
+    <div class="steps-row">
+      <div class="step-item reveal">
+        <div class="step-num">01</div>
         <div class="step-title">Upload Your Creative</div>
-        <div class="step-desc">Drop any video ad or static asset. Supports MP4, MOV, JPG, PNG, GIF. Any format, any resolution.</div>
-        <div class="step-highlight"></div>
+        <div class="step-desc">Drop any video ad or static asset. Any format, any resolution, any length.</div>
       </div>
-
-      <div class="step">
-        <div class="step-num">02 / ANALYZE</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="26" cy="26" r="20" stroke="#7c3aed" stroke-width="1"/>
-            <circle cx="26" cy="26" r="12" stroke="#00e5ff" stroke-width="1" stroke-dasharray="4 2"/>
-            <circle cx="26" cy="26" r="4" fill="#e040fb"/>
-            <path d="M6 26h6M40 26h6M26 6v6M26 40v6" stroke="#7c3aed" stroke-width="1" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="step-title">Neural Stimulus Scan</div>
-        <div class="step-desc">Tribe V2 Brain Mapper runs real-time analysis on attention zones, emotional triggers, and cognitive load patterns.</div>
-        <div class="step-highlight"></div>
+      <div class="step-item reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <div class="step-title">AI Scans the Brain Response</div>
+        <div class="step-desc">AdMagic's engine analyzes attention zones, emotional triggers, and cognitive load in real time.</div>
       </div>
-
-      <div class="step">
-        <div class="step-num">03 / OPTIMIZE</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 38l11-14 8 8 9-12 8 6" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="8" y="40" width="6" height="4" fill="rgba(0,255,136,0.3)" stroke="#00ff88" stroke-width="1"/>
-            <rect x="19" y="36" width="6" height="8" fill="rgba(0,255,136,0.3)" stroke="#00ff88" stroke-width="1"/>
-            <rect x="30" y="30" width="6" height="14" fill="rgba(0,255,136,0.5)" stroke="#00ff88" stroke-width="1"/>
-            <rect x="41" y="24" width="6" height="20" fill="rgba(0,255,136,0.7)" stroke="#00ff88" stroke-width="1"/>
-          </svg>
-        </div>
-        <div class="step-title">Actionable Intelligence</div>
-        <div class="step-desc">Receive frame-by-frame heatmaps, emotion curves, and specific edits that will amplify conversion.</div>
-        <div class="step-highlight"></div>
+      <div class="step-item reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <div class="step-title">Get Actionable Intelligence</div>
+        <div class="step-desc">Receive specific, prioritized edits that will amplify conversion — before you spend a dollar.</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- BRAIN SECTION -->
-  <section style="position:relative; z-index:2;">
-    <div class="brain-section">
-      <div class="brain-canvas-wrap reveal">
-        <canvas id="brain-canvas"></canvas>
-        <div class="brain-overlay">
-          <div class="brain-label">LIVE NEURAL SCAN — DEMO MODE</div>
-        </div>
-      </div>
-
-      <div class="brain-info reveal">
-        <div class="section-label">TRIBE V2 INTELLIGENCE</div>
-        <h3 style="font-family:'Syne',sans-serif; font-size: clamp(28px,3vw,40px); font-weight:700; letter-spacing:-1.5px; line-height:1.1; margin-bottom:32px;">
-          Built on Meta's<br>proprietary brain<br>research data.
-        </h3>
-
-        <div class="brain-stat">
-          <div class="stat-num">847M</div>
-          <div class="stat-label">Neural data points from Meta's Tribe V2 research corpus</div>
-        </div>
-        <div class="brain-stat">
-          <div class="stat-num">0.3s</div>
-          <div class="stat-label">Average time to identify emotional response triggers in your creative</div>
-        </div>
-        <div class="brain-stat">
-          <div class="stat-num">94%</div>
-          <div class="stat-label">Accuracy in predicting ad performance vs. traditional A/B testing</div>
-        </div>
-
-        <div class="data-tags">
-          <div class="tag">EEG MAPPING</div>
-          <div class="tag">FMRI PATTERNS</div>
-          <div class="tag">EMOTION VECTORS</div>
-          <div class="tag">ATTENTION HEAT</div>
-          <div class="tag">COGNITIVE LOAD</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WAITLIST -->
-  <section class="waitlist-section" id="waitlist">
-    <div class="section-label" style="justify-content:center; text-align:center; margin-bottom:32px;">
-      EARLY ACCESS
+<!-- WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="waitlist-bg"></div>
+  <div class="waitlist-inner">
+    <div class="waitlist-eyebrow">
+      <div class="live-dot"></div>
+      Now accepting waitlist applications
     </div>
 
     <h2 class="waitlist-headline reveal">
-      Your brain on<br>better ads.
+      Your brain on<br><span class="wl-gradient">better ads.</span>
     </h2>
 
-    <p class="waitlist-sub reveal">
-      Join the waitlist for AdMagic's private beta. First cohort gets<br>
-      unlimited neural scans free for 90 days.
+    <p class="waitlist-sub reveal reveal-delay-1">
+      Join AdMagic's private beta. First cohort gets unlimited creative scans free for 90 days. No credit card. No catch.
     </p>
 
-    <div class="waitlist-card reveal">
-      <div id="form-wrap">
-        <div class="form-row">
-          <input type="email" class="form-input" id="email-input" placeholder="your@email.com" />
-          <button class="form-btn" onclick="handleSubmit()">
-            <span>Join Waitlist →</span>
-          </button>
+    <div class="waitlist-form-wrap reveal reveal-delay-2">
+      <div id="wl-form">
+        <div class="wl-input-row">
+          <input type="email" class="wl-input" id="wl-email" placeholder="your@company.com" />
+          <button class="wl-btn" onclick="waitlistSubmit()">Join the Waitlist →</button>
         </div>
-        <div class="form-note">No spam. No noise. Just early access when we launch. Unsubscribe anytime.</div>
+        <p class="wl-note">By joining you agree to receive product updates. Unsubscribe anytime.</p>
       </div>
 
-      <div class="success-msg" id="success-msg">
-        <div class="success-code">[ ACCESS REQUEST LOGGED ]</div>
-        <div class="success-text">You're on the list.<br>We'll be in touch soon.</div>
+      <div class="wl-success" id="wl-success">
+        <div class="wl-success-icon">🎉</div>
+        <div class="wl-success-title">You're on the list!</div>
+        <div class="wl-success-sub">We'll be in touch before launch. Get ready to see your ads differently.</div>
       </div>
 
-      <div class="social-proof">
+      <div class="proof-bar">
         <div class="proof-item">
-          <div class="proof-num" id="waitlist-count">2,847</div>
+          <div class="proof-num" id="wl-count">2,847</div>
           <div class="proof-label">On Waitlist</div>
         </div>
-        <div style="width:1px; height:40px; background:var(--glass-border);"></div>
+        <div class="proof-divider"></div>
         <div class="proof-item">
           <div class="proof-num">147</div>
           <div class="proof-label">Beta Spots</div>
         </div>
-        <div style="width:1px; height:40px; background:var(--glass-border);"></div>
+        <div class="proof-divider"></div>
         <div class="proof-item">
-          <div class="proof-num">Q3 '26</div>
+          <div class="proof-num">Q1 '26</div>
           <div class="proof-label">Launch Target</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">
-      <div class="logo-dot" style="width:6px;height:6px;"></div>
-      AdMagic
+<!-- FOOTER -->
+<footer>
+  <div class="logo" style="font-size:18px; text-decoration:none;">
+    <div class="logo-mark" style="width:28px;height:28px;">
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 2L15 6V12L9 16L3 12V6L9 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="9" cy="9" r="2.5" fill="white"/>
+      </svg>
     </div>
-    <div class="footer-meta">
-      © 2026 AdMagic Inc. · All neural data processed in compliance with Meta Tribe V2 research licensing.
-    </div>
-    <div class="footer-tech">
-      Powered by <strong>TRIBE V2 BRAIN MAPPER</strong><br>
-      Neural stimulus analysis · Real-time processing
-    </div>
-  </footer>
-
-</div>
+    AdMagic
+  </div>
+  <p class="footer-copy">© 2026 AdMagic Inc. · AI-powered creative intelligence.</p>
+  <nav class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="mailto:hello@admagic.cloud">Contact</a>
+  </nav>
+</footer>
 
 <script>
-// ── CURSOR ──────────────────────────────────────────────────────────────────
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
+// ── VIDEO SLIDESHOW ──────────────────────────────────────────────────────────
+const videos = document.querySelectorAll('.slide-video');
+const dots = document.querySelectorAll('.dot');
+const labels = ['Predict Consumer Behaviour', 'Dashboard Demo'];
+const labelEl = document.getElementById('videoLabel');
+let current = 0;
+let autoTimer = null;
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx - 5 + 'px';
-  cursor.style.top = my - 5 + 'px';
-});
+function goSlide(idx) {
+  videos[current].pause();
+  videos[current].classList.remove('active');
+  dots[current].classList.remove('active');
 
-function animRing() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  ring.style.left = rx - 18 + 'px';
-  ring.style.top = ry - 18 + 'px';
-  requestAnimationFrame(animRing);
-}
-animRing();
+  current = idx;
 
-document.querySelectorAll('a, button, .step').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.transform = 'scale(2)';
-    ring.style.transform = 'scale(1.5)';
-    ring.style.borderColor = 'rgba(0,229,255,0.6)';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.transform = 'scale(1)';
-    ring.style.transform = 'scale(1)';
-    ring.style.borderColor = 'rgba(0,229,255,0.4)';
-  });
-});
+  videos[current].classList.add('active');
+  videos[current].currentTime = 0;
+  videos[current].play().catch(() => {});
+  dots[current].classList.add('active');
+  labelEl.textContent = labels[current];
 
-// ── NEURAL NETWORK BACKGROUND ───────────────────────────────────────────────
-const bgCanvas = document.getElementById('neural-bg');
-const bgCtx = bgCanvas.getContext('2d');
-let nodes = [], W, H;
-
-function resizeBg() {
-  W = bgCanvas.width = window.innerWidth;
-  H = bgCanvas.height = window.innerHeight;
-}
-resizeBg();
-window.addEventListener('resize', resizeBg);
-
-for (let i = 0; i < 90; i++) {
-  nodes.push({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    r: Math.random() * 2.5 + 0.5,
-    pulse: Math.random() * Math.PI * 2
-  });
+  resetAuto();
 }
 
-function drawNeural() {
-  bgCtx.clearRect(0, 0, W, H);
-
-  nodes.forEach(n => {
-    n.x += n.vx; n.y += n.vy; n.pulse += 0.02;
-    if (n.x < 0 || n.x > W) n.vx *= -1;
-    if (n.y < 0 || n.y > H) n.vy *= -1;
-  });
-
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 180) {
-        const alpha = (1 - dist / 180) * 0.25;
-        const t = (nodes[i].x / W);
-        const r = Math.round(t * 124 + (1-t)*0);
-        const g = Math.round(t * 58 + (1-t)*229);
-        const b = Math.round(t * 237 + (1-t)*255);
-        bgCtx.beginPath();
-        bgCtx.moveTo(nodes[i].x, nodes[i].y);
-        bgCtx.lineTo(nodes[j].x, nodes[j].y);
-        bgCtx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
-        bgCtx.lineWidth = 0.6;
-        bgCtx.stroke();
-      }
-    }
-  }
-
-  nodes.forEach(n => {
-    const glow = Math.sin(n.pulse) * 0.5 + 0.5;
-    bgCtx.beginPath();
-    bgCtx.arc(n.x, n.y, n.r * (1 + glow * 0.5), 0, Math.PI * 2);
-    bgCtx.fillStyle = `rgba(0,229,255,${0.3 + glow * 0.4})`;
-    bgCtx.fill();
-  });
-
-  requestAnimationFrame(drawNeural);
+function changeSlide(dir) {
+  goSlide((current + dir + videos.length) % videos.length);
 }
-drawNeural();
 
-// ── BRAIN CANVAS ─────────────────────────────────────────────────────────────
-const bc = document.getElementById('brain-canvas');
-const bctx = bc.getContext('2d');
-let bW, bH, tick = 0;
-
-function resizeBrain() {
-  bW = bc.width = bc.parentElement.clientWidth;
-  bH = bc.height = bc.parentElement.clientHeight;
+function resetAuto() {
+  clearInterval(autoTimer);
+  autoTimer = setInterval(() => changeSlide(1), 12000);
 }
-resizeBrain();
-window.addEventListener('resize', resizeBrain);
 
-const rings = Array.from({length: 8}, (_, i) => ({
-  radius: 60 + i * 28,
-  speed: (i % 2 === 0 ? 1 : -1) * (0.003 + i * 0.001),
-  phase: (i / 8) * Math.PI * 2,
-  nodes: Array.from({length: 6 + i * 2}, (_, j) => ({
-    angle: (j / (6 + i * 2)) * Math.PI * 2,
-    active: Math.random() > 0.5
-  }))
-}));
+// Start first video, begin auto-advance
+videos[0].play().catch(() => {});
+resetAuto();
 
-const signals = Array.from({length: 12}, () => ({
-  ring: Math.floor(Math.random() * 8),
-  nodeIdx: Math.floor(Math.random() * 14),
-  progress: Math.random(),
-  speed: 0.006 + Math.random() * 0.012
-}));
+// ── SCROLL REVEALS ────────────────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.12 });
+revealEls.forEach(el => obs.observe(el));
 
-function drawBrain() {
-  bctx.clearRect(0, 0, bW, bH);
-  tick++;
-
-  const cx = bW / 2, cy = bH / 2;
-
-  // Ambient glow
-  const grad = bctx.createRadialGradient(cx, cy, 0, cx, cy, 220);
-  grad.addColorStop(0, 'rgba(124,58,237,0.12)');
-  grad.addColorStop(0.5, 'rgba(0,229,255,0.06)');
-  grad.addColorStop(1, 'transparent');
-  bctx.fillStyle = grad;
-  bctx.beginPath();
-  bctx.arc(cx, cy, 220, 0, Math.PI * 2);
-  bctx.fill();
-
-  rings.forEach((ring, ri) => {
-    ring.phase += ring.speed;
-    const nodePositions = ring.nodes.map((n, ni) => {
-      const angle = n.angle + ring.phase;
-      return { x: cx + Math.cos(angle) * ring.radius, y: cy + Math.sin(angle) * ring.radius, active: n.active };
-    });
-
-    // Ring circle
-    bctx.beginPath();
-    bctx.arc(cx, cy, ring.radius, 0, Math.PI * 2);
-    bctx.strokeStyle = `rgba(124,58,237,${0.06 + ri * 0.01})`;
-    bctx.lineWidth = 0.5;
-    bctx.stroke();
-
-    // Connections on ring
-    nodePositions.forEach((p, pi) => {
-      const next = nodePositions[(pi + 1) % nodePositions.length];
-      if (p.active || next.active) {
-        bctx.beginPath();
-        bctx.moveTo(p.x, p.y);
-        bctx.lineTo(next.x, next.y);
-        bctx.strokeStyle = `rgba(0,229,255,${p.active ? 0.18 : 0.05})`;
-        bctx.lineWidth = 0.7;
-        bctx.stroke();
-      }
-      // Cross-ring connections
-      if (ri < rings.length - 1) {
-        const outer = rings[ri + 1];
-        const outerAngle = nodePositions[0].x; // reuse phase
-        const opAngle = ring.nodes[pi].angle + ring.phase;
-        const op = { x: cx + Math.cos(opAngle) * rings[ri+1].radius, y: cy + Math.sin(opAngle) * rings[ri+1].radius };
-        if (pi % 3 === 0) {
-          bctx.beginPath();
-          bctx.moveTo(p.x, p.y);
-          bctx.lineTo(op.x, op.y);
-          bctx.strokeStyle = `rgba(224,64,251,0.06)`;
-          bctx.lineWidth = 0.5;
-          bctx.stroke();
-        }
-      }
-
-      // Nodes
-      const pulse = Math.sin(tick * 0.04 + ri * 0.8 + pi) * 0.5 + 0.5;
-      bctx.beginPath();
-      bctx.arc(p.x, p.y, p.active ? 2.5 + pulse : 1.2, 0, Math.PI * 2);
-      bctx.fillStyle = p.active ? `rgba(0,229,255,${0.6 + pulse * 0.4})` : 'rgba(124,58,237,0.3)';
-      bctx.fill();
-    });
-  });
-
-  // Center core
-  const corePulse = Math.sin(tick * 0.05) * 0.3 + 0.7;
-  const coreGrad = bctx.createRadialGradient(cx, cy, 0, cx, cy, 20 * corePulse);
-  coreGrad.addColorStop(0, 'rgba(0,229,255,0.9)');
-  coreGrad.addColorStop(0.5, 'rgba(124,58,237,0.5)');
-  coreGrad.addColorStop(1, 'transparent');
-  bctx.beginPath();
-  bctx.arc(cx, cy, 20 * corePulse, 0, Math.PI * 2);
-  bctx.fillStyle = coreGrad;
-  bctx.fill();
-
-  // Signals traveling
-  signals.forEach(sig => {
-    sig.progress += sig.speed;
-    if (sig.progress > 1) { sig.progress = 0; sig.ring = Math.floor(Math.random() * 8); }
-    const ring = rings[sig.ring];
-    const angle = sig.progress * Math.PI * 2 + ring.phase;
-    const sx = cx + Math.cos(angle) * ring.radius;
-    const sy = cy + Math.sin(angle) * ring.radius;
-    bctx.beginPath();
-    bctx.arc(sx, sy, 3, 0, Math.PI * 2);
-    bctx.fillStyle = 'rgba(0,229,255,0.9)';
-    bctx.fill();
-    bctx.beginPath();
-    bctx.arc(sx, sy, 6, 0, Math.PI * 2);
-    bctx.fillStyle = 'rgba(0,229,255,0.2)';
-    bctx.fill();
-  });
-
-  requestAnimationFrame(drawBrain);
-}
-drawBrain();
-
-// ── SCROLL REVEALS ───────────────────────────────────────────────────────────
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), 100);
-    }
-  });
-}, { threshold: 0.15 });
-
-reveals.forEach(el => observer.observe(el));
-
-// ── STAGGERED STEP REVEALS ──────────────────────────────────────────────────
-const stepObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      document.querySelectorAll('.step').forEach((step, i) => {
-        setTimeout(() => {
-          step.style.opacity = '1';
-          step.style.transform = 'none';
-        }, i * 120);
-      });
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.step').forEach(step => {
-  step.style.opacity = '0';
-  step.style.transform = 'translateY(24px)';
-  step.style.transition = 'all 0.6s ease';
-});
-
-const workflow = document.querySelector('.workflow');
-if (workflow) stepObs.observe(workflow);
-
-// ── WAITLIST COUNT ANIMATION ─────────────────────────────────────────────────
-const countEl = document.getElementById('waitlist-count');
-let countAnimDone = false;
-
+// ── WAITLIST COUNT ANIMATION ──────────────────────────────────────────────────
+const countEl = document.getElementById('wl-count');
+let countDone = false;
 const countObs = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting && !countAnimDone) {
-    countAnimDone = true;
-    let start = 2700, end = 2847, duration = 1200;
-    let startTime = null;
-    function animCount(ts) {
-      if (!startTime) startTime = ts;
-      const prog = Math.min((ts - startTime) / duration, 1);
-      const ease = 1 - Math.pow(1 - prog, 3);
+  if (entries[0].isIntersecting && !countDone) {
+    countDone = true;
+    let start = 2750, end = 2847, t = null;
+    const dur = 1200;
+    function tick(ts) {
+      if (!t) t = ts;
+      const p = Math.min((ts - t) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
       countEl.textContent = Math.floor(start + (end - start) * ease).toLocaleString();
-      if (prog < 1) requestAnimationFrame(animCount);
+      if (p < 1) requestAnimationFrame(tick);
     }
-    requestAnimationFrame(animCount);
+    requestAnimationFrame(tick);
   }
 }, { threshold: 0.5 });
-
 if (countEl) countObs.observe(countEl);
 
-// ── FORM SUBMIT ──────────────────────────────────────────────────────────────
-function handleSubmit() {
-  const email = document.getElementById('email-input').value.trim();
+// ── FORMS ─────────────────────────────────────────────────────────────────────
+function heroSubmit() {
+  const email = document.getElementById('hero-email').value.trim();
   if (!email || !email.includes('@')) {
-    document.getElementById('email-input').style.borderColor = 'rgba(224,64,251,0.6)';
-    document.getElementById('email-input').style.background = 'rgba(224,64,251,0.05)';
-    setTimeout(() => {
-      document.getElementById('email-input').style.borderColor = '';
-      document.getElementById('email-input').style.background = '';
-    }, 2000);
+    document.getElementById('hero-email').style.outline = '2px solid #ec4899';
+    setTimeout(() => document.getElementById('hero-email').style.outline = '', 2000);
     return;
   }
-  document.getElementById('form-wrap').style.display = 'none';
-  document.getElementById('success-msg').classList.add('visible');
+  document.getElementById('hero-form-wrap').style.display = 'none';
+  document.getElementById('hero-success').classList.add('visible');
+  bumpCount();
 }
 
-document.getElementById('email-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') handleSubmit();
-});
+function waitlistSubmit() {
+  const email = document.getElementById('wl-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('wl-email').style.outline = '2px solid rgba(236,72,153,0.7)';
+    setTimeout(() => document.getElementById('wl-email').style.outline = '', 2000);
+    return;
+  }
+  document.getElementById('wl-form').style.display = 'none';
+  document.getElementById('wl-success').classList.add('visible');
+  bumpCount();
+}
+
+let extraCount = 0;
+function bumpCount() {
+  extraCount++;
+  if (countEl) {
+    const base = 2847 + extraCount;
+    countEl.textContent = base.toLocaleString();
+  }
+}
+
+// Enter key support
+document.getElementById('hero-email').addEventListener('keydown', e => { if (e.key === 'Enter') heroSubmit(); });
+document.getElementById('wl-email').addEventListener('keydown', e => { if (e.key === 'Enter') waitlistSubmit(); });
 </script>
 </body>
 </html>
