@@ -1,619 +1,500 @@
 <!DOCTYPE html>
-<html lang="en" class="js">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AdMagic — See How the Brain Reacts to Your Ads</title>
-<meta name="description" content="Upload any creative asset and get real-time AI analysis of how your audience's brain processes your messaging.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect width='22' height='24' fill='%234a4d44'/%3E%3Cpath fill='%23fff' d='M11 4L19 8.5V15.5L11 20L3 15.5V8.5Z'/%3E%3C/svg%3E">
-
+<meta name="description" content="Upload any creative asset and get real-time AI analysis of how your audience processes your messaging.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect width='22' height='24' fill='%234a4d44'/%3E%3Cpath fill='%23fff' d='M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z'/%3E%3C/svg%3E">
 <style>
-@font-face {
-  font-family:'Lexend';
-  src:url('https://ublctyddhtbgaersvxxb.supabase.co/storage/v1/object/public/threeui-media/scene-images/embedded/1ec8f6ee2750554b4bc59ff0b507d316a82a7ba37e0e5bebc41d3bd9b9faad46.woff2') format('woff2');
-  font-weight:100 900;font-style:normal;font-display:swap;
-}
+@font-face{font-family:'Lexend';src:url('https://ublctyddhtbgaersvxxb.supabase.co/storage/v1/object/public/threeui-media/scene-images/embedded/1ec8f6ee2750554b4bc59ff0b507d316a82a7ba37e0e5bebc41d3bd9b9faad46.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
 
-:root {
-  --u:    calc(100vw / 1600);
-  --ink:  #ffffff;
-  --ink-soft: rgba(255,255,255,.62);
-  --ink-faint:rgba(255,255,255,.40);
-  --rule: rgba(255,255,255,.055);
-  --bg:   #383b34;
-  --card: #f2f3ef;
-  --card-ink:#23261f;
-  --card-label:#7c8177;
-  --accent:#8fb840;
-  --ease: cubic-bezier(.22,.61,.36,1);
-  --ease-out:cubic-bezier(.16,1,.3,1);
+:root{
+  --ink:#fff; --ink-soft:rgba(255,255,255,.62); --ink-faint:rgba(255,255,255,.38);
+  --bg:#3d4037; --bg-dark:#2a2d25; --bg-deep:#1e2119; --bg-card:#2e3128;
+  --card:#f2f3ef; --card-ink:#23261f; --card-label:#7c8177;
+  --accent:#8fb840; --rule:rgba(255,255,255,.06);
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
 }
-@media(min-width:1900px){:root{--u:calc(1900px / 1600);}}
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--bg);scroll-behavior:smooth;}
-body{
-  font-family:'Lexend',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  font-weight:300;color:var(--ink);background:var(--bg);
-  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--ink);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ── PARTICLE CANVAS ── */
+#motes{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;padding:20px 0;
 }
+.dock{
+  display:flex;align-items:center;gap:3px;height:46px;padding:5px;
+  border-radius:14px;border:1px solid rgba(255,255,255,.11);
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 42%),rgba(28,33,24,.82);
+  box-shadow:0 8px 22px rgba(8,12,6,.35),inset 0 1px rgba(255,255,255,.06);
+  backdrop-filter:blur(18px);
+}
+.nav-mark{
+  width:36px;height:36px;border-radius:9px;
+  background:#eef1e7;border:1px solid #eef1e7;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .2s var(--ease);flex-shrink:0;
+}
+.nav-mark:hover{background:#fff;}
+.nav-mark svg{width:16px;height:16px;fill:#23261f;}
+.nav-link{
+  display:inline-flex;align-items:center;height:36px;padding:0 15px;
+  border:1px solid transparent;border-radius:9px;
+  color:var(--ink-faint);text-decoration:none;font-weight:400;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
+  transition:color .18s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+}
+.nav-link:hover{color:var(--ink);border-color:rgba(255,255,255,.18);background:rgba(28,33,24,.9);}
+.nav-cta{color:var(--ink);background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.11);}
+.nav-cta:hover{background:rgba(255,255,255,.13);}
 
 /* ── HERO ── */
 .hero{
-  position:relative;width:100%;height:100svh;
-  min-height:calc(880 * var(--u));overflow:hidden;isolation:isolate;
+  position:relative;min-height:100svh;
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;
+  padding:110px 80px 80px;gap:64px;
   background:
-    radial-gradient(64% 52% at 27% 84%,rgba(143,184,64,.07) 0%,rgba(143,184,64,0) 72%),
-    radial-gradient(70% 60% at 92% 8%, rgba(24,28,20,.12) 0%,rgba(24,28,20,0) 68%),
+    radial-gradient(ellipse 65% 55% at 15% 75%,rgba(143,184,64,.07) 0%,transparent 70%),
+    radial-gradient(ellipse 55% 45% at 90% 10%,rgba(20,26,16,.14) 0%,transparent 60%),
     #4a4d44;
+  overflow:hidden;
 }
+/* bottom light pool — Sylva's signature floor glow */
 .hero::after{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(72% 44% at 50% 117%,rgba(238,243,231,.45) 0%,rgba(238,243,231,.18) 42%,rgba(238,243,231,.03) 72%,rgba(238,243,231,0) 88%),
-    linear-gradient(180deg,rgba(238,243,231,0) 54%,rgba(238,243,231,.03) 78%,rgba(238,243,231,.07) 100%);
-  pointer-events:none;z-index:0;
+    radial-gradient(72% 44% at 50% 120%,rgba(238,243,231,.42) 0%,rgba(238,243,231,.16) 42%,rgba(238,243,231,.03) 72%,transparent 88%),
+    linear-gradient(180deg,transparent 55%,rgba(238,243,231,.05) 80%,rgba(238,243,231,.09) 100%);
+  z-index:1;
 }
-
-.stage{
-  position:absolute;left:50%;top:50%;
-  margin-left:calc(-800 * var(--u));margin-top:calc(-440 * var(--u));
-  width:calc(1600 * var(--u));height:calc(880 * var(--u));
-}
-
-/* guides */
-.guides{position:absolute;inset:calc(-40 * var(--u)) 0;z-index:1;pointer-events:none;}
-.guides i{
-  position:absolute;top:0;bottom:0;width:1px;
-  background:linear-gradient(180deg,rgba(255,255,255,0) 0%,var(--rule) 12%,var(--rule) 78%,rgba(255,255,255,0) 100%);
-}
-
 /* ghost wordmark */
-.ghost{
-  position:absolute;z-index:1;
-  left:calc(6 * var(--u));bottom:calc(-64 * var(--u));
-  font-size:calc(310 * var(--u));line-height:.78;font-weight:400;
-  letter-spacing:calc(18 * var(--u));color:rgba(255,255,255,.048);
-  white-space:nowrap;user-select:none;pointer-events:none;
+.hero-ghost{
+  position:absolute;bottom:-60px;left:-8px;right:0;
+  font-size:clamp(80px,14vw,220px);font-weight:400;line-height:.78;
+  letter-spacing:.04em;color:rgba(255,255,255,.04);
+  white-space:nowrap;user-select:none;pointer-events:none;z-index:1;overflow:hidden;
 }
 
-/* ── DOCK ── */
-.dock-wrap{
-  position:absolute;z-index:5;
-  top:calc(38 * var(--u));left:0;right:0;
-  display:flex;justify-content:center;pointer-events:none;
-}
-.dock{
-  pointer-events:auto;
-  display:flex;align-items:flex-start;gap:calc(3 * var(--u));
-  height:calc(46 * var(--u));padding:calc(5 * var(--u));
-  border-radius:calc(14 * var(--u));border:1px solid rgba(255,255,255,.11);
-  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 42%),rgba(34,40,31,.74);
-  box-shadow:0 calc(8 * var(--u)) calc(22 * var(--u)) rgba(10,14,8,.30),inset 0 1px rgba(255,255,255,.06);
-}
-.dock-item{
-  position:relative;z-index:6;
-  display:inline-flex;align-items:center;justify-content:center;
-  height:calc(36 * var(--u));gap:calc(8 * var(--u));padding:0 calc(16 * var(--u));
-  border:1px solid transparent;border-radius:calc(10 * var(--u));
-  background:rgba(255,255,255,.04);color:var(--ink-faint);
-  text-decoration:none;cursor:pointer;font-family:inherit;font-weight:500;
-  font-size:calc(11 * var(--u));letter-spacing:calc(1.5 * var(--u));text-transform:uppercase;white-space:nowrap;
-  transition:color .18s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
-}
-.dock-item:hover{color:var(--ink);border-color:rgba(255,255,255,.19);background:rgba(31,37,28,.94);box-shadow:0 calc(7 * var(--u)) calc(16 * var(--u)) rgba(10,14,8,.30);}
-.dock-mark{width:calc(36 * var(--u));padding:0;background:#eef1e7;border-color:#eef1e7;color:#23261f;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.dock-mark svg{width:58%;height:58%;display:block;fill:currentColor;}
-.dock-mark:hover{background:#fff;border-color:#fff;color:#1b1e18;}
-.dock-item--cta{color:var(--ink);background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.12);}
-.dock-item--cta:hover{background:rgba(255,255,255,.13);}
+.hero-left{position:relative;z-index:2;display:flex;flex-direction:column;gap:0;}
 
-/* ── HERO COPY ── */
-.headline{
-  position:absolute;z-index:4;
-  left:calc(46 * var(--u));top:calc(195 * var(--u));
-  font-size:calc(63 * var(--u));line-height:calc(68 * var(--u));
-  font-weight:300;letter-spacing:calc(-0.38 * var(--u));color:var(--ink);
+.hero-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:999px;padding:5px 14px;
+  font-size:11px;font-weight:400;color:rgba(255,255,255,.5);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px;
+  width:fit-content;
 }
-.headline span{display:block;padding-bottom:.04em;}
+.pill-live{width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 7px rgba(143,184,64,.7);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-.lede{
-  position:absolute;z-index:4;
-  left:calc(520 * var(--u));top:calc(196 * var(--u));
-  width:calc(228 * var(--u));
-  font-size:calc(16.5 * var(--u));line-height:calc(24 * var(--u));
-  font-weight:300;color:var(--ink-soft);
+.hero-headline{
+  font-size:clamp(42px,4.8vw,72px);font-weight:300;
+  line-height:1.06;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:20px;
 }
 
-/* explore button */
-.explore-wrap{position:absolute;z-index:4;left:calc(46 * var(--u));top:calc(410 * var(--u));}
-.explore-btn{
-  --h:calc(60 * var(--u));height:var(--h);
-  padding:0 calc(28 * var(--u)) 0 calc(18 * var(--u));
-  display:inline-flex;align-items:center;gap:calc(12 * var(--u));
-  border:0;background:none;cursor:pointer;position:relative;border-radius:999px;
-  color:#fff;font-family:inherit;font-size:calc(14 * var(--u));font-weight:500;
-  letter-spacing:calc(0.2 * var(--u));text-decoration:none;
+.hero-lede{
+  font-size:clamp(15px,1.4vw,18px);font-weight:300;
+  color:var(--ink-soft);line-height:1.65;
+  max-width:420px;margin-bottom:36px;
 }
-.explore-plate{
+
+/* glass CTA button */
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  position:relative;border:0;background:none;cursor:pointer;
+  padding:15px 28px;border-radius:999px;
+  color:#fff;font-family:'Lexend',inherit;font-size:14px;font-weight:400;
+  letter-spacing:.02em;text-decoration:none;width:fit-content;
+  margin-bottom:20px;
+}
+.cta-plate{
   position:absolute;inset:0;border-radius:999px;
-  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.014) 44%,rgba(255,255,255,0) 64%),rgba(10,12,10,.44);
-  box-shadow:0 calc(5 * var(--u)) calc(11 * var(--u)) rgba(0,0,0,.38),0 calc(14 * var(--u)) calc(29 * var(--u)) rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.13),inset 0 -1px rgba(0,0,0,.2);
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.01) 44%,transparent 64%),rgba(10,12,8,.46);
+  box-shadow:0 5px 12px rgba(0,0,0,.38),0 14px 30px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.14);
   transition:box-shadow .3s var(--ease),background .3s var(--ease);
 }
-.explore-btn:hover .explore-plate{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 44%,rgba(255,255,255,0) 64%),rgba(8,10,8,.52);box-shadow:0 calc(8 * var(--u)) calc(18 * var(--u)) rgba(0,0,0,.44),0 calc(22 * var(--u)) calc(44 * var(--u)) rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.17),inset 0 -1px rgba(0,0,0,.24);}
-.explore-btn span{position:relative;z-index:1;}
-.explore-ico{position:relative;z-index:1;width:calc(20 * var(--u));height:calc(20 * var(--u));flex:none;}
-.explore-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;}
+.cta-btn:hover .cta-plate{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 44%,transparent 64%),rgba(8,10,6,.56);box-shadow:0 8px 18px rgba(0,0,0,.44),0 22px 46px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.18);}
+.cta-btn span{position:relative;z-index:1;}
 
-/* ── HERO FORM (below explore btn) ── */
-.hero-form-area{
-  position:absolute;z-index:4;
-  left:calc(46 * var(--u));top:calc(496 * var(--u));
-  width:calc(420 * var(--u));
-}
+/* hero email form */
+.hero-form-wrap{display:flex;flex-direction:column;gap:10px;}
 .hero-form{
   display:flex;border-radius:999px;overflow:hidden;
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.13);
   background:rgba(255,255,255,.05);backdrop-filter:blur(12px);
+  max-width:400px;
 }
-.hero-email-input{
-  flex:1;background:transparent;border:none;
-  padding:calc(13 * var(--u)) calc(20 * var(--u));
-  color:var(--ink);font-family:'Lexend',inherit;
-  font-size:calc(13 * var(--u));font-weight:300;outline:none;
-}
-.hero-email-input::placeholder{color:rgba(255,255,255,.28);}
-.hero-submit-btn{
-  position:relative;margin:calc(4 * var(--u));padding:0 calc(18 * var(--u));
-  border:0;background:none;cursor:pointer;border-radius:999px;color:#fff;
-  font-family:'Lexend',inherit;font-size:calc(12 * var(--u));font-weight:400;
-  letter-spacing:calc(0.5 * var(--u));
+.hero-email{flex:1;background:transparent;border:none;padding:13px 20px;color:var(--ink);font-family:'Lexend',inherit;font-size:14px;font-weight:300;outline:none;}
+.hero-email::placeholder{color:rgba(255,255,255,.28);}
+.hero-go{
+  position:relative;margin:4px;padding:0 18px;border:0;background:none;cursor:pointer;
+  border-radius:999px;color:#fff;font-family:'Lexend',inherit;font-size:13px;font-weight:400;
   display:inline-flex;align-items:center;
 }
-.hero-submit-plate{position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.01) 44%,rgba(255,255,255,0) 64%),rgba(10,12,10,.52);box-shadow:0 4px 10px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.13);}
-.hero-submit-btn span{position:relative;z-index:1;}
-.hero-ok{
-  display:none;background:rgba(143,184,64,.12);border:1px solid rgba(143,184,64,.3);
-  border-radius:999px;padding:calc(13 * var(--u)) calc(20 * var(--u));
-  font-size:calc(13 * var(--u));font-weight:300;color:rgba(143,184,64,.9);text-align:center;
-}
+.hero-go-plate{position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.01) 44%,transparent 64%),rgba(10,12,8,.5);box-shadow:0 4px 10px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.13);}
+.hero-go span{position:relative;z-index:1;}
+.hero-ok{display:none;background:rgba(143,184,64,.12);border:1px solid rgba(143,184,64,.3);border-radius:999px;padding:12px 20px;font-size:13px;font-weight:300;color:rgba(143,184,64,.9);max-width:400px;}
 .hero-ok.on{display:block;}
+.hero-note{font-size:12px;font-weight:300;color:rgba(255,255,255,.25);}
 
-/* stats */
-.stat{position:absolute;z-index:4;display:flex;align-items:flex-start;gap:calc(9 * var(--u));}
-.stat--a{left:calc(46 * var(--u));top:calc(580 * var(--u));}
-.stat--b{left:calc(240 * var(--u));top:calc(580 * var(--u));}
-.stat dt{font-size:calc(12 * var(--u));font-weight:300;color:var(--ink-faint);line-height:calc(18 * var(--u));}
-.stat dd{font-size:calc(13.5 * var(--u));font-weight:500;color:var(--ink);line-height:calc(20 * var(--u));}
+/* hero stats */
+.hero-stats{display:flex;gap:40px;margin-top:32px;padding-top:28px;border-top:1px solid var(--rule);}
+.h-stat dt{font-size:11px;font-weight:300;color:var(--ink-faint);letter-spacing:.05em;margin-bottom:4px;}
+.h-stat dd{font-size:22px;font-weight:300;color:var(--ink);letter-spacing:-.03em;}
 
-/* ethos card */
-.ethos-card{
-  position:absolute;z-index:2;left:calc(-52 * var(--u));top:calc(180 * var(--u));
-  width:calc(210 * var(--u));border-radius:calc(32 * var(--u));
-  background:var(--card);
-  box-shadow:0 calc(30 * var(--u)) calc(80 * var(--u)) rgba(10,14,8,.55),0 calc(8 * var(--u)) calc(20 * var(--u)) rgba(10,14,8,.25);
-  padding:calc(22 * var(--u)) calc(24 * var(--u)) calc(20 * var(--u));color:var(--card-ink);
-}
-.ethos-label{font-size:calc(11 * var(--u));font-weight:500;color:var(--card-label);letter-spacing:calc(1 * var(--u));text-transform:uppercase;margin-bottom:calc(12 * var(--u));}
-.ethos-headline{font-size:calc(20 * var(--u));line-height:calc(25 * var(--u));font-weight:300;letter-spacing:calc(-0.3 * var(--u));}
+/* ── HERO RIGHT — VIDEO ── */
+.hero-right{position:relative;z-index:2;}
 
-/* ── VIDEO CARD ── */
 .video-card{
-  position:absolute;z-index:4;
-  right:calc(48 * var(--u));top:calc(88 * var(--u));
-  width:calc(556 * var(--u));
-  border-radius:calc(22 * var(--u));overflow:hidden;background:#1a1e17;
-  box-shadow:0 calc(30 * var(--u)) calc(80 * var(--u)) rgba(10,14,8,.55),0 calc(8 * var(--u)) calc(20 * var(--u)) rgba(10,14,8,.25);
+  border-radius:20px;overflow:hidden;background:#141810;
+  box-shadow:0 32px 80px rgba(8,12,6,.6),0 8px 24px rgba(8,12,6,.3),0 0 0 1px rgba(255,255,255,.06);
 }
-.vc-chrome{
-  background:rgba(15,18,12,.9);padding:calc(10 * var(--u)) calc(14 * var(--u));
-  display:flex;align-items:center;gap:calc(5 * var(--u));
-  flex-shrink:0;
+.vc-bar{
+  background:rgba(12,16,10,.92);padding:11px 14px;
+  display:flex;align-items:center;gap:6px;
 }
-.cdot{width:calc(10 * var(--u));height:calc(10 * var(--u));border-radius:50%;}
-.cdot-r{background:#ff5f57;}.cdot-y{background:#febc2e;}.cdot-g{background:#28c840;}
-.vc-chrome-title{
-  flex:1;text-align:center;
-  font-size:calc(11 * var(--u));font-weight:400;color:rgba(255,255,255,.3);
-  letter-spacing:calc(0.5 * var(--u));
-}
+.cdot{width:10px;height:10px;border-radius:50%;}
+.cd-r{background:#ff5f57;}.cd-y{background:#febc2e;}.cd-g{background:#28c840;}
+.vc-title{flex:1;text-align:center;font-size:11px;font-weight:300;color:rgba(255,255,255,.3);letter-spacing:.04em;}
 
-.video-stage{position:relative;aspect-ratio:16/9;background:#0f1210;overflow:hidden;}
-.slide-video{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  opacity:0;transition:opacity .6s var(--ease);
-}
+.video-stage{position:relative;aspect-ratio:16/9;background:#0d1009;overflow:hidden;}
+.slide-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s var(--ease);}
 .slide-video.active{opacity:1;}
 
-.vid-label-pill{
-  position:absolute;top:calc(10 * var(--u));left:calc(10 * var(--u));
-  background:rgba(10,14,8,.65);color:rgba(255,255,255,.75);
-  font-size:calc(10 * var(--u));font-weight:500;
-  padding:calc(4 * var(--u)) calc(10 * var(--u));border-radius:999px;
-  letter-spacing:calc(0.8 * var(--u));text-transform:uppercase;
-  z-index:3;backdrop-filter:blur(8px);transition:opacity .3s;
+.vid-tag{
+  position:absolute;top:10px;left:10px;z-index:5;
+  background:rgba(8,12,6,.7);color:rgba(255,255,255,.75);
+  font-size:10px;font-weight:400;padding:4px 10px;border-radius:999px;
+  letter-spacing:.06em;text-transform:uppercase;backdrop-filter:blur(8px);
+  transition:opacity .3s;
 }
 
-/* nav arrows — large, always visible, clearly clickable */
-.slide-arrow{
+/* ARROWS — large pill buttons, always visible */
+.v-arrow{
   position:absolute;top:50%;transform:translateY(-50%);
-  width:calc(38 * var(--u));height:calc(38 * var(--u));
-  border-radius:50%;
-  background:rgba(255,255,255,.18);
-  border:1px solid rgba(255,255,255,.3);
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;z-index:10;color:white;
-  font-size:calc(18 * var(--u));font-weight:300;line-height:1;
-  transition:background .2s var(--ease),transform .2s var(--ease);
-  backdrop-filter:blur(10px);
-  user-select:none;
+  cursor:pointer;z-index:10;color:#fff;
+  font-size:20px;font-weight:300;line-height:1;
+  transition:background .2s var(--ease),transform .18s var(--ease);
+  backdrop-filter:blur(10px);user-select:none;-webkit-user-select:none;
 }
-.slide-arrow:hover{background:rgba(255,255,255,.32);transform:translateY(-50%) scale(1.08);}
-.slide-arrow:active{transform:translateY(-50%) scale(.96);}
-.arrow-prev{left:calc(10 * var(--u));}
-.arrow-next{right:calc(10 * var(--u));}
+.v-arrow:hover{background:rgba(255,255,255,.3);transform:translateY(-50%) scale(1.08);}
+.v-arrow:active{transform:translateY(-50%) scale(.94);}
+.v-prev{left:10px;}.v-next{right:10px;}
 
-/* bottom dots + counter */
 .vc-footer{
-  background:rgba(10,14,8,.88);
+  background:rgba(10,14,8,.9);padding:11px 16px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:calc(12 * var(--u)) calc(16 * var(--u));
 }
-.slide-dots{display:flex;gap:calc(6 * var(--u));align-items:center;}
-.sdot{
-  width:calc(6 * var(--u));height:calc(6 * var(--u));border-radius:999px;
-  background:rgba(255,255,255,.25);cursor:pointer;border:none;padding:0;
-  transition:all .3s var(--ease);
-}
-.sdot.active{background:rgba(255,255,255,.85);width:calc(20 * var(--u));}
-.vc-counter{font-size:calc(11 * var(--u));color:rgba(255,255,255,.3);font-weight:300;letter-spacing:.05em;}
-
-/* scroll cue */
-.scroll-cue{
-  position:absolute;z-index:4;left:calc(46 * var(--u));bottom:calc(44 * var(--u));
-  display:flex;align-items:center;gap:calc(10 * var(--u));
-  font-size:calc(11 * var(--u));font-weight:400;color:var(--ink-faint);
-  letter-spacing:calc(1.5 * var(--u));text-transform:uppercase;text-decoration:none;
-}
-.scroll-line{width:calc(32 * var(--u));height:1px;background:linear-gradient(90deg,rgba(255,255,255,.4),rgba(255,255,255,0));}
+.sdots{display:flex;gap:6px;align-items:center;}
+.sdot{width:6px;height:6px;border-radius:999px;background:rgba(255,255,255,.22);cursor:pointer;border:none;padding:0;transition:all .3s var(--ease);}
+.sdot.on{background:rgba(255,255,255,.85);width:20px;}
+.vc-count{font-size:11px;font-weight:300;color:rgba(255,255,255,.3);letter-spacing:.04em;}
 
 /* ── BRANDS ── */
 .brands{
-  padding:60px 80px;background:#33362e;
-  border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);
+  padding:52px 80px;background:#30342a;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
 }
-.brands-label{font-size:12px;font-weight:400;color:rgba(255,255,255,.28);letter-spacing:.14em;text-transform:uppercase;margin-bottom:28px;text-align:center;}
-.brands-row{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
-.brand-name{font-size:17px;font-weight:300;color:rgba(255,255,255,.32);letter-spacing:.01em;transition:color .2s var(--ease);}
-.brand-name:hover{color:rgba(255,255,255,.65);}
-.brand-more{font-size:13px;font-weight:300;color:rgba(255,255,255,.2);letter-spacing:.1em;}
+.brands-lbl{font-size:11px;font-weight:400;color:rgba(255,255,255,.25);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:24px;}
+.brands-row{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;}
+.brand{font-size:16px;font-weight:300;color:rgba(255,255,255,.3);letter-spacing:.01em;transition:color .2s var(--ease);}
+.brand:hover{color:rgba(255,255,255,.6);}
+.brand-more{font-size:12px;font-weight:300;color:rgba(255,255,255,.18);letter-spacing:.1em;}
 
 /* ── FEATURES ── */
-.section{padding:120px 80px;max-width:1400px;margin:0 auto;}
-.sec-eye{font-size:12px;font-weight:400;color:rgba(255,255,255,.32);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;}
-.sec-head{font-size:clamp(36px,3.8vw,56px);font-weight:300;color:var(--ink);line-height:1.08;letter-spacing:-.025em;max-width:620px;margin-bottom:16px;}
-.sec-sub{font-size:16px;font-weight:300;color:var(--ink-soft);max-width:460px;line-height:1.65;margin-bottom:72px;}
+.features{padding:110px 80px;max-width:1300px;margin:0 auto;}
+.sec-eye{font-size:11px;font-weight:400;color:rgba(255,255,255,.3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;}
+.sec-head{font-size:clamp(32px,3.5vw,52px);font-weight:300;color:var(--ink);line-height:1.08;letter-spacing:-.025em;max-width:580px;margin-bottom:14px;}
+.sec-sub{font-size:16px;font-weight:300;color:var(--ink-soft);max-width:440px;line-height:1.65;margin-bottom:64px;}
 
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.055);}
-.feat-card{background:#33362e;padding:40px 36px;transition:background .3s var(--ease);position:relative;}
-.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,184,64,.4),transparent);opacity:0;transition:opacity .3s var(--ease);}
-.feat-card:hover{background:#383b2f;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.06);}
+.feat-card{background:#2e3128;padding:38px 32px;transition:background .3s var(--ease);position:relative;overflow:hidden;}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,184,64,.35),transparent);opacity:0;transition:opacity .3s var(--ease);}
+.feat-card:hover{background:#343831;}
 .feat-card:hover::before{opacity:1;}
-.feat-num{font-size:11px;font-weight:400;color:rgba(255,255,255,.2);letter-spacing:.2em;margin-bottom:32px;}
-.feat-icon{font-size:28px;margin-bottom:20px;display:block;}
-.feat-title{font-size:18px;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin-bottom:12px;line-height:1.2;}
-.feat-desc{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.65;}
+.feat-n{font-size:10px;font-weight:400;color:rgba(255,255,255,.18);letter-spacing:.2em;margin-bottom:28px;}
+.feat-ico{font-size:26px;margin-bottom:18px;display:block;}
+.feat-t{font-size:17px;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;line-height:1.2;}
+.feat-d{font-size:13.5px;font-weight:300;color:var(--ink-soft);line-height:1.65;}
 
-/* ── HOW ── */
-.how{padding:80px 80px 120px;background:#2e3128;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);}
-.how-inner{max-width:1200px;margin:0 auto;}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:64px;}
-.step-num{font-size:11px;font-weight:500;color:rgba(143,184,64,.6);letter-spacing:.2em;margin-bottom:20px;}
-.step-line{width:32px;height:1px;background:rgba(143,184,64,.5);margin-bottom:28px;}
-.step-title{font-size:20px;font-weight:300;color:var(--ink);letter-spacing:-.02em;margin-bottom:12px;line-height:1.2;}
-.step-desc{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.65;}
+/* ── HOW IT WORKS — with organic animation ── */
+.how{padding:100px 80px;background:#282b22;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);position:relative;overflow:hidden;}
+.how-canvas{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5;}
+.how-inner{max-width:1100px;margin:0 auto;position:relative;z-index:2;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:60px;position:relative;}
+.steps::before{content:'';position:absolute;top:32px;left:calc(100%/6);right:calc(100%/6);height:1px;background:linear-gradient(90deg,transparent,rgba(143,184,64,.3),rgba(143,184,64,.3),transparent);pointer-events:none;}
+
+.step{padding:0 32px;}
+.step:not(:last-child){border-right:1px solid var(--rule);}
+.step-num{
+  width:64px;height:64px;border-radius:50%;
+  background:#2e3128;border:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:500;color:rgba(143,184,64,.7);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:28px;
+  box-shadow:0 0 0 6px #282b22,0 0 0 7px rgba(255,255,255,.04);
+  position:relative;z-index:3;
+}
+/* pulsing ring on step numbers */
+.step-num::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(143,184,64,.15);animation:step-pulse 3s ease-in-out infinite;}
+@keyframes step-pulse{0%,100%{transform:scale(1);opacity:.5;}50%{transform:scale(1.08);opacity:.15;}}
+.step:nth-child(2) .step-num::after{animation-delay:.8s;}
+.step:nth-child(3) .step-num::after{animation-delay:1.6s;}
+
+.step-line{width:28px;height:1px;background:rgba(143,184,64,.45);margin-bottom:20px;}
+.step-t{font-size:19px;font-weight:300;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;line-height:1.2;}
+.step-d{font-size:13.5px;font-weight:300;color:var(--ink-soft);line-height:1.65;}
 
 /* ── WAITLIST ── */
-.waitlist{padding:120px 80px;background:#1e2119;position:relative;overflow:hidden;}
-.waitlist::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(143,184,64,.08) 0%,transparent 70%);top:-200px;right:-100px;pointer-events:none;}
-.wl-inner{max-width:680px;margin:0 auto;position:relative;z-index:2;}
-.wl-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:400;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-bottom:32px;}
-.live-dot{width:7px;height:7px;background:#8fb840;border-radius:50%;box-shadow:0 0 8px rgba(143,184,64,.7);animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.wl-head{font-size:clamp(38px,4.5vw,62px);font-weight:300;color:var(--ink);line-height:1.06;letter-spacing:-.035em;margin-bottom:20px;}
-.wl-sub{font-size:16px;font-weight:300;color:var(--ink-soft);line-height:1.65;margin-bottom:52px;}
+.waitlist{padding:110px 80px;background:var(--bg-deep);position:relative;overflow:hidden;}
+.wl-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(143,184,64,.08) 0%,transparent 70%);top:-150px;right:-80px;pointer-events:none;}
+.wl-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(60,90,30,.1) 0%,transparent 70%);bottom:-100px;left:-60px;pointer-events:none;}
+.wl-inner{max-width:640px;margin:0 auto;position:relative;z-index:2;}
+
+.wl-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 14px;font-size:11px;font-weight:400;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;margin-bottom:28px;}
+.wl-head{font-size:clamp(36px,4vw,58px);font-weight:300;color:var(--ink);line-height:1.06;letter-spacing:-.035em;margin-bottom:18px;}
+.wl-sub{font-size:16px;font-weight:300;color:var(--ink-soft);line-height:1.65;margin-bottom:48px;}
 
 .wl-card{
-  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.01) 40%,rgba(255,255,255,0) 60%),rgba(34,40,31,.6);
-  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px;
-  backdrop-filter:blur(20px);
-  box-shadow:0 30px 80px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01) 40%,transparent 60%),rgba(28,33,22,.65);
+  border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px;
+  backdrop-filter:blur(20px);box-shadow:0 28px 72px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.07);
 }
-.wl-form-row{display:flex;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.12);margin-bottom:16px;background:rgba(255,255,255,.04);}
-.wl-email-input{flex:1;background:transparent;border:none;padding:16px 24px;color:var(--ink);font-family:'Lexend',inherit;font-size:15px;font-weight:300;outline:none;}
-.wl-email-input::placeholder{color:rgba(255,255,255,.28);}
-.wl-submit-btn{
-  position:relative;margin:4px 4px 4px 0;padding:0 26px;
-  border:0;background:none;cursor:pointer;border-radius:999px;color:#fff;
-  font-family:'Lexend',inherit;font-size:14px;font-weight:400;letter-spacing:.03em;
-  white-space:nowrap;display:inline-flex;align-items:center;
-}
-.wl-submit-plate{position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.014) 44%,rgba(255,255,255,0) 64%),rgba(10,12,10,.5);box-shadow:0 4px 10px rgba(0,0,0,.38),0 12px 28px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.13);transition:box-shadow .3s var(--ease),background .3s var(--ease);}
-.wl-submit-btn:hover .wl-submit-plate{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 44%,rgba(255,255,255,0) 64%),rgba(8,10,8,.6);box-shadow:0 6px 16px rgba(0,0,0,.44),0 18px 40px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.17);}
-.wl-submit-btn span{position:relative;z-index:1;}
-.wl-note{font-size:12px;font-weight:300;color:rgba(255,255,255,.28);text-align:center;}
+.wl-row{display:flex;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.11);margin-bottom:14px;background:rgba(255,255,255,.04);}
+.wl-email{flex:1;background:transparent;border:none;padding:15px 22px;color:var(--ink);font-family:'Lexend',inherit;font-size:14px;font-weight:300;outline:none;}
+.wl-email::placeholder{color:rgba(255,255,255,.26);}
+.wl-go{position:relative;margin:4px 4px 4px 0;padding:0 24px;border:0;background:none;cursor:pointer;border-radius:999px;color:#fff;font-family:'Lexend',inherit;font-size:14px;font-weight:400;letter-spacing:.02em;white-space:nowrap;display:inline-flex;align-items:center;}
+.wl-plate{position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.014) 44%,transparent 64%),rgba(10,12,8,.5);box-shadow:0 4px 10px rgba(0,0,0,.38),0 12px 28px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.13);transition:box-shadow .3s var(--ease),background .3s var(--ease);}
+.wl-go:hover .wl-plate{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 44%,transparent 64%),rgba(8,10,6,.6);box-shadow:0 6px 16px rgba(0,0,0,.44),0 18px 40px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.17);}
+.wl-go span{position:relative;z-index:1;}
+.wl-note{font-size:11px;font-weight:300;color:rgba(255,255,255,.24);text-align:center;}
 
-.wl-success{display:none;text-align:center;padding:12px;}
-.wl-success.on{display:block;}
-.wl-success-title{font-size:22px;font-weight:300;color:var(--ink);margin-bottom:8px;letter-spacing:-.02em;}
-.wl-success-sub{font-size:14px;color:var(--ink-soft);}
+.wl-ok{display:none;text-align:center;padding:12px;}
+.wl-ok.on{display:block;}
+.wl-ok-t{font-size:21px;font-weight:300;color:var(--ink);margin-bottom:6px;letter-spacing:-.02em;}
+.wl-ok-s{font-size:14px;color:var(--ink-soft);}
 
-.proof-row{display:flex;align-items:center;justify-content:center;gap:48px;margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,.07);}
-.proof-item{text-align:center;}
-.proof-num{font-size:28px;font-weight:300;color:var(--ink);letter-spacing:-.04em;}
-.proof-label{font-size:11px;font-weight:400;color:rgba(255,255,255,.28);letter-spacing:.12em;text-transform:uppercase;margin-top:4px;}
-.proof-sep{width:1px;height:40px;background:rgba(255,255,255,.08);}
+.proof{display:flex;align-items:center;justify-content:center;gap:40px;margin-top:36px;padding-top:28px;border-top:1px solid rgba(255,255,255,.06);}
+.p-item{text-align:center;}
+.p-num{font-size:26px;font-weight:300;color:var(--ink);letter-spacing:-.04em;}
+.p-lbl{font-size:10px;font-weight:400;color:rgba(255,255,255,.26);letter-spacing:.12em;text-transform:uppercase;margin-top:3px;}
+.p-sep{width:1px;height:36px;background:rgba(255,255,255,.07);}
 
 /* ── FOOTER ── */
-footer{padding:40px 80px;background:#1a1d17;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;gap:20px;}
-.footer-logo{font-size:16px;font-weight:400;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
-.footer-logo svg{width:22px;height:22px;fill:rgba(255,255,255,.4);}
-.footer-copy{font-size:12px;font-weight:300;color:rgba(255,255,255,.22);}
-.footer-links{display:flex;gap:24px;}
-.footer-links a{font-size:12px;font-weight:300;color:rgba(255,255,255,.28);text-decoration:none;transition:color .2s var(--ease);}
-.footer-links a:hover{color:rgba(255,255,255,.65);}
+footer{padding:36px 80px;background:#181c14;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.f-logo{font-size:15px;font-weight:400;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:9px;}
+.f-logo svg{width:20px;height:20px;fill:rgba(255,255,255,.35);}
+.f-copy{font-size:11px;font-weight:300;color:rgba(255,255,255,.2);}
+.f-links{display:flex;gap:20px;}
+.f-links a{font-size:11px;font-weight:300;color:rgba(255,255,255,.26);text-decoration:none;transition:color .2s var(--ease);}
+.f-links a:hover{color:rgba(255,255,255,.6);}
 
-/* reveals */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+/* ── REVEALS ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
 .reveal.in{opacity:1;transform:none;}
 .rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}
 
-/* ── MOBILE ── */
-@media(max-width:900px){
-  .stage{display:none;}
-  .hero{height:auto;min-height:100svh;display:flex;flex-direction:column;padding:90px 20px 48px;gap:0;}
-  .m-hero-content{display:flex;flex-direction:column;gap:16px;}
-  .headline{position:static;font-size:40px;line-height:1.1;}
-  .lede{position:static;width:auto;font-size:15px;}
-  .explore-wrap,.hero-form-area{position:static;width:100%;}
-  .explore-btn{--h:50px;font-size:14px;padding:0 24px 0 16px;}
-  .hero-form{width:100%;}
-  .hero-email-input{font-size:14px;}
-  .hero-submit-btn{font-size:13px;padding:0 16px;}
-  .video-card{position:static;width:100%;border-radius:14px;margin-top:24px;}
-  .vc-chrome .cdot{width:10px;height:10px;}
-  .slide-arrow{width:36px;height:36px;font-size:18px;}
-  .arrow-prev{left:8px;}.arrow-next{right:8px;}
-  .sdot{width:6px;height:6px;}.sdot.active{width:18px;}
-  .feat-grid{grid-template-columns:1fr;}
-  .steps{grid-template-columns:1fr;gap:32px;}
-  .section,.how,.waitlist,.brands{padding-left:20px;padding-right:20px;}
-  footer{flex-direction:column;text-align:center;padding:28px 20px;}
-  .wl-form-row{flex-direction:column;border-radius:14px;}
-  .wl-email-input{border-radius:0;}
-  .wl-submit-btn{border-radius:0;margin:0;padding:14px 24px;justify-content:center;}
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;padding:100px 24px 60px;gap:40px;}
+  .hero-headline{font-size:clamp(36px,8vw,56px);}
+  .hero-ghost{display:none;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .steps{grid-template-columns:1fr;}
+  .steps::before{display:none;}
+  .step{padding:0;border-right:none!important;margin-bottom:36px;}
+  .step:last-child{margin-bottom:0;}
+  .features,.how,.waitlist,.brands{padding-left:24px;padding-right:24px;}
+  footer{flex-direction:column;text-align:center;padding:28px 24px;}
   .brands-row{gap:20px;}
-  .proof-row{gap:24px;}
+  .proof{gap:20px;}
+}
+@media(max-width:640px){
+  .feat-grid{grid-template-columns:1fr;}
+  .nav-link:not(.nav-cta):not(:first-child){display:none;}
+  .wl-row{flex-direction:column;border-radius:14px;}
+  .wl-email{border-radius:0;}
+  .wl-go{border-radius:0;margin:0;padding:13px 24px;justify-content:center;}
 }
 </style>
 </head>
 <body>
 
+<!-- ORGANIC PARTICLE CANVAS (motes / pollen — Sylva-style) -->
+<canvas id="motes"></canvas>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="dock">
+    <a class="nav-mark" href="#top" aria-label="AdMagic">
+      <svg viewBox="0 0 22 24"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/><circle cx="11" cy="12" r="2.6" style="fill:white"/></svg>
+    </a>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#how">How It Works</a>
+    <a class="nav-link" href="#waitlist">Intelligence</a>
+    <a class="nav-link nav-cta" href="#waitlist">Join Waitlist →</a>
+  </div>
+</nav>
+
 <!-- ── HERO ── -->
 <section class="hero" id="top">
-  <div class="stage">
+  <div class="hero-ghost" aria-hidden="true">AdMagic</div>
 
-    <div class="guides">
-      <i style="left:calc(46 * var(--u))"></i>
-      <i style="left:calc(490 * var(--u))"></i>
-      <i style="left:calc(800 * var(--u))"></i>
-      <i style="left:calc(1110 * var(--u))"></i>
-      <i style="left:calc(1554 * var(--u))"></i>
-    </div>
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="hero-pill"><div class="pill-live"></div>AI Creative Intelligence · Private Beta</div>
+    <h1 class="hero-headline">See how the brain<br>reacts to your ads</h1>
+    <p class="hero-lede">Upload any creative asset and get real-time AI analysis of how your audience's brain processes your messaging, emotions, and calls to action.</p>
 
-    <div class="ghost">AdMagic</div>
+    <a class="cta-btn" href="#waitlist">
+      <div class="cta-plate"></div>
+      <span>→</span><span>Request early access</span>
+    </a>
 
-    <!-- DOCK -->
-    <div class="dock-wrap">
-      <nav class="dock" role="navigation">
-        <a class="dock-item dock-mark" href="#top" aria-label="AdMagic home">
-          <svg viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/>
-            <circle cx="11" cy="12" r="2.8" style="fill:white;"/>
-          </svg>
-        </a>
-        <a class="dock-item" href="#features">Features</a>
-        <a class="dock-item" href="#how">How It Works</a>
-        <a class="dock-item" href="#waitlist">Intelligence</a>
-        <a class="dock-item dock-item--cta" href="#waitlist">Join Waitlist →</a>
-      </nav>
-    </div>
-
-    <!-- HEADLINE -->
-    <div class="headline" role="heading" aria-level="1">
-      <span>See how the brain</span>
-      <span>reacts to your ads</span>
-    </div>
-
-    <p class="lede">Upload any creative asset and get real-time AI analysis of how your audience processes your messaging, emotions, and calls to action.</p>
-
-    <!-- CTA -->
-    <div class="explore-wrap">
-      <a class="explore-btn" href="#waitlist">
-        <div class="explore-plate"></div>
-        <span class="explore-ico">
-          <svg viewBox="0 0 20 20"><polyline points="4,10 16,10"/><polyline points="11,5 16,10 11,15"/></svg>
-        </span>
-        <span>Request early access</span>
-      </a>
-    </div>
-
-    <!-- HERO FORM -->
-    <div class="hero-form-area" id="hero-form-area">
+    <div class="hero-form-wrap">
       <div class="hero-form" id="hero-form-el">
-        <input type="email" class="hero-email-input" id="hero-email" placeholder="Enter your work email" autocomplete="email"/>
-        <button class="hero-submit-btn" onclick="heroSubmit()">
-          <div class="hero-submit-plate"></div>
-          <span>Get access</span>
-        </button>
+        <input type="email" class="hero-email" id="hero-email" placeholder="Enter your work email" autocomplete="email">
+        <button class="hero-go" onclick="heroSubmit()"><div class="hero-go-plate"></div><span>Get access</span></button>
       </div>
       <div class="hero-ok" id="hero-ok">✓ You're on the list — we'll be in touch.</div>
+      <p class="hero-note">No credit card · Join 2,847+ marketers on the waitlist</p>
     </div>
 
-    <!-- STATS -->
-    <dl class="stat stat--a">
-      <div><dt>Marketers on waitlist</dt><dd id="stat-count">2,847</dd></div>
-    </dl>
-    <dl class="stat stat--b">
-      <div><dt>Beta spots remaining</dt><dd>147</dd></div>
-    </dl>
-
-    <!-- ETHOS CARD -->
-    <div class="ethos-card">
-      <div class="ethos-label">Our Focus</div>
-      <div class="ethos-headline">Let data,<br>not guesswork,<br>lead.</div>
+    <div class="hero-stats">
+      <dl class="h-stat"><dt>Marketers on waitlist</dt><dd id="stat-n">2,847</dd></dl>
+      <dl class="h-stat"><dt>Beta spots left</dt><dd>147</dd></dl>
     </div>
-
-    <!-- VIDEO SLIDESHOW -->
-    <div class="video-card" id="video-card">
-      <div class="vc-chrome">
-        <div class="cdot cdot-r"></div>
-        <div class="cdot cdot-y"></div>
-        <div class="cdot cdot-g"></div>
-        <div class="vc-chrome-title" id="vc-chrome-title">AdMagic — Predict Consumer Behaviour</div>
-      </div>
-      <div class="video-stage">
-        <!-- VIDEO 1 -->
-        <video class="slide-video active" id="vid0" autoplay muted loop playsinline preload="auto">
-          <source src="admagic_54sec_video.mp4" type="video/mp4">
-        </video>
-        <!-- VIDEO 2 -->
-        <video class="slide-video" id="vid1" muted loop playsinline preload="auto">
-          <source src="admagic_predict_consumer.mp4" type="video/mp4">
-        </video>
-
-        <div class="vid-label-pill" id="vid-label">Predict Consumer Behaviour</div>
-
-        <!-- PREV / NEXT ARROWS -->
-        <button class="slide-arrow arrow-prev" id="arrow-prev" onclick="changeSlide(-1)" aria-label="Previous video">&#8249;</button>
-        <button class="slide-arrow arrow-next" id="arrow-next" onclick="changeSlide(1)" aria-label="Next video">&#8250;</button>
-      </div>
-      <div class="vc-footer">
-        <div class="slide-dots">
-          <button class="sdot active" id="sdot0" onclick="goSlide(0)" aria-label="Slide 1"></button>
-          <button class="sdot" id="sdot1" onclick="goSlide(1)" aria-label="Slide 2"></button>
-        </div>
-        <div class="vc-counter" id="vc-counter">1 / 2</div>
-      </div>
-    </div>
-
-    <a class="scroll-cue" href="#brands">
-      <span class="scroll-line"></span>
-      <span>Scroll to explore</span>
-    </a>
-
-  </div><!-- /stage -->
-
-  <!-- MOBILE FALLBACK -->
-  <div class="m-hero-content" style="display:none;" id="m-hero">
-    <h1 style="font-size:38px;line-height:1.1;font-weight:300;letter-spacing:-.03em;margin-bottom:12px;">See how the brain reacts to your ads</h1>
-    <p style="font-size:15px;font-weight:300;color:var(--ink-soft);line-height:1.65;margin-bottom:24px;">Upload any creative asset and get real-time AI analysis of how your audience processes your messaging.</p>
-    <div style="position:relative;margin-bottom:24px;">
-      <div class="video-card" style="position:static;width:100%;border-radius:14px;">
-        <div class="vc-chrome"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
-        <div class="video-stage" style="aspect-ratio:16/9;">
-          <video class="slide-video active" id="mvid0" autoplay muted loop playsinline preload="auto"><source src="admagic_54sec_video.mp4" type="video/mp4"></video>
-          <video class="slide-video" id="mvid1" muted loop playsinline preload="auto"><source src="admagic_predict_consumer.mp4" type="video/mp4"></video>
-          <button class="slide-arrow arrow-prev" onclick="mChangeSlide(-1)" style="width:36px;height:36px;font-size:18px;">&#8249;</button>
-          <button class="slide-arrow arrow-next" onclick="mChangeSlide(1)" style="width:36px;height:36px;font-size:18px;">&#8250;</button>
-        </div>
-        <div class="vc-footer">
-          <div class="slide-dots"><button class="sdot active" id="msdot0" onclick="mGoSlide(0)"></button><button class="sdot" id="msdot1" onclick="mGoSlide(1)"></button></div>
-          <div class="vc-counter" id="mvc">1 / 2</div>
-        </div>
-      </div>
-    </div>
-    <a class="explore-btn" href="#waitlist" style="--h:50px;font-size:14px;text-decoration:none;position:relative;">
-      <div class="explore-plate"></div><span style="position:relative;z-index:1;">Request early access →</span>
-    </a>
   </div>
 
+  <!-- RIGHT — VIDEO -->
+  <div class="hero-right">
+    <div class="video-card">
+      <div class="vc-bar">
+        <div class="cdot cd-r"></div><div class="cdot cd-y"></div><div class="cdot cd-g"></div>
+        <div class="vc-title" id="vc-title">AdMagic — Predict Consumer Behaviour</div>
+      </div>
+      <div class="video-stage">
+        <video class="slide-video active" id="v0" autoplay muted loop playsinline preload="auto">
+          <source src="admagic_54sec_video.mp4" type="video/mp4">
+        </video>
+        <video class="slide-video" id="v1" muted loop playsinline preload="auto">
+          <source src="admagic_predict_consumer.mp4" type="video/mp4">
+        </video>
+        <div class="vid-tag" id="vid-tag">Predict Consumer Behaviour</div>
+        <button class="v-arrow v-prev" onclick="slide(-1)" aria-label="Previous">&#8249;</button>
+        <button class="v-arrow v-next" onclick="slide(1)" aria-label="Next">&#8250;</button>
+      </div>
+      <div class="vc-footer">
+        <div class="sdots">
+          <button class="sdot on" id="d0" onclick="goSlide(0)" aria-label="Slide 1"></button>
+          <button class="sdot" id="d1" onclick="goSlide(1)" aria-label="Slide 2"></button>
+        </div>
+        <div class="vc-count" id="vc-cnt">1 / 2</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ── BRANDS ── -->
 <div class="brands" id="brands">
-  <p class="brands-label">Trusted by marketing teams at</p>
+  <p class="brands-lbl">Trusted by marketing teams at</p>
   <div class="brands-row">
-    <span class="brand-name">Iugodigital</span>
-    <span class="brand-name">Banjaaran</span>
-    <span class="brand-name">Future Caribbean</span>
-    <span class="brand-name">GoDocta Health</span>
-    <span class="brand-name">Voltrack</span>
+    <span class="brand">Iugodigital</span>
+    <span class="brand">Banjaaran</span>
+    <span class="brand">Future Caribbean</span>
+    <span class="brand">GoDocta Health</span>
+    <span class="brand">Voltrack</span>
     <span class="brand-more">100+ brands</span>
   </div>
 </div>
 
 <!-- ── FEATURES ── -->
-<section class="section" id="features">
+<section class="features" id="features">
   <p class="sec-eye reveal">What AdMagic does</p>
-  <h2 class="sec-head reveal rd1">Your all-in-one creative intelligence platform</h2>
-  <p class="sec-sub reveal rd2">From ad creatives to competitor analysis — everything you need to know before you spend a dollar.</p>
+  <h2 class="sec-head reveal rd1">Your all-in-one creative<br>intelligence platform</h2>
+  <p class="sec-sub reveal rd2">Everything you need to know how your audience's brain reacts — before you spend a dollar.</p>
 
   <div class="feat-grid">
-    <div class="feat-card reveal"><div class="feat-num">01</div><span class="feat-icon">🧠</span><div class="feat-title">Neural Stimulus Analysis</div><div class="feat-desc">Analyze real-time brain activity and emotional stimulus for video and static assets using proprietary AI intelligence built on cutting-edge brain research data.</div></div>
-    <div class="feat-card reveal rd1"><div class="feat-num">02</div><span class="feat-icon">📊</span><div class="feat-title">Emotional Response Mapping</div><div class="feat-desc">Get frame-by-frame heatmaps and emotion curves showing exactly where attention peaks, drops, and what drives your viewers to act.</div></div>
-    <div class="feat-card reveal rd2"><div class="feat-num">03</div><span class="feat-icon">⚡</span><div class="feat-title">Real-Time Processing</div><div class="feat-desc">Upload your creative and receive actionable intelligence in seconds — not days. Know before you spend, not after the campaign runs.</div></div>
-    <div class="feat-card reveal"><div class="feat-num">04</div><span class="feat-icon">🎯</span><div class="feat-title">Attention Zone Detection</div><div class="feat-desc">Identify exactly which visual elements capture and hold attention, and which ones cause viewers to disengage — down to the frame.</div></div>
-    <div class="feat-card reveal rd1"><div class="feat-num">05</div><span class="feat-icon">🎬</span><div class="feat-title">Video &amp; Static Support</div><div class="feat-desc">Supports MP4, MOV, JPG, PNG, GIF and more. Analyze everything from 6-second bumpers to long-form brand videos with equal precision.</div></div>
-    <div class="feat-card reveal rd2"><div class="feat-num">06</div><span class="feat-icon">📈</span><div class="feat-title">Predictive Performance</div><div class="feat-desc">Predict how your ad will perform before launch with high accuracy — and cut creative testing costs significantly vs. traditional A/B testing.</div></div>
+    <div class="feat-card reveal"><div class="feat-n">01</div><span class="feat-ico">🧠</span><div class="feat-t">Neural Stimulus Analysis</div><div class="feat-d">Analyze real-time brain activity and emotional stimulus for video and static assets using proprietary AI creative intelligence.</div></div>
+    <div class="feat-card reveal rd1"><div class="feat-n">02</div><span class="feat-ico">📊</span><div class="feat-t">Emotional Response Mapping</div><div class="feat-d">Get frame-by-frame heatmaps and emotion curves showing exactly where attention peaks, drops, and what drives action.</div></div>
+    <div class="feat-card reveal rd2"><div class="feat-n">03</div><span class="feat-ico">⚡</span><div class="feat-t">Real-Time Processing</div><div class="feat-d">Upload your creative and receive actionable intelligence in seconds — not days. Know before you spend, not after.</div></div>
+    <div class="feat-card reveal"><div class="feat-n">04</div><span class="feat-ico">🎯</span><div class="feat-t">Attention Zone Detection</div><div class="feat-d">Identify which visual elements capture and hold attention, and which ones cause viewers to disengage — down to the frame.</div></div>
+    <div class="feat-card reveal rd1"><div class="feat-n">05</div><span class="feat-ico">🎬</span><div class="feat-t">Video &amp; Static Support</div><div class="feat-d">Supports MP4, MOV, JPG, PNG, GIF and more. Analyze 6-second bumpers to long-form brand videos with equal precision.</div></div>
+    <div class="feat-card reveal rd2"><div class="feat-n">06</div><span class="feat-ico">📈</span><div class="feat-t">Predictive Performance</div><div class="feat-d">Predict how your ad will perform before launch and cut creative testing costs significantly vs. traditional A/B testing.</div></div>
   </div>
 </section>
 
 <!-- ── HOW IT WORKS ── -->
 <section class="how" id="how">
+  <canvas class="how-canvas" id="how-canvas"></canvas>
   <div class="how-inner">
     <p class="sec-eye reveal">How it works</p>
-    <h2 class="sec-head reveal rd1">Three steps to creative clarity</h2>
+    <h2 class="sec-head reveal rd1">Three steps to<br>creative clarity</h2>
     <p class="sec-sub reveal rd2">No PhD required. Upload, analyze, optimize — in under a minute.</p>
+
     <div class="steps">
-      <div class="reveal"><div class="step-num">Step 01</div><div class="step-line"></div><div class="step-title">Upload your creative</div><div class="step-desc">Drop any video ad or static asset. Any format, any resolution, any length — AdMagic accepts it all.</div></div>
-      <div class="reveal rd1"><div class="step-num">Step 02</div><div class="step-line"></div><div class="step-title">AI scans the brain response</div><div class="step-desc">AdMagic's engine analyzes attention zones, emotional triggers, and cognitive load patterns in real time.</div></div>
-      <div class="reveal rd2"><div class="step-num">Step 03</div><div class="step-line"></div><div class="step-title">Get actionable intelligence</div><div class="step-desc">Receive specific, prioritized edits that will amplify conversion. Act on the data before you spend — not after.</div></div>
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-line"></div>
+        <div class="step-t">Upload your creative</div>
+        <div class="step-d">Drop any video ad or static asset. Any format, any resolution, any length — AdMagic accepts it all and starts analyzing immediately.</div>
+      </div>
+      <div class="step reveal rd1">
+        <div class="step-num">02</div>
+        <div class="step-line"></div>
+        <div class="step-t">AI scans the brain response</div>
+        <div class="step-d">AdMagic's engine analyzes attention zones, emotional triggers, and cognitive load patterns in real time against a vast model of human neural responses.</div>
+      </div>
+      <div class="step reveal rd2">
+        <div class="step-num">03</div>
+        <div class="step-line"></div>
+        <div class="step-t">Get actionable intelligence</div>
+        <div class="step-d">Receive specific, prioritized edits that will amplify conversion. Act on the data before you spend a dollar — not after the campaign runs.</div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ── WAITLIST ── -->
 <section class="waitlist" id="waitlist">
+  <div class="wl-glow"></div>
+  <div class="wl-glow2"></div>
   <div class="wl-inner">
-    <div class="wl-badge reveal"><div class="live-dot"></div>Now accepting applications</div>
+    <div class="wl-badge reveal"><div class="pill-live"></div>Now accepting applications</div>
     <h2 class="wl-head reveal rd1">Your brain on<br>better ads.</h2>
     <p class="wl-sub reveal rd2">Join AdMagic's private beta. First cohort gets unlimited creative scans free for 90 days. No credit card. No catch.</p>
 
     <div class="wl-card reveal rd2">
       <div id="wl-form-wrap">
-        <div class="wl-form-row">
-          <input type="email" class="wl-email-input" id="wl-email" placeholder="your@company.com" autocomplete="email"/>
-          <button class="wl-submit-btn" onclick="wlSubmit()">
-            <div class="wl-submit-plate"></div>
-            <span>Join the waitlist →</span>
-          </button>
+        <div class="wl-row">
+          <input type="email" class="wl-email" id="wl-email" placeholder="your@company.com" autocomplete="email">
+          <button class="wl-go" onclick="wlSubmit()"><div class="wl-plate"></div><span>Join the waitlist →</span></button>
         </div>
         <p class="wl-note">By joining you agree to receive product updates. Unsubscribe anytime.</p>
       </div>
 
-      <div class="wl-success" id="wl-success">
-        <div class="wl-success-title">You're on the list.</div>
-        <div class="wl-success-sub">We'll be in touch before launch. Get ready to see your ads differently.</div>
+      <div class="wl-ok" id="wl-ok">
+        <div class="wl-ok-t">You're on the list.</div>
+        <div class="wl-ok-s">We'll be in touch before launch. Get ready to see your ads differently.</div>
       </div>
 
-      <div class="proof-row">
-        <div class="proof-item"><div class="proof-num" id="wl-count">2,847</div><div class="proof-label">On waitlist</div></div>
-        <div class="proof-sep"></div>
-        <div class="proof-item"><div class="proof-num">147</div><div class="proof-label">Beta spots</div></div>
-        <div class="proof-sep"></div>
-        <div class="proof-item"><div class="proof-num">Q1 '26</div><div class="proof-label">Launch target</div></div>
+      <div class="proof">
+        <div class="p-item"><div class="p-num" id="wl-n">2,847</div><div class="p-lbl">On waitlist</div></div>
+        <div class="p-sep"></div>
+        <div class="p-item"><div class="p-num">147</div><div class="p-lbl">Beta spots</div></div>
+        <div class="p-sep"></div>
+        <div class="p-item"><div class="p-num">Q1 '26</div><div class="p-lbl">Launch target</div></div>
       </div>
     </div>
   </div>
@@ -621,12 +502,12 @@ footer{padding:40px 80px;background:#1a1d17;border-top:1px solid rgba(255,255,25
 
 <!-- ── FOOTER ── -->
 <footer>
-  <div class="footer-logo">
-    <svg viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/></svg>
+  <div class="f-logo">
+    <svg viewBox="0 0 22 24"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/></svg>
     AdMagic
   </div>
-  <p class="footer-copy">© 2026 AdMagic Inc. · AI-powered creative intelligence.</p>
-  <nav class="footer-links">
+  <p class="f-copy">© 2026 AdMagic Inc. · AI-powered creative intelligence.</p>
+  <nav class="f-links">
     <a href="#">Privacy</a>
     <a href="#">Terms</a>
     <a href="mailto:anmol@admagic.cloud">Contact</a>
@@ -634,149 +515,364 @@ footer{padding:40px 80px;background:#1a1d17;border-top:1px solid rgba(255,255,25
 </footer>
 
 <script>
-// ── Mobile detection ──────────────────────────────────────────────────────────
-const isMobile = window.innerWidth <= 900;
-if (isMobile) {
-  const stage = document.querySelector('.stage');
-  const mhero = document.getElementById('m-hero');
-  if (stage) stage.style.display = 'none';
-  if (mhero) mhero.style.display = 'flex';
-  mhero.style.flexDirection = 'column';
-  mhero.style.gap = '0';
-}
+/* ════════════════════════════════════════════════════════════════════════════
+   ORGANIC PARTICLE SYSTEM — Sylva-inspired motes / pollen
+   Replicates the floating organic particles from threeui.com/sylva--living-green
+   Using canvas2D: no external dependency required.
+   ════════════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (REDUCED) return;
 
-// ── DESKTOP SLIDESHOW ─────────────────────────────────────────────────────────
-const VIDS   = [document.getElementById('vid0'), document.getElementById('vid1')];
-const SDOTS  = [document.getElementById('sdot0'), document.getElementById('sdot1')];
-const VID_LABELS = ['Predict Consumer Behaviour', 'VP & ICP — Consumer Behaviour'];
-const labelEl    = document.getElementById('vid-label');
-const chromeTitleEl = document.getElementById('vc-chrome-title');
-const counterEl  = document.getElementById('vc-counter');
-let cur = 0, autoT;
+  var canvas = document.getElementById('motes');
+  var ctx = canvas.getContext('2d');
+  var W, H, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var motes = [];
+  var NUM = 120;
+  var t = 0;
+
+  function resize() {
+    W = window.innerWidth;
+    H = document.documentElement.scrollHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.scale(dpr, dpr);
+  }
+
+  /* Perlin-like noise using sin harmonics — gives organic drift */
+  function noise(x, y, z) {
+    return Math.sin(x * 1.2 + z) * Math.cos(y * 0.8 + z * 1.1) * 0.5 +
+           Math.sin(x * 2.4 + z * 2.3 + 0.7) * Math.cos(y * 1.6 + z * 0.9) * 0.25 +
+           Math.sin(x * 4.8 + z * 4.1 + 1.3) * 0.125;
+  }
+
+  function spawnMote() {
+    var cluster = Math.random();
+    var baseX, baseY;
+    // clusters: bottom-left (moss area), center-right (video card area), full spread
+    if (cluster < 0.35) {
+      baseX = Math.random() * W * 0.45;
+      baseY = H * 0.75 + Math.random() * H * 0.25;
+    } else if (cluster < 0.55) {
+      baseX = W * 0.5 + Math.random() * W * 0.5;
+      baseY = Math.random() * H * 0.5;
+    } else {
+      baseX = Math.random() * W;
+      baseY = Math.random() * H;
+    }
+    return {
+      x: baseX, y: baseY,
+      ox: baseX, oy: baseY,  /* origin for drift */
+      r: 0.8 + Math.random() * 2.2,
+      alpha: 0.05 + Math.random() * 0.3,
+      speed: 0.18 + Math.random() * 0.35,
+      phase: Math.random() * Math.PI * 2,
+      freq:  0.4 + Math.random() * 0.8,
+      drift: (Math.random() - 0.5) * 0.4,
+      rise:  0.06 + Math.random() * 0.18,  /* upward drift */
+      life: 0, maxLife: 200 + Math.random() * 400,
+      kind: Math.random()  /* 0=dot, 0.7=ring, 0.9=cross */
+    };
+  }
+
+  function initMotes() {
+    motes = [];
+    for (var i = 0; i < NUM; i++) {
+      var m = spawnMote();
+      m.life = Math.random() * m.maxLife; /* stagger */
+      motes.push(m);
+    }
+  }
+
+  function drawMote(m, alpha) {
+    var a = alpha * m.alpha;
+    if (a < 0.005) return;
+
+    if (m.kind < 0.72) {
+      /* filled circle */
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(210,220,180,' + a + ')';
+      ctx.fill();
+    } else if (m.kind < 0.90) {
+      /* ring */
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r * 1.5, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(180,210,140,' + (a * 0.6) + ')';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    } else {
+      /* tiny cross — like a spore */
+      var s = m.r * 1.8;
+      ctx.strokeStyle = 'rgba(200,215,160,' + a + ')';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(m.x - s, m.y); ctx.lineTo(m.x + s, m.y);
+      ctx.moveTo(m.x, m.y - s); ctx.lineTo(m.x, m.y + s);
+      ctx.stroke();
+    }
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.008;
+
+    for (var i = 0; i < motes.length; i++) {
+      var m = motes[i];
+      m.life++;
+
+      /* organic drift using noise field */
+      var nx = noise(m.ox / 300, m.oy / 400, t * m.freq + m.phase);
+      var ny = noise(m.ox / 280 + 5, m.oy / 350 + 3, t * m.freq * 0.8 + m.phase + 2);
+      m.x = m.ox + nx * 60;
+      m.y = m.oy + ny * 40 - m.life * m.rise; /* rise slowly upward */
+      m.ox += m.drift * 0.12;
+
+      /* fade in / fade out lifecycle */
+      var lifeRatio = m.life / m.maxLife;
+      var fade = lifeRatio < 0.12 ? lifeRatio / 0.12 :
+                 lifeRatio > 0.80 ? (1 - lifeRatio) / 0.20 : 1;
+
+      drawMote(m, fade);
+
+      /* respawn */
+      if (m.life >= m.maxLife || m.y < -80 || m.x < -100 || m.x > W + 100) {
+        motes[i] = spawnMote();
+      }
+    }
+
+    requestAnimationFrame(drawFrame);
+  }
+
+  resize();
+  initMotes();
+  drawFrame();
+
+  /* Resize only reinits positions — avoids constant allocation */
+  var resizeT;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(function () {
+      ctx.setTransform(1,0,0,1,0,0);
+      resize();
+      initMotes();
+    }, 180);
+  });
+}());
+
+/* ════════════════════════════════════════════════════════════════════════════
+   HOW-IT-WORKS SECTION CANVAS — animated neural / organic flow lines
+   ════════════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (REDUCED) return;
+
+  var cv = document.getElementById('how-canvas');
+  var cx = cv.getContext('2d');
+  var W, H, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var lines = [], t = 0;
+  var NUM_LINES = 8;
+
+  function resize() {
+    var rect = cv.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height || 600;
+    cv.width  = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    cx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function makeNode(i) {
+    return {
+      x: (W / (NUM_LINES + 1)) * (i + 1) + (Math.random() - 0.5) * W * 0.1,
+      y: H * 0.3 + Math.random() * H * 0.4,
+      phase: Math.random() * Math.PI * 2,
+      amp: 20 + Math.random() * 40,
+      freq: 0.4 + Math.random() * 0.6,
+      speed: 0.006 + Math.random() * 0.010
+    };
+  }
+
+  function initLines() {
+    lines = [];
+    for (var i = 0; i < NUM_LINES; i++) lines.push(makeNode(i));
+  }
+
+  var inView = false;
+  var observer = new IntersectionObserver(function(e) {
+    inView = e[0].isIntersecting;
+  }, { threshold: 0.1 });
+  observer.observe(cv.parentElement);
+
+  function draw() {
+    requestAnimationFrame(draw);
+    if (!inView) return;
+    t += 0.01;
+    cx.clearRect(0, 0, W, H);
+
+    /* draw flowing curves between nodes */
+    for (var i = 0; i < lines.length - 1; i++) {
+      var a = lines[i], b = lines[i+1];
+      var ay = a.y + Math.sin(t * a.freq + a.phase) * a.amp;
+      var by = b.y + Math.sin(t * b.freq + b.phase) * b.amp;
+
+      var grad = cx.createLinearGradient(a.x, ay, b.x, by);
+      grad.addColorStop(0, 'rgba(143,184,64,0)');
+      grad.addColorStop(0.3, 'rgba(143,184,64,.12)');
+      grad.addColorStop(0.7, 'rgba(143,184,64,.12)');
+      grad.addColorStop(1, 'rgba(143,184,64,0)');
+
+      cx.beginPath();
+      cx.moveTo(a.x, ay);
+      var mx = (a.x + b.x) / 2, my = (ay + by) / 2 - 30;
+      cx.quadraticCurveTo(mx, my, b.x, by);
+      cx.strokeStyle = grad;
+      cx.lineWidth = 0.8;
+      cx.stroke();
+
+      /* travelling pulse dot */
+      var prog = ((t * a.speed * 60) % 1);
+      var px = a.x + (b.x - a.x) * prog;
+      var py = ay + (by - ay) * prog + Math.sin(prog * Math.PI) * -15;
+      var pAlpha = Math.sin(prog * Math.PI) * 0.5;
+      cx.beginPath();
+      cx.arc(px, py, 2.5, 0, Math.PI * 2);
+      cx.fillStyle = 'rgba(143,184,64,' + pAlpha + ')';
+      cx.fill();
+    }
+
+    /* draw nodes */
+    for (var j = 0; j < lines.length; j++) {
+      var n = lines[j];
+      var ny = n.y + Math.sin(t * n.freq + n.phase) * n.amp;
+      var pulse = (Math.sin(t * 1.2 + n.phase) * 0.5 + 0.5) * 0.4 + 0.05;
+      cx.beginPath();
+      cx.arc(n.x, ny, 3, 0, Math.PI * 2);
+      cx.fillStyle = 'rgba(143,184,64,' + pulse + ')';
+      cx.fill();
+    }
+  }
+
+  var sect = cv.parentElement;
+  function onResize() {
+    cx.setTransform(1,0,0,1,0,0);
+    resize();
+    initLines();
+  }
+  var resT;
+  window.addEventListener('resize', function(){ clearTimeout(resT); resT = setTimeout(onResize, 200); });
+
+  /* wait for element to paint before measuring */
+  requestAnimationFrame(function() {
+    resize();
+    initLines();
+    draw();
+  });
+}());
+
+/* ════════════════════════════════════════════════════════════════════════════
+   VIDEO SLIDESHOW
+   ════════════════════════════════════════════════════════════════════════════ */
+var VIDS   = [document.getElementById('v0'),  document.getElementById('v1')];
+var DOTS   = [document.getElementById('d0'),  document.getElementById('d1')];
+var LABELS = ['Predict Consumer Behaviour', 'VP & ICP — Consumer Behaviour'];
+var tagEl    = document.getElementById('vid-tag');
+var titleEl  = document.getElementById('vc-title');
+var cntEl    = document.getElementById('vc-cnt');
+var cur = 0, autoT;
 
 function goSlide(idx) {
   VIDS[cur].pause();
   VIDS[cur].classList.remove('active');
-  SDOTS[cur].classList.remove('active');
-
-  cur = (idx + VIDS.length) % VIDS.length;
-
+  DOTS[cur].classList.remove('on');
+  cur = ((idx % VIDS.length) + VIDS.length) % VIDS.length;
   VIDS[cur].classList.add('active');
   VIDS[cur].currentTime = 0;
-  VIDS[cur].play().catch(() => {});
-  SDOTS[cur].classList.add('active');
-  if (labelEl) labelEl.textContent = VID_LABELS[cur];
-  if (chromeTitleEl) chromeTitleEl.textContent = 'AdMagic — ' + VID_LABELS[cur];
-  if (counterEl) counterEl.textContent = (cur + 1) + ' / ' + VIDS.length;
+  VIDS[cur].play().catch(function(){});
+  DOTS[cur].classList.add('on');
+  if (tagEl)   tagEl.textContent   = LABELS[cur];
+  if (titleEl) titleEl.textContent = 'AdMagic — ' + LABELS[cur];
+  if (cntEl)   cntEl.textContent   = (cur + 1) + ' / ' + VIDS.length;
   resetAuto();
 }
+function slide(dir) { goSlide(cur + dir); }
+function resetAuto() { clearInterval(autoT); autoT = setInterval(function(){ slide(1); }, 13000); }
 
-function changeSlide(dir) { goSlide(cur + dir); }
+if (VIDS[0]) { VIDS[0].play().catch(function(){}); resetAuto(); }
+document.addEventListener('keydown', function(e){ if(e.key==='ArrowLeft') slide(-1); if(e.key==='ArrowRight') slide(1); });
 
-function resetAuto() {
-  clearInterval(autoT);
-  autoT = setInterval(() => changeSlide(1), 13000);
-}
+/* ════════════════════════════════════════════════════════════════════════════
+   FORMS
+   ════════════════════════════════════════════════════════════════════════════ */
+var statN = document.getElementById('stat-n');
+var wlN   = document.getElementById('wl-n');
+var extra = 0;
 
-if (VIDS[0]) { VIDS[0].play().catch(() => {}); resetAuto(); }
-
-// keyboard navigation for arrows
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft')  changeSlide(-1);
-  if (e.key === 'ArrowRight') changeSlide(1);
-});
-
-// ── MOBILE SLIDESHOW ─────────────────────────────────────────────────────────
-const MVIDS  = [document.getElementById('mvid0'), document.getElementById('mvid1')];
-const MSDOTS = [document.getElementById('msdot0'), document.getElementById('msdot1')];
-const mCounter = document.getElementById('mvc');
-let mcur = 0;
-
-function mGoSlide(idx) {
-  if (!MVIDS[0]) return;
-  MVIDS[mcur].pause();
-  MVIDS[mcur].classList.remove('active');
-  MSDOTS[mcur].classList.remove('active');
-  mcur = (idx + MVIDS.length) % MVIDS.length;
-  MVIDS[mcur].classList.add('active');
-  MVIDS[mcur].currentTime = 0;
-  MVIDS[mcur].play().catch(() => {});
-  MSDOTS[mcur].classList.add('active');
-  if (mCounter) mCounter.textContent = (mcur + 1) + ' / ' + MVIDS.length;
-}
-function mChangeSlide(dir) { mGoSlide(mcur + dir); }
-if (MVIDS[0]) MVIDS[0].play().catch(() => {});
-
-// ── SCROLL REVEALS ────────────────────────────────────────────────────────────
-const obsR = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => obsR.observe(el));
-
-// ── COUNT ANIMATION ───────────────────────────────────────────────────────────
-function animCount(el, from, to, ms) {
-  let t0 = null;
-  (function tick(ts) {
-    if (!t0) t0 = ts;
-    const p = Math.min((ts - t0) / ms, 1);
-    const e = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.floor(from + (to - from) * e).toLocaleString();
-    if (p < 1) requestAnimationFrame(tick);
-  })(performance.now());
-}
-let statDone = false, wlDone = false;
-const statEl = document.getElementById('stat-count');
-const wlEl   = document.getElementById('wl-count');
-
-new IntersectionObserver(en => {
-  if (en[0].isIntersecting && !statDone) { statDone = true; if (statEl) animCount(statEl, 2700, 2847, 1400); }
-}, { threshold: 0.5 }).observe(document.querySelector('.hero'));
-
-new IntersectionObserver(en => {
-  if (en[0].isIntersecting && !wlDone) { wlDone = true; if (wlEl) animCount(wlEl, 2700, 2847, 1400); }
-}, { threshold: 0.5 }).observe(document.getElementById('waitlist'));
-
-// ── FORMS ─────────────────────────────────────────────────────────────────────
-let extra = 0;
 function bumpCount() {
   extra++;
-  const n = (2847 + extra).toLocaleString();
-  if (statEl) statEl.textContent = n;
-  if (wlEl)   wlEl.textContent   = n;
+  var n = (2847 + extra).toLocaleString();
+  if (statN) statN.textContent = n;
+  if (wlN)   wlN.textContent   = n;
 }
 
 function heroSubmit() {
-  const v = document.getElementById('hero-email').value.trim();
+  var v = (document.getElementById('hero-email').value || '').trim();
   if (!v || !v.includes('@')) {
     document.getElementById('hero-email').style.boxShadow = '0 0 0 1px rgba(143,184,64,.5)';
-    setTimeout(() => document.getElementById('hero-email').style.boxShadow = '', 2000);
+    setTimeout(function(){ document.getElementById('hero-email').style.boxShadow = ''; }, 2000);
     return;
   }
   document.getElementById('hero-form-el').style.display = 'none';
   document.getElementById('hero-ok').classList.add('on');
   bumpCount();
 }
-
 function wlSubmit() {
-  const v = document.getElementById('wl-email').value.trim();
+  var v = (document.getElementById('wl-email').value || '').trim();
   if (!v || !v.includes('@')) {
     document.getElementById('wl-email').style.boxShadow = '0 0 0 1px rgba(143,184,64,.5)';
-    setTimeout(() => document.getElementById('wl-email').style.boxShadow = '', 2000);
+    setTimeout(function(){ document.getElementById('wl-email').style.boxShadow = ''; }, 2000);
     return;
   }
   document.getElementById('wl-form-wrap').style.display = 'none';
-  document.getElementById('wl-success').classList.add('on');
+  document.getElementById('wl-ok').classList.add('on');
   bumpCount();
 }
 
-document.getElementById('hero-email')?.addEventListener('keydown', e => { if (e.key === 'Enter') heroSubmit(); });
-document.getElementById('wl-email')?.addEventListener('keydown', e => { if (e.key === 'Enter') wlSubmit(); });
+document.getElementById('hero-email').addEventListener('keydown', function(e){ if(e.key==='Enter') heroSubmit(); });
+document.getElementById('wl-email').addEventListener('keydown',   function(e){ if(e.key==='Enter') wlSubmit(); });
 
-// ── SMOOTH SCROLL ─────────────────────────────────────────────────────────────
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const t = document.querySelector(a.getAttribute('href'));
-    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+/* ════════════════════════════════════════════════════════════════════════════
+   COUNT ANIMATION
+   ════════════════════════════════════════════════════════════════════════════ */
+function animN(el, from, to, ms) {
+  var t0 = null;
+  (function tick(ts) {
+    if (!t0) t0 = ts;
+    var p = Math.min((ts - t0) / ms, 1);
+    el.textContent = Math.floor(from + (to - from) * (1 - Math.pow(1-p, 3))).toLocaleString();
+    if (p < 1) requestAnimationFrame(tick);
+  })(performance.now());
+}
+var sD = false, wD = false;
+new IntersectionObserver(function(e){ if(e[0].isIntersecting && !sD){ sD=true; if(statN) animN(statN,2700,2847,1400); } }, {threshold:.5}).observe(document.querySelector('.hero'));
+new IntersectionObserver(function(e){ if(e[0].isIntersecting && !wD){ wD=true; if(wlN) animN(wlN,2700,2847,1400); } }, {threshold:.5}).observe(document.getElementById('waitlist'));
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SCROLL REVEALS
+   ════════════════════════════════════════════════════════════════════════════ */
+var obs = new IntersectionObserver(function(e){ e.forEach(function(x){ if(x.isIntersecting) x.target.classList.add('in'); }); }, {threshold:.1});
+document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SMOOTH SCROLL
+   ════════════════════════════════════════════════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
   });
 });
 </script>
