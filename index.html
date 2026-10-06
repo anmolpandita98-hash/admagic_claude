@@ -26,7 +26,8 @@ body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--i
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:center;align-items:center;padding:20px 0;
+  display:flex;justify-content:center;align-items:center;
+  padding:20px 240px 20px 0; /* right gap keeps dock clear of corner links */
   pointer-events:none;
 }
 nav > *{pointer-events:auto;}
