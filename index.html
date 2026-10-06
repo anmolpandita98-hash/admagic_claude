@@ -27,16 +27,16 @@ body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--i
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;justify-content:center;align-items:center;
-  padding:20px 240px 20px 0; /* right gap keeps dock clear of corner links */
+  padding:20px 0;
   pointer-events:none;
 }
 nav > *{pointer-events:auto;}
 
-/* top-right corner links — separate from dock */
+/* top-right corner links — above the dock, clearly separate */
 .corner-links{
-  position:fixed;top:0;right:0;z-index:101;
+  position:fixed;top:6px;right:16px;z-index:102;
   display:flex;align-items:center;gap:2px;
-  padding:18px 24px;
+  padding:4px 6px;
 }
 .corner-link{
   display:inline-flex;align-items:center;height:30px;padding:0 11px;
