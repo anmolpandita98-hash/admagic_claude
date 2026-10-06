@@ -1,1208 +1,784 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AdMagic — AI-Powered Ad Creative Intelligence</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AdMagic — See How the Brain Reacts to Your Ads</title>
+<meta name="description" content="Upload any creative asset and get real-time AI analysis of how your audience's brain processes your messaging.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect width='22' height='24' fill='%234a4d44'/%3E%3Cpath fill='%23fff' d='M11 4L19 8.5V15.5L11 20L3 15.5V8.5Z'/%3E%3C/svg%3E">
 
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+@font-face {
+  font-family:'Lexend';
+  src:url('https://ublctyddhtbgaersvxxb.supabase.co/storage/v1/object/public/threeui-media/scene-images/embedded/1ec8f6ee2750554b4bc59ff0b507d316a82a7ba37e0e5bebc41d3bd9b9faad46.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+}
 
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f9f7ff;
-  --bg-card: #f3f0ff;
-  --border: #e8e3ff;
-  --border-mid: #d4cbff;
-  --accent: #7c3aed;
-  --accent-light: #a855f7;
-  --accent-soft: #ede9fe;
-  --accent-grad: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
-  --cta: #ec4899;
-  --cta-hover: #db2777;
-  --text-head: #0f0a1e;
-  --text-body: #3d3558;
-  --text-muted: #8b7fb8;
-  --text-dim: #b8aed4;
-  --nav-h: 72px;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --shadow-card: 0 4px 24px rgba(124,58,237,0.08), 0 1px 4px rgba(0,0,0,0.04);
-  --shadow-lifted: 0 20px 60px rgba(124,58,237,0.15), 0 4px 16px rgba(0,0,0,0.06);
+  --u:    calc(100vw / 1600);
+  --ink:  #ffffff;
+  --ink-soft: rgba(255,255,255,.62);
+  --ink-faint:rgba(255,255,255,.40);
+  --rule: rgba(255,255,255,.055);
+  --bg:   #383b34;
+  --card: #f2f3ef;
+  --card-ink:#23261f;
+  --card-label:#7c8177;
+  --accent:#8fb840;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
 }
+@media(min-width:1900px){:root{--u:calc(1900px / 1600);}}
 
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text-body);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);scroll-behavior:smooth;}
+body{
+  font-family:'Lexend',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-weight:300;color:var(--ink);background:var(--bg);
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
-
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--nav-h);
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 48px;
-  z-index: 200;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800;
-  font-size: 22px;
-  color: var(--text-head);
-  text-decoration: none;
-}
-
-.logo-mark {
-  width: 34px; height: 34px;
-  background: var(--accent-grad);
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-
-.logo-mark svg { width: 18px; height: 18px; }
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nav-badge {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 5px 12px;
-  border-radius: 100px;
-  border: 1px solid var(--border-mid);
-}
-
-.btn-nav {
-  background: var(--accent);
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 10px 22px;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-nav:hover { background: var(--accent-light); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,58,237,0.3); }
 
 /* ── HERO ── */
-.hero {
-  padding: calc(var(--nav-h) + 72px) 48px 80px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+.hero{
+  position:relative;width:100%;height:100svh;
+  min-height:calc(880 * var(--u));overflow:hidden;isolation:isolate;
+  background:
+    radial-gradient(64% 52% at 27% 84%,rgba(143,184,64,.07) 0%,rgba(143,184,64,0) 72%),
+    radial-gradient(70% 60% at 92% 8%, rgba(24,28,20,.12) 0%,rgba(24,28,20,0) 68%),
+    #4a4d44;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(72% 44% at 50% 117%,rgba(238,243,231,.45) 0%,rgba(238,243,231,.18) 42%,rgba(238,243,231,.03) 72%,rgba(238,243,231,0) 88%),
+    linear-gradient(180deg,rgba(238,243,231,0) 54%,rgba(238,243,231,.03) 78%,rgba(238,243,231,.07) 100%);
+  pointer-events:none;z-index:0;
 }
 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.08) 0%, transparent 70%),
-              radial-gradient(ellipse 50% 40% at 80% 60%, rgba(236,72,153,0.05) 0%, transparent 60%);
-  pointer-events: none;
+.stage{
+  position:absolute;left:50%;top:50%;
+  margin-left:calc(-800 * var(--u));margin-top:calc(-440 * var(--u));
+  width:calc(1600 * var(--u));height:calc(880 * var(--u));
 }
 
-.hero-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--accent-soft);
-  border: 1px solid var(--border-mid);
-  border-radius: 100px;
-  padding: 6px 16px 6px 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
-  margin-bottom: 28px;
-  animation: fade-up 0.6s ease forwards;
+/* guides */
+.guides{position:absolute;inset:calc(-40 * var(--u)) 0;z-index:1;pointer-events:none;}
+.guides i{
+  position:absolute;top:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,rgba(255,255,255,0) 0%,var(--rule) 12%,var(--rule) 78%,rgba(255,255,255,0) 100%);
 }
 
-.pill-dot {
-  width: 20px; height: 20px;
-  background: var(--accent-grad);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+/* ghost wordmark */
+.ghost{
+  position:absolute;z-index:1;
+  left:calc(6 * var(--u));bottom:calc(-64 * var(--u));
+  font-size:calc(310 * var(--u));line-height:.78;font-weight:400;
+  letter-spacing:calc(18 * var(--u));color:rgba(255,255,255,.048);
+  white-space:nowrap;user-select:none;pointer-events:none;
 }
 
-.pill-dot::after {
-  content: '✦';
-  font-size: 10px;
-  color: white;
+/* ── DOCK ── */
+.dock-wrap{
+  position:absolute;z-index:5;
+  top:calc(38 * var(--u));left:0;right:0;
+  display:flex;justify-content:center;pointer-events:none;
+}
+.dock{
+  pointer-events:auto;
+  display:flex;align-items:flex-start;gap:calc(3 * var(--u));
+  height:calc(46 * var(--u));padding:calc(5 * var(--u));
+  border-radius:calc(14 * var(--u));border:1px solid rgba(255,255,255,.11);
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 42%),rgba(34,40,31,.74);
+  box-shadow:0 calc(8 * var(--u)) calc(22 * var(--u)) rgba(10,14,8,.30),inset 0 1px rgba(255,255,255,.06);
+}
+.dock-item{
+  position:relative;z-index:6;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:calc(36 * var(--u));gap:calc(8 * var(--u));padding:0 calc(16 * var(--u));
+  border:1px solid transparent;border-radius:calc(10 * var(--u));
+  background:rgba(255,255,255,.04);color:var(--ink-faint);
+  text-decoration:none;cursor:pointer;font-family:inherit;font-weight:500;
+  font-size:calc(11 * var(--u));letter-spacing:calc(1.5 * var(--u));text-transform:uppercase;white-space:nowrap;
+  transition:color .18s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+}
+.dock-item:hover{color:var(--ink);border-color:rgba(255,255,255,.19);background:rgba(31,37,28,.94);box-shadow:0 calc(7 * var(--u)) calc(16 * var(--u)) rgba(10,14,8,.30);}
+.dock-mark{width:calc(36 * var(--u));padding:0;background:#eef1e7;border-color:#eef1e7;color:#23261f;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.dock-mark svg{width:58%;height:58%;display:block;fill:currentColor;}
+.dock-mark:hover{background:#fff;border-color:#fff;color:#1b1e18;}
+.dock-item--cta{color:var(--ink);background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.12);}
+.dock-item--cta:hover{background:rgba(255,255,255,.13);}
+
+/* ── HERO COPY ── */
+.headline{
+  position:absolute;z-index:4;
+  left:calc(46 * var(--u));top:calc(195 * var(--u));
+  font-size:calc(63 * var(--u));line-height:calc(68 * var(--u));
+  font-weight:300;letter-spacing:calc(-0.38 * var(--u));color:var(--ink);
+}
+.headline span{display:block;padding-bottom:.04em;}
+
+.lede{
+  position:absolute;z-index:4;
+  left:calc(520 * var(--u));top:calc(196 * var(--u));
+  width:calc(228 * var(--u));
+  font-size:calc(16.5 * var(--u));line-height:calc(24 * var(--u));
+  font-weight:300;color:var(--ink-soft);
 }
 
-.hero-headline {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(44px, 7vw, 86px);
-  font-weight: 800;
-  color: var(--text-head);
-  line-height: 1.0;
-  letter-spacing: -2.5px;
-  max-width: 900px;
-  margin: 0 auto 24px;
-  opacity: 0;
-  animation: fade-up 0.7s ease forwards 0.1s;
+/* explore button */
+.explore-wrap{position:absolute;z-index:4;left:calc(46 * var(--u));top:calc(410 * var(--u));}
+.explore-btn{
+  --h:calc(60 * var(--u));height:var(--h);
+  padding:0 calc(28 * var(--u)) 0 calc(18 * var(--u));
+  display:inline-flex;align-items:center;gap:calc(12 * var(--u));
+  border:0;background:none;cursor:pointer;position:relative;border-radius:999px;
+  color:#fff;font-family:inherit;font-size:calc(14 * var(--u));font-weight:500;
+  letter-spacing:calc(0.2 * var(--u));text-decoration:none;
+}
+.explore-plate{
+  position:absolute;inset:0;border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.014) 44%,rgba(255,255,255,0) 64%),rgba(10,12,10,.44);
+  box-shadow:0 calc(5 * var(--u)) calc(11 * var(--u)) rgba(0,0,0,.38),0 calc(14 * var(--u)) calc(29 * var(--u)) rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.13),inset 0 -1px rgba(0,0,0,.2);
+  transition:box-shadow .3s var(--ease),background .3s var(--ease);
+}
+.explore-btn:hover .explore-plate{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 44%,rgba(255,255,255,0) 64%),rgba(8,10,8,.52);box-shadow:0 calc(8 * var(--u)) calc(18 * var(--u)) rgba(0,0,0,.44),0 calc(22 * var(--u)) calc(44 * var(--u)) rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.17),inset 0 -1px rgba(0,0,0,.24);}
+.explore-btn span{position:relative;z-index:1;}
+.explore-ico{position:relative;z-index:1;width:calc(20 * var(--u));height:calc(20 * var(--u));flex:none;}
+.explore-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── HERO FORM (below explore btn) ── */
+.hero-form-area{
+  position:absolute;z-index:4;
+  left:calc(46 * var(--u));top:calc(496 * var(--u));
+  width:calc(420 * var(--u));
+}
+.hero-form{
+  display:flex;border-radius:999px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.05);backdrop-filter:blur(12px);
+}
+.hero-email-input{
+  flex:1;background:transparent;border:none;
+  padding:calc(13 * var(--u)) calc(20 * var(--u));
+  color:var(--ink);font-family:'Lexend',inherit;
+  font-size:calc(13 * var(--u));font-weight:300;outline:none;
+}
+.hero-email-input::placeholder{color:rgba(255,255,255,.28);}
+.hero-submit-btn{
+  position:relative;margin:calc(4 * var(--u));padding:0 calc(18 * var(--u));
+  border:0;background:none;cursor:pointer;border-radius:999px;color:#fff;
+  font-family:'Lexend',inherit;font-size:calc(12 * var(--u));font-weight:400;
+  letter-spacing:calc(0.5 * var(--u));
+  display:inline-flex;align-items:center;
+}
+.hero-submit-plate{position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.01) 44%,rgba(255,255,255,0) 64%),rgba(10,12,10,.52);box-shadow:0 4px 10px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.13);}
+.hero-submit-btn span{position:relative;z-index:1;}
+.hero-ok{
+  display:none;background:rgba(143,184,64,.12);border:1px solid rgba(143,184,64,.3);
+  border-radius:999px;padding:calc(13 * var(--u)) calc(20 * var(--u));
+  font-size:calc(13 * var(--u));font-weight:300;color:rgba(143,184,64,.9);text-align:center;
+}
+.hero-ok.on{display:block;}
+
+/* stats */
+.stat{position:absolute;z-index:4;display:flex;align-items:flex-start;gap:calc(9 * var(--u));}
+.stat--a{left:calc(46 * var(--u));top:calc(580 * var(--u));}
+.stat--b{left:calc(240 * var(--u));top:calc(580 * var(--u));}
+.stat dt{font-size:calc(12 * var(--u));font-weight:300;color:var(--ink-faint);line-height:calc(18 * var(--u));}
+.stat dd{font-size:calc(13.5 * var(--u));font-weight:500;color:var(--ink);line-height:calc(20 * var(--u));}
+
+/* ethos card */
+.ethos-card{
+  position:absolute;z-index:2;left:calc(-52 * var(--u));top:calc(180 * var(--u));
+  width:calc(210 * var(--u));border-radius:calc(32 * var(--u));
+  background:var(--card);
+  box-shadow:0 calc(30 * var(--u)) calc(80 * var(--u)) rgba(10,14,8,.55),0 calc(8 * var(--u)) calc(20 * var(--u)) rgba(10,14,8,.25);
+  padding:calc(22 * var(--u)) calc(24 * var(--u)) calc(20 * var(--u));color:var(--card-ink);
+}
+.ethos-label{font-size:calc(11 * var(--u));font-weight:500;color:var(--card-label);letter-spacing:calc(1 * var(--u));text-transform:uppercase;margin-bottom:calc(12 * var(--u));}
+.ethos-headline{font-size:calc(20 * var(--u));line-height:calc(25 * var(--u));font-weight:300;letter-spacing:calc(-0.3 * var(--u));}
+
+/* ── VIDEO CARD ── */
+.video-card{
+  position:absolute;z-index:4;
+  right:calc(48 * var(--u));top:calc(88 * var(--u));
+  width:calc(556 * var(--u));
+  border-radius:calc(22 * var(--u));overflow:hidden;background:#1a1e17;
+  box-shadow:0 calc(30 * var(--u)) calc(80 * var(--u)) rgba(10,14,8,.55),0 calc(8 * var(--u)) calc(20 * var(--u)) rgba(10,14,8,.25);
+}
+.vc-chrome{
+  background:rgba(15,18,12,.9);padding:calc(10 * var(--u)) calc(14 * var(--u));
+  display:flex;align-items:center;gap:calc(5 * var(--u));
+  flex-shrink:0;
+}
+.cdot{width:calc(10 * var(--u));height:calc(10 * var(--u));border-radius:50%;}
+.cdot-r{background:#ff5f57;}.cdot-y{background:#febc2e;}.cdot-g{background:#28c840;}
+.vc-chrome-title{
+  flex:1;text-align:center;
+  font-size:calc(11 * var(--u));font-weight:400;color:rgba(255,255,255,.3);
+  letter-spacing:calc(0.5 * var(--u));
 }
 
-.hero-headline .gradient-text {
-  background: var(--accent-grad);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.video-stage{position:relative;aspect-ratio:16/9;background:#0f1210;overflow:hidden;}
+.slide-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .6s var(--ease);
+}
+.slide-video.active{opacity:1;}
+
+.vid-label-pill{
+  position:absolute;top:calc(10 * var(--u));left:calc(10 * var(--u));
+  background:rgba(10,14,8,.65);color:rgba(255,255,255,.75);
+  font-size:calc(10 * var(--u));font-weight:500;
+  padding:calc(4 * var(--u)) calc(10 * var(--u));border-radius:999px;
+  letter-spacing:calc(0.8 * var(--u));text-transform:uppercase;
+  z-index:3;backdrop-filter:blur(8px);transition:opacity .3s;
 }
 
-.hero-sub {
-  font-size: clamp(16px, 2vw, 19px);
-  color: var(--text-muted);
-  max-width: 560px;
-  margin: 0 auto 40px;
-  line-height: 1.65;
-  font-weight: 400;
-  opacity: 0;
-  animation: fade-up 0.7s ease forwards 0.2s;
+/* nav arrows — large, always visible, clearly clickable */
+.slide-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:calc(38 * var(--u));height:calc(38 * var(--u));
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:10;color:white;
+  font-size:calc(18 * var(--u));font-weight:300;line-height:1;
+  transition:background .2s var(--ease),transform .2s var(--ease);
+  backdrop-filter:blur(10px);
+  user-select:none;
 }
+.slide-arrow:hover{background:rgba(255,255,255,.32);transform:translateY(-50%) scale(1.08);}
+.slide-arrow:active{transform:translateY(-50%) scale(.96);}
+.arrow-prev{left:calc(10 * var(--u));}
+.arrow-next{right:calc(10 * var(--u));}
 
-/* HERO EMAIL FORM */
-.hero-form {
-  display: flex;
-  gap: 0;
-  max-width: 480px;
-  margin: 0 auto 20px;
-  border-radius: 100px;
-  overflow: hidden;
-  box-shadow: 0 0 0 1px var(--border-mid), 0 8px 32px rgba(124,58,237,0.12);
-  opacity: 0;
-  animation: fade-up 0.7s ease forwards 0.3s;
+/* bottom dots + counter */
+.vc-footer{
+  background:rgba(10,14,8,.88);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(12 * var(--u)) calc(16 * var(--u));
 }
-
-.hero-input {
-  flex: 1;
-  border: none;
-  padding: 16px 24px;
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
-  color: var(--text-head);
-  background: #fff;
-  outline: none;
+.slide-dots{display:flex;gap:calc(6 * var(--u));align-items:center;}
+.sdot{
+  width:calc(6 * var(--u));height:calc(6 * var(--u));border-radius:999px;
+  background:rgba(255,255,255,.25);cursor:pointer;border:none;padding:0;
+  transition:all .3s var(--ease);
 }
+.sdot.active{background:rgba(255,255,255,.85);width:calc(20 * var(--u));}
+.vc-counter{font-size:calc(11 * var(--u));color:rgba(255,255,255,.3);font-weight:300;letter-spacing:.05em;}
 
-.hero-input::placeholder { color: var(--text-dim); }
-
-.hero-btn {
-  background: var(--accent-grad);
-  color: #fff;
-  border: none;
-  padding: 16px 28px;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.2s ease;
-  flex-shrink: 0;
+/* scroll cue */
+.scroll-cue{
+  position:absolute;z-index:4;left:calc(46 * var(--u));bottom:calc(44 * var(--u));
+  display:flex;align-items:center;gap:calc(10 * var(--u));
+  font-size:calc(11 * var(--u));font-weight:400;color:var(--ink-faint);
+  letter-spacing:calc(1.5 * var(--u));text-transform:uppercase;text-decoration:none;
 }
+.scroll-line{width:calc(32 * var(--u));height:1px;background:linear-gradient(90deg,rgba(255,255,255,.4),rgba(255,255,255,0));}
 
-.hero-btn:hover { opacity: 0.9; }
-
-.hero-note {
-  font-size: 13px;
-  color: var(--text-dim);
-  opacity: 0;
-  animation: fade-up 0.7s ease forwards 0.4s;
+/* ── BRANDS ── */
+.brands{
+  padding:60px 80px;background:#33362e;
+  border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);
 }
-
-.hero-note a { color: var(--accent); text-decoration: none; }
-
-/* SUCCESS BANNER */
-.success-banner {
-  display: none;
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  border: 1px solid #86efac;
-  border-radius: 100px;
-  padding: 14px 28px;
-  max-width: 480px;
-  margin: 0 auto;
-  font-size: 15px;
-  font-weight: 500;
-  color: #166534;
-  text-align: center;
-}
-
-.success-banner.visible { display: block; }
-
-/* SOCIAL PROOF ROW */
-.social-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 32px;
-  font-size: 13px;
-  color: var(--text-muted);
-  opacity: 0;
-  animation: fade-up 0.7s ease forwards 0.5s;
-}
-
-.avatars {
-  display: flex;
-}
-
-.avatar {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  margin-left: -8px;
-  background: var(--accent-grad);
-  font-size: 11px;
-  font-weight: 700;
-  color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Bricolage Grotesque', sans-serif;
-}
-
-.avatar:first-child { margin-left: 0; }
-
-/* ── VIDEO SLIDESHOW ── */
-.video-section {
-  padding: 16px 48px 80px;
-  max-width: 1200px;
-  margin: 0 auto;
-  opacity: 0;
-  animation: fade-up 0.8s ease forwards 0.7s;
-}
-
-.video-frame {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: var(--shadow-lifted), 0 0 0 1px var(--border);
-  background: var(--text-head);
-  aspect-ratio: 16/9;
-}
-
-.video-frame::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 22px;
-  background: var(--accent-grad);
-  z-index: -1;
-  opacity: 0.4;
-}
-
-.slide-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-
-.slide-video.active { opacity: 1; }
-
-/* Video top bar chrome */
-.video-chrome {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 36px;
-  background: rgba(15,10,30,0.85);
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  gap: 6px;
-  z-index: 10;
-  backdrop-filter: blur(8px);
-}
-
-.chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
-.cd-red { background: #ff5f57; }
-.cd-yellow { background: #febc2e; }
-.cd-green { background: #28c840; }
-
-.video-label {
-  position: absolute;
-  top: 44px; left: 16px;
-  background: rgba(0,0,0,0.6);
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  z-index: 10;
-  backdrop-filter: blur(8px);
-  transition: opacity 0.3s ease;
-}
-
-/* Slide dots */
-.slide-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.dot {
-  width: 8px; height: 8px;
-  border-radius: 100px;
-  background: var(--border-mid);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  padding: 0;
-}
-
-.dot.active {
-  background: var(--accent);
-  width: 24px;
-}
-
-/* Slide arrows */
-.slide-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px; height: 40px;
-  background: rgba(255,255,255,0.9);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  z-index: 20;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  font-size: 16px;
-  color: var(--text-head);
-}
-
-.slide-arrow:hover { background: var(--accent); color: white; border-color: var(--accent); }
-.slide-arrow.prev { left: -20px; }
-.slide-arrow.next { right: -20px; }
-
-/* ── LOGO STRIP ── */
-.logo-strip {
-  padding: 48px 48px;
-  text-align: center;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-soft);
-}
-
-.strip-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 28px;
-}
-
-.logos-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 48px;
-  flex-wrap: wrap;
-}
-
-.logo-pill {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-dim);
-  letter-spacing: -0.5px;
-  transition: color 0.2s ease;
-}
-
-.logo-pill:hover { color: var(--text-muted); }
+.brands-label{font-size:12px;font-weight:400;color:rgba(255,255,255,.28);letter-spacing:.14em;text-transform:uppercase;margin-bottom:28px;text-align:center;}
+.brands-row{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
+.brand-name{font-size:17px;font-weight:300;color:rgba(255,255,255,.32);letter-spacing:.01em;transition:color .2s var(--ease);}
+.brand-name:hover{color:rgba(255,255,255,.65);}
+.brand-more{font-size:13px;font-weight:300;color:rgba(255,255,255,.2);letter-spacing:.1em;}
 
 /* ── FEATURES ── */
-.features {
-  padding: 100px 48px;
-  max-width: 1200px;
-  margin: 0 auto;
+.section{padding:120px 80px;max-width:1400px;margin:0 auto;}
+.sec-eye{font-size:12px;font-weight:400;color:rgba(255,255,255,.32);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;}
+.sec-head{font-size:clamp(36px,3.8vw,56px);font-weight:300;color:var(--ink);line-height:1.08;letter-spacing:-.025em;max-width:620px;margin-bottom:16px;}
+.sec-sub{font-size:16px;font-weight:300;color:var(--ink-soft);max-width:460px;line-height:1.65;margin-bottom:72px;}
+
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.055);}
+.feat-card{background:#33362e;padding:40px 36px;transition:background .3s var(--ease);position:relative;}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,184,64,.4),transparent);opacity:0;transition:opacity .3s var(--ease);}
+.feat-card:hover{background:#383b2f;}
+.feat-card:hover::before{opacity:1;}
+.feat-num{font-size:11px;font-weight:400;color:rgba(255,255,255,.2);letter-spacing:.2em;margin-bottom:32px;}
+.feat-icon{font-size:28px;margin-bottom:20px;display:block;}
+.feat-title{font-size:18px;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin-bottom:12px;line-height:1.2;}
+.feat-desc{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.65;}
+
+/* ── HOW ── */
+.how{padding:80px 80px 120px;background:#2e3128;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);}
+.how-inner{max-width:1200px;margin:0 auto;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:64px;}
+.step-num{font-size:11px;font-weight:500;color:rgba(143,184,64,.6);letter-spacing:.2em;margin-bottom:20px;}
+.step-line{width:32px;height:1px;background:rgba(143,184,64,.5);margin-bottom:28px;}
+.step-title{font-size:20px;font-weight:300;color:var(--ink);letter-spacing:-.02em;margin-bottom:12px;line-height:1.2;}
+.step-desc{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.65;}
+
+/* ── WAITLIST ── */
+.waitlist{padding:120px 80px;background:#1e2119;position:relative;overflow:hidden;}
+.waitlist::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(143,184,64,.08) 0%,transparent 70%);top:-200px;right:-100px;pointer-events:none;}
+.wl-inner{max-width:680px;margin:0 auto;position:relative;z-index:2;}
+.wl-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:400;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-bottom:32px;}
+.live-dot{width:7px;height:7px;background:#8fb840;border-radius:50%;box-shadow:0 0 8px rgba(143,184,64,.7);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.wl-head{font-size:clamp(38px,4.5vw,62px);font-weight:300;color:var(--ink);line-height:1.06;letter-spacing:-.035em;margin-bottom:20px;}
+.wl-sub{font-size:16px;font-weight:300;color:var(--ink-soft);line-height:1.65;margin-bottom:52px;}
+
+.wl-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.01) 40%,rgba(255,255,255,0) 60%),rgba(34,40,31,.6);
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 30px 80px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.08);
 }
-
-.section-eyebrow {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
+.wl-form-row{display:flex;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.12);margin-bottom:16px;background:rgba(255,255,255,.04);}
+.wl-email-input{flex:1;background:transparent;border:none;padding:16px 24px;color:var(--ink);font-family:'Lexend',inherit;font-size:15px;font-weight:300;outline:none;}
+.wl-email-input::placeholder{color:rgba(255,255,255,.28);}
+.wl-submit-btn{
+  position:relative;margin:4px 4px 4px 0;padding:0 26px;
+  border:0;background:none;cursor:pointer;border-radius:999px;color:#fff;
+  font-family:'Lexend',inherit;font-size:14px;font-weight:400;letter-spacing:.03em;
+  white-space:nowrap;display:inline-flex;align-items:center;
 }
+.wl-submit-plate{position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.014) 44%,rgba(255,255,255,0) 64%),rgba(10,12,10,.5);box-shadow:0 4px 10px rgba(0,0,0,.38),0 12px 28px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.13);transition:box-shadow .3s var(--ease),background .3s var(--ease);}
+.wl-submit-btn:hover .wl-submit-plate{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 44%,rgba(255,255,255,0) 64%),rgba(8,10,8,.6);box-shadow:0 6px 16px rgba(0,0,0,.44),0 18px 40px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.17);}
+.wl-submit-btn span{position:relative;z-index:1;}
+.wl-note{font-size:12px;font-weight:300;color:rgba(255,255,255,.28);text-align:center;}
 
-.section-headline {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(32px, 4vw, 50px);
-  font-weight: 800;
-  color: var(--text-head);
-  line-height: 1.1;
-  letter-spacing: -1.5px;
-  max-width: 600px;
-  margin-bottom: 16px;
-}
+.wl-success{display:none;text-align:center;padding:12px;}
+.wl-success.on{display:block;}
+.wl-success-title{font-size:22px;font-weight:300;color:var(--ink);margin-bottom:8px;letter-spacing:-.02em;}
+.wl-success-sub{font-size:14px;color:var(--ink-soft);}
 
-.section-sub {
-  font-size: 17px;
-  color: var(--text-muted);
-  max-width: 500px;
-  line-height: 1.6;
-  margin-bottom: 60px;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.feat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px 28px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.feat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--accent-grad);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.feat-card:hover { box-shadow: var(--shadow-lifted); transform: translateY(-4px); border-color: var(--border-mid); }
-.feat-card:hover::before { opacity: 1; }
-
-.feat-icon {
-  width: 44px; height: 44px;
-  background: var(--accent-soft);
-  border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px;
-  font-size: 20px;
-}
-
-.feat-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--text-head);
-  margin-bottom: 10px;
-  letter-spacing: -0.3px;
-}
-
-.feat-desc {
-  font-size: 14px;
-  line-height: 1.65;
-  color: var(--text-muted);
-}
-
-/* ── HOW IT WORKS ── */
-.how {
-  padding: 80px 48px 100px;
-  background: var(--bg-soft);
-  text-align: center;
-}
-
-.how-inner {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.steps-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  margin-top: 60px;
-  position: relative;
-}
-
-.steps-row::before {
-  content: '';
-  position: absolute;
-  top: 32px; left: calc(50% / 3 + 16%); right: calc(50% / 3 + 16%);
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--cta));
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.step-item {
-  padding: 32px 24px;
-  text-align: center;
-}
-
-.step-num {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--border-mid);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 20px;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--accent);
-  box-shadow: var(--shadow-card);
-  position: relative;
-}
-
-.step-num::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px dashed var(--border-mid);
-}
-
-.step-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-head);
-  margin-bottom: 8px;
-}
-
-.step-desc {
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* ── WAITLIST SECTION ── */
-.waitlist {
-  padding: 100px 48px;
-  text-align: center;
-  background: var(--text-head);
-  position: relative;
-  overflow: hidden;
-}
-
-.waitlist-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 70% 80% at 30% 50%, rgba(124,58,237,0.25) 0%, transparent 60%),
-              radial-gradient(ellipse 60% 70% at 80% 30%, rgba(236,72,153,0.15) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.waitlist-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
-
-.waitlist-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 100px;
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.7);
-  margin-bottom: 28px;
-}
-
-.live-dot {
-  width: 8px; height: 8px;
-  background: #4ade80;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #4ade80;
-  animation: blink 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.waitlist-headline {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(36px, 5vw, 58px);
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.05;
-  letter-spacing: -2px;
-  margin-bottom: 20px;
-}
-
-.waitlist-headline .wl-gradient {
-  background: linear-gradient(135deg, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.waitlist-sub {
-  font-size: 17px;
-  color: rgba(255,255,255,0.55);
-  line-height: 1.65;
-  margin-bottom: 44px;
-}
-
-.waitlist-form-wrap {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 20px;
-  padding: 36px;
-  backdrop-filter: blur(20px);
-}
-
-.wl-input-row {
-  display: flex;
-  gap: 0;
-  margin-bottom: 16px;
-  border-radius: 100px;
-  overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
-}
-
-.wl-input {
-  flex: 1;
-  background: rgba(255,255,255,0.08);
-  border: none;
-  padding: 16px 24px;
-  color: white;
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
-  outline: none;
-}
-
-.wl-input::placeholder { color: rgba(255,255,255,0.35); }
-
-.wl-btn {
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  color: white;
-  border: none;
-  padding: 16px 28px;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.2s ease;
-}
-
-.wl-btn:hover { opacity: 0.85; }
-
-.wl-note {
-  font-size: 12px;
-  color: rgba(255,255,255,0.35);
-}
-
-/* Waitlist success */
-.wl-success {
-  display: none;
-  text-align: center;
-  padding: 8px;
-}
-.wl-success.visible { display: block; }
-
-.wl-success-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
-}
-
-.wl-success-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 8px;
-}
-
-.wl-success-sub {
-  font-size: 14px;
-  color: rgba(255,255,255,0.5);
-}
-
-/* Proof bar */
-.proof-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  margin-top: 40px;
-  padding-top: 32px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-.proof-item { text-align: center; }
-
-.proof-num {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 30px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.proof-label {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 2px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.proof-divider {
-  width: 1px;
-  height: 40px;
-  background: rgba(255,255,255,0.1);
-}
+.proof-row{display:flex;align-items:center;justify-content:center;gap:48px;margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,.07);}
+.proof-item{text-align:center;}
+.proof-num{font-size:28px;font-weight:300;color:var(--ink);letter-spacing:-.04em;}
+.proof-label{font-size:11px;font-weight:400;color:rgba(255,255,255,.28);letter-spacing:.12em;text-transform:uppercase;margin-top:4px;}
+.proof-sep{width:1px;height:40px;background:rgba(255,255,255,.08);}
 
 /* ── FOOTER ── */
-footer {
-  padding: 40px 48px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
+footer{padding:40px 80px;background:#1a1d17;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.footer-logo{font-size:16px;font-weight:400;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
+.footer-logo svg{width:22px;height:22px;fill:rgba(255,255,255,.4);}
+.footer-copy{font-size:12px;font-weight:300;color:rgba(255,255,255,.22);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:12px;font-weight:300;color:rgba(255,255,255,.28);text-decoration:none;transition:color .2s var(--ease);}
+.footer-links a:hover{color:rgba(255,255,255,.65);}
 
-.footer-copy {
-  font-size: 13px;
-  color: var(--text-dim);
-}
+/* reveals */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+.reveal.in{opacity:1;transform:none;}
+.rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}
 
-.footer-links {
-  display: flex;
-  gap: 24px;
-}
-
-.footer-links a {
-  font-size: 13px;
-  color: var(--text-dim);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.footer-links a:hover { color: var(--accent); }
-
-/* ── ANIMATIONS ── */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.in { opacity: 1; transform: none; }
-
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  nav { padding: 0 20px; }
-  .hero, .video-section, .features, .how, .waitlist { padding-left: 20px; padding-right: 20px; }
-  .hero-headline { letter-spacing: -1.5px; }
-  .features-grid { grid-template-columns: 1fr; }
-  .steps-row { grid-template-columns: 1fr; }
-  .steps-row::before { display: none; }
-  .proof-bar { gap: 20px; }
-  footer { flex-direction: column; text-align: center; }
-  .slide-arrow { display: none; }
-  .logos-row { gap: 24px; }
-  .logo-strip { padding: 32px 20px; }
-  .waitlist-form-wrap { padding: 24px 16px; }
-  .wl-input-row { flex-direction: column; border-radius: 12px; }
-  .wl-input { border-radius: 0; }
-  .wl-btn { border-radius: 0; padding: 14px 20px; }
-  .hero-form { flex-direction: column; border-radius: 12px; }
-  .hero-input { border-radius: 0; }
-  .hero-btn { border-radius: 0; padding: 14px 20px; }
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .stage{display:none;}
+  .hero{height:auto;min-height:100svh;display:flex;flex-direction:column;padding:90px 20px 48px;gap:0;}
+  .m-hero-content{display:flex;flex-direction:column;gap:16px;}
+  .headline{position:static;font-size:40px;line-height:1.1;}
+  .lede{position:static;width:auto;font-size:15px;}
+  .explore-wrap,.hero-form-area{position:static;width:100%;}
+  .explore-btn{--h:50px;font-size:14px;padding:0 24px 0 16px;}
+  .hero-form{width:100%;}
+  .hero-email-input{font-size:14px;}
+  .hero-submit-btn{font-size:13px;padding:0 16px;}
+  .video-card{position:static;width:100%;border-radius:14px;margin-top:24px;}
+  .vc-chrome .cdot{width:10px;height:10px;}
+  .slide-arrow{width:36px;height:36px;font-size:18px;}
+  .arrow-prev{left:8px;}.arrow-next{right:8px;}
+  .sdot{width:6px;height:6px;}.sdot.active{width:18px;}
+  .feat-grid{grid-template-columns:1fr;}
+  .steps{grid-template-columns:1fr;gap:32px;}
+  .section,.how,.waitlist,.brands{padding-left:20px;padding-right:20px;}
+  footer{flex-direction:column;text-align:center;padding:28px 20px;}
+  .wl-form-row{flex-direction:column;border-radius:14px;}
+  .wl-email-input{border-radius:0;}
+  .wl-submit-btn{border-radius:0;margin:0;padding:14px 24px;justify-content:center;}
+  .brands-row{gap:20px;}
+  .proof-row{gap:24px;}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="logo" href="#">
-    <div class="logo-mark">
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 2L15 6V12L9 16L3 12V6L9 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-        <circle cx="9" cy="9" r="2.5" fill="white"/>
-      </svg>
+<!-- ── HERO ── -->
+<section class="hero" id="top">
+  <div class="stage">
+
+    <div class="guides">
+      <i style="left:calc(46 * var(--u))"></i>
+      <i style="left:calc(490 * var(--u))"></i>
+      <i style="left:calc(800 * var(--u))"></i>
+      <i style="left:calc(1110 * var(--u))"></i>
+      <i style="left:calc(1554 * var(--u))"></i>
     </div>
-    AdMagic
-  </a>
-  <div class="nav-right">
-    <span class="nav-badge">✦ Private Beta</span>
-    <a href="#waitlist" class="btn-nav">Join Waitlist →</a>
-  </div>
-</nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
+    <div class="ghost">AdMagic</div>
 
-  <div class="hero-pill">
-    <div class="pill-dot"></div>
-    AI-Powered Ad Creative Intelligence
-  </div>
-
-  <h1 class="hero-headline">
-    See How the Human Brain<br>
-    <span class="gradient-text">Reacts to Your Ads</span>
-  </h1>
-
-  <p class="hero-sub">
-    Upload any creative asset — video or static — and get real-time analysis of how your audience's brain processes your messaging, emotions, and calls to action.
-  </p>
-
-  <div class="hero-form" id="hero-form-wrap">
-    <input type="email" class="hero-input" id="hero-email" placeholder="Enter your work email" />
-    <button class="hero-btn" onclick="heroSubmit()">Get Early Access →</button>
-  </div>
-  <div class="success-banner" id="hero-success">
-    🎉 You're on the list! We'll reach out before launch.
-  </div>
-
-  <p class="hero-note">No credit card required · <a href="#waitlist">Join 2,847+ marketers</a> on the waitlist</p>
-
-  <div class="social-row">
-    <div class="avatars">
-      <div class="avatar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">S</div>
-      <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#f97316)">M</div>
-      <div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">A</div>
-      <div class="avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6)">R</div>
+    <!-- DOCK -->
+    <div class="dock-wrap">
+      <nav class="dock" role="navigation">
+        <a class="dock-item dock-mark" href="#top" aria-label="AdMagic home">
+          <svg viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/>
+            <circle cx="11" cy="12" r="2.8" style="fill:white;"/>
+          </svg>
+        </a>
+        <a class="dock-item" href="#features">Features</a>
+        <a class="dock-item" href="#how">How It Works</a>
+        <a class="dock-item" href="#waitlist">Intelligence</a>
+        <a class="dock-item dock-item--cta" href="#waitlist">Join Waitlist →</a>
+      </nav>
     </div>
-    <span>Joined by growth teams at top brands worldwide</span>
-  </div>
-</section>
 
-<!-- VIDEO SLIDESHOW -->
-<div class="video-section">
-  <div style="position:relative;">
-    <div class="video-frame" id="videoFrame">
-      <div class="video-chrome">
-        <div class="chrome-dot cd-red"></div>
-        <div class="chrome-dot cd-yellow"></div>
-        <div class="chrome-dot cd-green"></div>
+    <!-- HEADLINE -->
+    <div class="headline" role="heading" aria-level="1">
+      <span>See how the brain</span>
+      <span>reacts to your ads</span>
+    </div>
+
+    <p class="lede">Upload any creative asset and get real-time AI analysis of how your audience processes your messaging, emotions, and calls to action.</p>
+
+    <!-- CTA -->
+    <div class="explore-wrap">
+      <a class="explore-btn" href="#waitlist">
+        <div class="explore-plate"></div>
+        <span class="explore-ico">
+          <svg viewBox="0 0 20 20"><polyline points="4,10 16,10"/><polyline points="11,5 16,10 11,15"/></svg>
+        </span>
+        <span>Request early access</span>
+      </a>
+    </div>
+
+    <!-- HERO FORM -->
+    <div class="hero-form-area" id="hero-form-area">
+      <div class="hero-form" id="hero-form-el">
+        <input type="email" class="hero-email-input" id="hero-email" placeholder="Enter your work email" autocomplete="email"/>
+        <button class="hero-submit-btn" onclick="heroSubmit()">
+          <div class="hero-submit-plate"></div>
+          <span>Get access</span>
+        </button>
       </div>
-
-      <video class="slide-video active" id="video0" autoplay muted loop playsinline preload="metadata">
-        <source src="admagic_54sec_video.mp4" type="video/mp4">
-      </video>
-      <video class="slide-video" id="video1" muted loop playsinline preload="metadata">
-        <source src="admagic_product_demo.mp4" type="video/mp4">
-      </video>
-
-      <div class="video-label" id="videoLabel">Predict Consumer Behaviour</div>
-
-      <button class="slide-arrow prev" onclick="changeSlide(-1)">‹</button>
-      <button class="slide-arrow next" onclick="changeSlide(1)">›</button>
+      <div class="hero-ok" id="hero-ok">✓ You're on the list — we'll be in touch.</div>
     </div>
 
-    <div class="slide-dots">
-      <button class="dot active" onclick="goSlide(0)" id="dot0"></button>
-      <button class="dot" onclick="goSlide(1)" id="dot1"></button>
+    <!-- STATS -->
+    <dl class="stat stat--a">
+      <div><dt>Marketers on waitlist</dt><dd id="stat-count">2,847</dd></div>
+    </dl>
+    <dl class="stat stat--b">
+      <div><dt>Beta spots remaining</dt><dd>147</dd></div>
+    </dl>
+
+    <!-- ETHOS CARD -->
+    <div class="ethos-card">
+      <div class="ethos-label">Our Focus</div>
+      <div class="ethos-headline">Let data,<br>not guesswork,<br>lead.</div>
     </div>
+
+    <!-- VIDEO SLIDESHOW -->
+    <div class="video-card" id="video-card">
+      <div class="vc-chrome">
+        <div class="cdot cdot-r"></div>
+        <div class="cdot cdot-y"></div>
+        <div class="cdot cdot-g"></div>
+        <div class="vc-chrome-title" id="vc-chrome-title">AdMagic — Predict Consumer Behaviour</div>
+      </div>
+      <div class="video-stage">
+        <!-- VIDEO 1 -->
+        <video class="slide-video active" id="vid0" autoplay muted loop playsinline preload="auto">
+          <source src="admagic_54sec_video.mp4" type="video/mp4">
+        </video>
+        <!-- VIDEO 2 -->
+        <video class="slide-video" id="vid1" muted loop playsinline preload="auto">
+          <source src="admagic_predict_consumer.mp4" type="video/mp4">
+        </video>
+
+        <div class="vid-label-pill" id="vid-label">Predict Consumer Behaviour</div>
+
+        <!-- PREV / NEXT ARROWS -->
+        <button class="slide-arrow arrow-prev" id="arrow-prev" onclick="changeSlide(-1)" aria-label="Previous video">&#8249;</button>
+        <button class="slide-arrow arrow-next" id="arrow-next" onclick="changeSlide(1)" aria-label="Next video">&#8250;</button>
+      </div>
+      <div class="vc-footer">
+        <div class="slide-dots">
+          <button class="sdot active" id="sdot0" onclick="goSlide(0)" aria-label="Slide 1"></button>
+          <button class="sdot" id="sdot1" onclick="goSlide(1)" aria-label="Slide 2"></button>
+        </div>
+        <div class="vc-counter" id="vc-counter">1 / 2</div>
+      </div>
+    </div>
+
+    <a class="scroll-cue" href="#brands">
+      <span class="scroll-line"></span>
+      <span>Scroll to explore</span>
+    </a>
+
+  </div><!-- /stage -->
+
+  <!-- MOBILE FALLBACK -->
+  <div class="m-hero-content" style="display:none;" id="m-hero">
+    <h1 style="font-size:38px;line-height:1.1;font-weight:300;letter-spacing:-.03em;margin-bottom:12px;">See how the brain reacts to your ads</h1>
+    <p style="font-size:15px;font-weight:300;color:var(--ink-soft);line-height:1.65;margin-bottom:24px;">Upload any creative asset and get real-time AI analysis of how your audience processes your messaging.</p>
+    <div style="position:relative;margin-bottom:24px;">
+      <div class="video-card" style="position:static;width:100%;border-radius:14px;">
+        <div class="vc-chrome"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+        <div class="video-stage" style="aspect-ratio:16/9;">
+          <video class="slide-video active" id="mvid0" autoplay muted loop playsinline preload="auto"><source src="admagic_54sec_video.mp4" type="video/mp4"></video>
+          <video class="slide-video" id="mvid1" muted loop playsinline preload="auto"><source src="admagic_predict_consumer.mp4" type="video/mp4"></video>
+          <button class="slide-arrow arrow-prev" onclick="mChangeSlide(-1)" style="width:36px;height:36px;font-size:18px;">&#8249;</button>
+          <button class="slide-arrow arrow-next" onclick="mChangeSlide(1)" style="width:36px;height:36px;font-size:18px;">&#8250;</button>
+        </div>
+        <div class="vc-footer">
+          <div class="slide-dots"><button class="sdot active" id="msdot0" onclick="mGoSlide(0)"></button><button class="sdot" id="msdot1" onclick="mGoSlide(1)"></button></div>
+          <div class="vc-counter" id="mvc">1 / 2</div>
+        </div>
+      </div>
+    </div>
+    <a class="explore-btn" href="#waitlist" style="--h:50px;font-size:14px;text-decoration:none;position:relative;">
+      <div class="explore-plate"></div><span style="position:relative;z-index:1;">Request early access →</span>
+    </a>
+  </div>
+
+</section>
+
+<!-- ── BRANDS ── -->
+<div class="brands" id="brands">
+  <p class="brands-label">Trusted by marketing teams at</p>
+  <div class="brands-row">
+    <span class="brand-name">Iugodigital</span>
+    <span class="brand-name">Banjaaran</span>
+    <span class="brand-name">Future Caribbean</span>
+    <span class="brand-name">GoDocta Health</span>
+    <span class="brand-name">Voltrack</span>
+    <span class="brand-more">100+ brands</span>
   </div>
 </div>
 
-<!-- LOGO STRIP -->
-<div class="logo-strip">
-  <p class="strip-label">Trusted by marketing teams at</p>
-  <div class="logos-row">
-    <span class="logo-pill">Nexstar</span>
-    <span class="logo-pill">Omnicom</span>
-    <span class="logo-pill">Dentsu</span>
-    <span class="logo-pill">IPG</span>
-    <span class="logo-pill">Havas</span>
-    <span class="logo-pill">TBWA</span>
-  </div>
-</div>
+<!-- ── FEATURES ── -->
+<section class="section" id="features">
+  <p class="sec-eye reveal">What AdMagic does</p>
+  <h2 class="sec-head reveal rd1">Your all-in-one creative intelligence platform</h2>
+  <p class="sec-sub reveal rd2">From ad creatives to competitor analysis — everything you need to know before you spend a dollar.</p>
 
-<!-- FEATURES -->
-<section class="features">
-  <p class="section-eyebrow reveal">What AdMagic Does</p>
-  <h2 class="section-headline reveal reveal-delay-1">Your All-in-One Creative<br>Intelligence Platform</h2>
-  <p class="section-sub reveal reveal-delay-2">From ad creatives and product visuals to competitor analysis — everything you need to optimize your marketing creative.</p>
-
-  <div class="features-grid">
-    <div class="feat-card reveal">
-      <div class="feat-icon">🧠</div>
-      <div class="feat-title">Neural Stimulus Analysis</div>
-      <div class="feat-desc">Analyze real-time brain activity and emotional stimulus for video and static assets using proprietary AI intelligence powered by cutting-edge brain research data.</div>
-    </div>
-    <div class="feat-card reveal reveal-delay-1">
-      <div class="feat-icon">📊</div>
-      <div class="feat-title">Emotional Response Mapping</div>
-      <div class="feat-desc">Get frame-by-frame heatmaps and emotion curves showing exactly where attention peaks, drops, and what drives your viewers to act.</div>
-    </div>
-    <div class="feat-card reveal reveal-delay-2">
-      <div class="feat-icon">⚡</div>
-      <div class="feat-title">Real-Time Processing</div>
-      <div class="feat-desc">Upload your creative and receive actionable intelligence in seconds — not days. Know before you spend, not after.</div>
-    </div>
-    <div class="feat-card reveal">
-      <div class="feat-icon">🎯</div>
-      <div class="feat-title">Attention Zone Detection</div>
-      <div class="feat-desc">Identify exactly which visual elements capture and hold attention, and which ones cause viewers to disengage.</div>
-    </div>
-    <div class="feat-card reveal reveal-delay-1">
-      <div class="feat-icon">🎬</div>
-      <div class="feat-title">Video & Static Support</div>
-      <div class="feat-desc">Supports MP4, MOV, JPG, PNG, GIF and more. Analyze everything from 6-second bumpers to long-form brand videos.</div>
-    </div>
-    <div class="feat-card reveal reveal-delay-2">
-      <div class="feat-icon">📈</div>
-      <div class="feat-title">Predictive Performance</div>
-      <div class="feat-desc">Predict how your ad will perform before launch with 94% accuracy vs. traditional A/B testing — and cut creative testing costs by up to 70%.</div>
-    </div>
+  <div class="feat-grid">
+    <div class="feat-card reveal"><div class="feat-num">01</div><span class="feat-icon">🧠</span><div class="feat-title">Neural Stimulus Analysis</div><div class="feat-desc">Analyze real-time brain activity and emotional stimulus for video and static assets using proprietary AI intelligence built on cutting-edge brain research data.</div></div>
+    <div class="feat-card reveal rd1"><div class="feat-num">02</div><span class="feat-icon">📊</span><div class="feat-title">Emotional Response Mapping</div><div class="feat-desc">Get frame-by-frame heatmaps and emotion curves showing exactly where attention peaks, drops, and what drives your viewers to act.</div></div>
+    <div class="feat-card reveal rd2"><div class="feat-num">03</div><span class="feat-icon">⚡</span><div class="feat-title">Real-Time Processing</div><div class="feat-desc">Upload your creative and receive actionable intelligence in seconds — not days. Know before you spend, not after the campaign runs.</div></div>
+    <div class="feat-card reveal"><div class="feat-num">04</div><span class="feat-icon">🎯</span><div class="feat-title">Attention Zone Detection</div><div class="feat-desc">Identify exactly which visual elements capture and hold attention, and which ones cause viewers to disengage — down to the frame.</div></div>
+    <div class="feat-card reveal rd1"><div class="feat-num">05</div><span class="feat-icon">🎬</span><div class="feat-title">Video &amp; Static Support</div><div class="feat-desc">Supports MP4, MOV, JPG, PNG, GIF and more. Analyze everything from 6-second bumpers to long-form brand videos with equal precision.</div></div>
+    <div class="feat-card reveal rd2"><div class="feat-num">06</div><span class="feat-icon">📈</span><div class="feat-title">Predictive Performance</div><div class="feat-desc">Predict how your ad will perform before launch with high accuracy — and cut creative testing costs significantly vs. traditional A/B testing.</div></div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="how">
+<!-- ── HOW IT WORKS ── -->
+<section class="how" id="how">
   <div class="how-inner">
-    <p class="section-eyebrow reveal">How It Works</p>
-    <h2 class="section-headline reveal reveal-delay-1" style="margin:0 auto 16px; text-align:center;">Three Steps to<br>Creative Clarity</h2>
-    <p class="section-sub reveal reveal-delay-2" style="margin:0 auto 0; text-align:center;">No PhD required. Upload, analyze, optimize — in minutes.</p>
-
-    <div class="steps-row">
-      <div class="step-item reveal">
-        <div class="step-num">01</div>
-        <div class="step-title">Upload Your Creative</div>
-        <div class="step-desc">Drop any video ad or static asset. Any format, any resolution, any length.</div>
-      </div>
-      <div class="step-item reveal reveal-delay-1">
-        <div class="step-num">02</div>
-        <div class="step-title">AI Scans the Brain Response</div>
-        <div class="step-desc">AdMagic's engine analyzes attention zones, emotional triggers, and cognitive load in real time.</div>
-      </div>
-      <div class="step-item reveal reveal-delay-2">
-        <div class="step-num">03</div>
-        <div class="step-title">Get Actionable Intelligence</div>
-        <div class="step-desc">Receive specific, prioritized edits that will amplify conversion — before you spend a dollar.</div>
-      </div>
+    <p class="sec-eye reveal">How it works</p>
+    <h2 class="sec-head reveal rd1">Three steps to creative clarity</h2>
+    <p class="sec-sub reveal rd2">No PhD required. Upload, analyze, optimize — in under a minute.</p>
+    <div class="steps">
+      <div class="reveal"><div class="step-num">Step 01</div><div class="step-line"></div><div class="step-title">Upload your creative</div><div class="step-desc">Drop any video ad or static asset. Any format, any resolution, any length — AdMagic accepts it all.</div></div>
+      <div class="reveal rd1"><div class="step-num">Step 02</div><div class="step-line"></div><div class="step-title">AI scans the brain response</div><div class="step-desc">AdMagic's engine analyzes attention zones, emotional triggers, and cognitive load patterns in real time.</div></div>
+      <div class="reveal rd2"><div class="step-num">Step 03</div><div class="step-line"></div><div class="step-title">Get actionable intelligence</div><div class="step-desc">Receive specific, prioritized edits that will amplify conversion. Act on the data before you spend — not after.</div></div>
     </div>
   </div>
 </section>
 
-<!-- WAITLIST -->
+<!-- ── WAITLIST ── -->
 <section class="waitlist" id="waitlist">
-  <div class="waitlist-bg"></div>
-  <div class="waitlist-inner">
-    <div class="waitlist-eyebrow">
-      <div class="live-dot"></div>
-      Now accepting waitlist applications
-    </div>
+  <div class="wl-inner">
+    <div class="wl-badge reveal"><div class="live-dot"></div>Now accepting applications</div>
+    <h2 class="wl-head reveal rd1">Your brain on<br>better ads.</h2>
+    <p class="wl-sub reveal rd2">Join AdMagic's private beta. First cohort gets unlimited creative scans free for 90 days. No credit card. No catch.</p>
 
-    <h2 class="waitlist-headline reveal">
-      Your brain on<br><span class="wl-gradient">better ads.</span>
-    </h2>
-
-    <p class="waitlist-sub reveal reveal-delay-1">
-      Join AdMagic's private beta. First cohort gets unlimited creative scans free for 90 days. No credit card. No catch.
-    </p>
-
-    <div class="waitlist-form-wrap reveal reveal-delay-2">
-      <div id="wl-form">
-        <div class="wl-input-row">
-          <input type="email" class="wl-input" id="wl-email" placeholder="your@company.com" />
-          <button class="wl-btn" onclick="waitlistSubmit()">Join the Waitlist →</button>
+    <div class="wl-card reveal rd2">
+      <div id="wl-form-wrap">
+        <div class="wl-form-row">
+          <input type="email" class="wl-email-input" id="wl-email" placeholder="your@company.com" autocomplete="email"/>
+          <button class="wl-submit-btn" onclick="wlSubmit()">
+            <div class="wl-submit-plate"></div>
+            <span>Join the waitlist →</span>
+          </button>
         </div>
         <p class="wl-note">By joining you agree to receive product updates. Unsubscribe anytime.</p>
       </div>
 
       <div class="wl-success" id="wl-success">
-        <div class="wl-success-icon">🎉</div>
-        <div class="wl-success-title">You're on the list!</div>
+        <div class="wl-success-title">You're on the list.</div>
         <div class="wl-success-sub">We'll be in touch before launch. Get ready to see your ads differently.</div>
       </div>
 
-      <div class="proof-bar">
-        <div class="proof-item">
-          <div class="proof-num" id="wl-count">2,847</div>
-          <div class="proof-label">On Waitlist</div>
-        </div>
-        <div class="proof-divider"></div>
-        <div class="proof-item">
-          <div class="proof-num">147</div>
-          <div class="proof-label">Beta Spots</div>
-        </div>
-        <div class="proof-divider"></div>
-        <div class="proof-item">
-          <div class="proof-num">Q1 '26</div>
-          <div class="proof-label">Launch Target</div>
-        </div>
+      <div class="proof-row">
+        <div class="proof-item"><div class="proof-num" id="wl-count">2,847</div><div class="proof-label">On waitlist</div></div>
+        <div class="proof-sep"></div>
+        <div class="proof-item"><div class="proof-num">147</div><div class="proof-label">Beta spots</div></div>
+        <div class="proof-sep"></div>
+        <div class="proof-item"><div class="proof-num">Q1 '26</div><div class="proof-label">Launch target</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ── FOOTER ── -->
 <footer>
-  <div class="logo" style="font-size:18px; text-decoration:none;">
-    <div class="logo-mark" style="width:28px;height:28px;">
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 2L15 6V12L9 16L3 12V6L9 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-        <circle cx="9" cy="9" r="2.5" fill="white"/>
-      </svg>
-    </div>
+  <div class="footer-logo">
+    <svg viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/></svg>
     AdMagic
   </div>
   <p class="footer-copy">© 2026 AdMagic Inc. · AI-powered creative intelligence.</p>
   <nav class="footer-links">
     <a href="#">Privacy</a>
     <a href="#">Terms</a>
-    <a href="mailto:hello@admagic.cloud">Contact</a>
+    <a href="mailto:anmol@admagic.cloud">Contact</a>
   </nav>
 </footer>
 
 <script>
-// ── VIDEO SLIDESHOW ──────────────────────────────────────────────────────────
-const videos = document.querySelectorAll('.slide-video');
-const dots = document.querySelectorAll('.dot');
-const labels = ['Predict Consumer Behaviour', 'Dashboard Demo'];
-const labelEl = document.getElementById('videoLabel');
-let current = 0;
-let autoTimer = null;
+// ── Mobile detection ──────────────────────────────────────────────────────────
+const isMobile = window.innerWidth <= 900;
+if (isMobile) {
+  const stage = document.querySelector('.stage');
+  const mhero = document.getElementById('m-hero');
+  if (stage) stage.style.display = 'none';
+  if (mhero) mhero.style.display = 'flex';
+  mhero.style.flexDirection = 'column';
+  mhero.style.gap = '0';
+}
+
+// ── DESKTOP SLIDESHOW ─────────────────────────────────────────────────────────
+const VIDS   = [document.getElementById('vid0'), document.getElementById('vid1')];
+const SDOTS  = [document.getElementById('sdot0'), document.getElementById('sdot1')];
+const VID_LABELS = ['Predict Consumer Behaviour', 'VP & ICP — Consumer Behaviour'];
+const labelEl    = document.getElementById('vid-label');
+const chromeTitleEl = document.getElementById('vc-chrome-title');
+const counterEl  = document.getElementById('vc-counter');
+let cur = 0, autoT;
 
 function goSlide(idx) {
-  videos[current].pause();
-  videos[current].classList.remove('active');
-  dots[current].classList.remove('active');
+  VIDS[cur].pause();
+  VIDS[cur].classList.remove('active');
+  SDOTS[cur].classList.remove('active');
 
-  current = idx;
+  cur = (idx + VIDS.length) % VIDS.length;
 
-  videos[current].classList.add('active');
-  videos[current].currentTime = 0;
-  videos[current].play().catch(() => {});
-  dots[current].classList.add('active');
-  labelEl.textContent = labels[current];
-
+  VIDS[cur].classList.add('active');
+  VIDS[cur].currentTime = 0;
+  VIDS[cur].play().catch(() => {});
+  SDOTS[cur].classList.add('active');
+  if (labelEl) labelEl.textContent = VID_LABELS[cur];
+  if (chromeTitleEl) chromeTitleEl.textContent = 'AdMagic — ' + VID_LABELS[cur];
+  if (counterEl) counterEl.textContent = (cur + 1) + ' / ' + VIDS.length;
   resetAuto();
 }
 
-function changeSlide(dir) {
-  goSlide((current + dir + videos.length) % videos.length);
-}
+function changeSlide(dir) { goSlide(cur + dir); }
 
 function resetAuto() {
-  clearInterval(autoTimer);
-  autoTimer = setInterval(() => changeSlide(1), 12000);
+  clearInterval(autoT);
+  autoT = setInterval(() => changeSlide(1), 13000);
 }
 
-// Start first video, begin auto-advance
-videos[0].play().catch(() => {});
-resetAuto();
+if (VIDS[0]) { VIDS[0].play().catch(() => {}); resetAuto(); }
+
+// keyboard navigation for arrows
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  changeSlide(-1);
+  if (e.key === 'ArrowRight') changeSlide(1);
+});
+
+// ── MOBILE SLIDESHOW ─────────────────────────────────────────────────────────
+const MVIDS  = [document.getElementById('mvid0'), document.getElementById('mvid1')];
+const MSDOTS = [document.getElementById('msdot0'), document.getElementById('msdot1')];
+const mCounter = document.getElementById('mvc');
+let mcur = 0;
+
+function mGoSlide(idx) {
+  if (!MVIDS[0]) return;
+  MVIDS[mcur].pause();
+  MVIDS[mcur].classList.remove('active');
+  MSDOTS[mcur].classList.remove('active');
+  mcur = (idx + MVIDS.length) % MVIDS.length;
+  MVIDS[mcur].classList.add('active');
+  MVIDS[mcur].currentTime = 0;
+  MVIDS[mcur].play().catch(() => {});
+  MSDOTS[mcur].classList.add('active');
+  if (mCounter) mCounter.textContent = (mcur + 1) + ' / ' + MVIDS.length;
+}
+function mChangeSlide(dir) { mGoSlide(mcur + dir); }
+if (MVIDS[0]) MVIDS[0].play().catch(() => {});
 
 // ── SCROLL REVEALS ────────────────────────────────────────────────────────────
-const revealEls = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver(entries => {
+const obsR = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-}, { threshold: 0.12 });
-revealEls.forEach(el => obs.observe(el));
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obsR.observe(el));
 
-// ── WAITLIST COUNT ANIMATION ──────────────────────────────────────────────────
-const countEl = document.getElementById('wl-count');
-let countDone = false;
-const countObs = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting && !countDone) {
-    countDone = true;
-    let start = 2750, end = 2847, t = null;
-    const dur = 1200;
-    function tick(ts) {
-      if (!t) t = ts;
-      const p = Math.min((ts - t) / dur, 1);
-      const ease = 1 - Math.pow(1 - p, 3);
-      countEl.textContent = Math.floor(start + (end - start) * ease).toLocaleString();
-      if (p < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-}, { threshold: 0.5 });
-if (countEl) countObs.observe(countEl);
+// ── COUNT ANIMATION ───────────────────────────────────────────────────────────
+function animCount(el, from, to, ms) {
+  let t0 = null;
+  (function tick(ts) {
+    if (!t0) t0 = ts;
+    const p = Math.min((ts - t0) / ms, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(from + (to - from) * e).toLocaleString();
+    if (p < 1) requestAnimationFrame(tick);
+  })(performance.now());
+}
+let statDone = false, wlDone = false;
+const statEl = document.getElementById('stat-count');
+const wlEl   = document.getElementById('wl-count');
+
+new IntersectionObserver(en => {
+  if (en[0].isIntersecting && !statDone) { statDone = true; if (statEl) animCount(statEl, 2700, 2847, 1400); }
+}, { threshold: 0.5 }).observe(document.querySelector('.hero'));
+
+new IntersectionObserver(en => {
+  if (en[0].isIntersecting && !wlDone) { wlDone = true; if (wlEl) animCount(wlEl, 2700, 2847, 1400); }
+}, { threshold: 0.5 }).observe(document.getElementById('waitlist'));
 
 // ── FORMS ─────────────────────────────────────────────────────────────────────
-function heroSubmit() {
-  const email = document.getElementById('hero-email').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('hero-email').style.outline = '2px solid #ec4899';
-    setTimeout(() => document.getElementById('hero-email').style.outline = '', 2000);
-    return;
-  }
-  document.getElementById('hero-form-wrap').style.display = 'none';
-  document.getElementById('hero-success').classList.add('visible');
-  bumpCount();
-}
-
-function waitlistSubmit() {
-  const email = document.getElementById('wl-email').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('wl-email').style.outline = '2px solid rgba(236,72,153,0.7)';
-    setTimeout(() => document.getElementById('wl-email').style.outline = '', 2000);
-    return;
-  }
-  document.getElementById('wl-form').style.display = 'none';
-  document.getElementById('wl-success').classList.add('visible');
-  bumpCount();
-}
-
-let extraCount = 0;
+let extra = 0;
 function bumpCount() {
-  extraCount++;
-  if (countEl) {
-    const base = 2847 + extraCount;
-    countEl.textContent = base.toLocaleString();
-  }
+  extra++;
+  const n = (2847 + extra).toLocaleString();
+  if (statEl) statEl.textContent = n;
+  if (wlEl)   wlEl.textContent   = n;
 }
 
-// Enter key support
-document.getElementById('hero-email').addEventListener('keydown', e => { if (e.key === 'Enter') heroSubmit(); });
-document.getElementById('wl-email').addEventListener('keydown', e => { if (e.key === 'Enter') waitlistSubmit(); });
+function heroSubmit() {
+  const v = document.getElementById('hero-email').value.trim();
+  if (!v || !v.includes('@')) {
+    document.getElementById('hero-email').style.boxShadow = '0 0 0 1px rgba(143,184,64,.5)';
+    setTimeout(() => document.getElementById('hero-email').style.boxShadow = '', 2000);
+    return;
+  }
+  document.getElementById('hero-form-el').style.display = 'none';
+  document.getElementById('hero-ok').classList.add('on');
+  bumpCount();
+}
+
+function wlSubmit() {
+  const v = document.getElementById('wl-email').value.trim();
+  if (!v || !v.includes('@')) {
+    document.getElementById('wl-email').style.boxShadow = '0 0 0 1px rgba(143,184,64,.5)';
+    setTimeout(() => document.getElementById('wl-email').style.boxShadow = '', 2000);
+    return;
+  }
+  document.getElementById('wl-form-wrap').style.display = 'none';
+  document.getElementById('wl-success').classList.add('on');
+  bumpCount();
+}
+
+document.getElementById('hero-email')?.addEventListener('keydown', e => { if (e.key === 'Enter') heroSubmit(); });
+document.getElementById('wl-email')?.addEventListener('keydown', e => { if (e.key === 'Enter') wlSubmit(); });
+
+// ── SMOOTH SCROLL ─────────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
 </script>
 </body>
 </html>
