@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corporate Social Responsibility — AdMagic</title>
+<style>
+@font-face{font-family:'Lexend';src:url('https://ublctyddhtbgaersvxxb.supabase.co/storage/v1/object/public/threeui-media/scene-images/embedded/1ec8f6ee2750554b4bc59ff0b507d316a82a7ba37e0e5bebc41d3bd9b9faad46.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+:root{--ink:#fff;--ink-soft:rgba(255,255,255,.65);--ink-faint:rgba(255,255,255,.38);--bg:#2a2d25;--bg-card:#30342a;--accent:#8fb840;--rule:rgba(255,255,255,.07);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);}
+body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid var(--rule);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink-soft);font-size:15px;font-weight:400;}
+.logo svg{width:22px;height:22px;fill:rgba(255,255,255,.4);}
+.logo:hover{color:var(--ink);}
+.back{font-size:12px;font-weight:300;color:var(--ink-faint);text-decoration:none;letter-spacing:.06em;padding:7px 16px;border:1px solid rgba(255,255,255,.1);border-radius:999px;transition:color .2s,border-color .2s;}
+.back:hover{color:var(--ink);border-color:rgba(255,255,255,.25);}
+
+.page-hero{padding:64px 48px 56px;border-bottom:1px solid var(--rule);background:linear-gradient(180deg,rgba(143,184,64,.05) 0%,transparent 100%);position:relative;overflow:hidden;}
+.page-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 14px;font-size:11px;font-weight:400;color:rgba(255,255,255,.38);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+.page-title{font-size:clamp(36px,5vw,64px);font-weight:300;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px;}
+.page-sub{font-size:15px;font-weight:300;color:var(--ink-soft);line-height:1.7;max-width:580px;}
+.updated{font-size:11px;color:var(--ink-faint);margin-top:16px;}
+
+/* PILLARS GRID */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule);margin:48px 48px 0;}
+.pillar{background:var(--bg-card);padding:40px 32px;position:relative;overflow:hidden;}
+.pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.35;}
+.pillar-ico{font-size:30px;margin-bottom:18px;display:block;}
+.pillar-n{font-size:10px;font-weight:400;color:rgba(255,255,255,.2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;}
+.pillar-t{font-size:18px;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;}
+.pillar-d{font-size:13px;font-weight:300;color:var(--ink-soft);line-height:1.7;}
+
+/* CONTENT */
+.content-wrap{max-width:800px;margin:0 auto;padding:64px 48px 100px;}
+h2{font-size:22px;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin:48px 0 14px;}
+h2:first-child{margin-top:0;}
+h3{font-size:16px;font-weight:400;color:var(--ink);letter-spacing:-.01em;margin:28px 0 8px;}
+p{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.8;margin-bottom:14px;}
+ul{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.8;margin:10px 0 14px;padding-left:22px;}
+ul li{margin-bottom:6px;}
+.rule-line{border:none;border-top:1px solid var(--rule);margin:40px 0;}
+.commitment-card{background:rgba(143,184,64,.07);border:1px solid rgba(143,184,64,.15);border-radius:12px;padding:22px 26px;margin:28px 0;}
+.commitment-card p{margin-bottom:0;color:rgba(255,255,255,.75);}
+.commitment-card strong{color:var(--accent);}
+
+/* PROGRESS BARS */
+.metric{margin:18px 0;}
+.metric-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.metric-lbl{font-size:13px;font-weight:300;color:var(--ink-soft);}
+.metric-val{font-size:13px;font-weight:400;color:var(--accent);}
+.bar-bg{height:4px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,rgba(143,184,64,.6),var(--accent));transition:width 1.2s cubic-bezier(.16,1,.3,1);}
+
+footer{border-top:1px solid var(--rule);padding:28px 48px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.f-copy{font-size:11px;color:rgba(255,255,255,.2);}
+.f-email{font-size:12px;color:rgba(255,255,255,.35);text-decoration:none;}
+.f-email:hover{color:rgba(255,255,255,.7);}
+
+@media(max-width:900px){
+  .pillars{grid-template-columns:1fr;margin-left:20px;margin-right:20px;}
+  .top-bar,.page-hero,.content-wrap,footer{padding-left:20px;padding-right:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">
+    <svg viewBox="0 0 22 24"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/><circle cx="11" cy="12" r="2.6" fill="rgba(255,255,255,.5)"/></svg>
+    AdMagic
+  </a>
+  <a class="back" href="javascript:window.close()">← Close</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-badge">Corporate Social Responsibility</div>
+  <h1 class="page-title">Building AI<br>that serves people.</h1>
+  <p class="page-sub">AdMagic is an AI company. That means we have a responsibility to build tools that are honest, transparent, and good for the world — not just good for the bottom line.</p>
+  <p class="updated">Last updated: October 2026</p>
+</div>
+
+<!-- PILLARS -->
+<div class="pillars">
+  <div class="pillar">
+    <div class="pillar-n">01</div>
+    <span class="pillar-ico">🤝</span>
+    <div class="pillar-t">Ethical AI</div>
+    <div class="pillar-d">We build AI systems that are explainable, auditable, and designed to augment human judgment — not replace it.</div>
+  </div>
+  <div class="pillar">
+    <div class="pillar-n">02</div>
+    <span class="pillar-ico">🌿</span>
+    <div class="pillar-t">Environmental</div>
+    <div class="pillar-d">We offset 100% of our cloud compute emissions and choose data centre providers committed to renewable energy.</div>
+  </div>
+  <div class="pillar">
+    <div class="pillar-n">03</div>
+    <span class="pillar-ico">🌍</span>
+    <div class="pillar-t">Community</div>
+    <div class="pillar-d">We give 1% of revenue to digital literacy programmes for underserved communities, starting in the Caribbean and South Asia.</div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <h2>Our commitments</h2>
+  <div class="commitment-card"><p><strong>We will never use your uploaded creative assets</strong> to train general-purpose AI models without your explicit, informed consent. Your data is yours.</p></div>
+  <div class="commitment-card"><p><strong>We will publish an annual transparency report</strong> covering how our AI models work, what data they were trained on, and what steps we've taken to reduce bias.</p></div>
+  <div class="commitment-card"><p><strong>We will offset 100% of our compute carbon footprint</strong> from day one. We track emissions per inference and report quarterly.</p></div>
+
+  <hr class="rule-line">
+
+  <h2>Ethical AI principles</h2>
+
+  <h3>Transparency</h3>
+  <p>We believe you have a right to understand how AdMagic reaches its conclusions. Our analysis outputs explain which visual and audio elements drove each insight, so you can verify the reasoning — not just trust a black box.</p>
+
+  <h3>No algorithmic discrimination</h3>
+  <p>We actively test our models for demographic bias and will not ship an update that we know performs materially worse for any audience segment. If we discover bias, we fix it before re-deployment and disclose it in our transparency report.</p>
+
+  <h3>Human oversight</h3>
+  <p>AdMagic is a decision-support tool. We design every output to help marketers think better, not to automate decisions that should involve human judgment. High-stakes creative decisions belong with people.</p>
+
+  <h3>Data minimisation</h3>
+  <p>We collect the minimum data necessary to run the service. We do not build audience profiles, run tracking pixels, or sell insights about your users to third parties.</p>
+
+  <hr class="rule-line">
+
+  <h2>Environmental responsibility</h2>
+  <p>Training and running AI models is energy-intensive. We take that seriously.</p>
+  <ul>
+    <li>All production infrastructure runs on AWS regions powered by at least 80% renewable energy</li>
+    <li>We purchase verified carbon offsets for any residual emissions through Gold Standard certified projects</li>
+    <li>We optimise model inference to minimise compute per request — smaller footprint, faster results</li>
+    <li>We report our total cloud emissions publicly every quarter</li>
+  </ul>
+
+  <h3>2026 progress</h3>
+  <div class="metric">
+    <div class="metric-head"><span class="metric-lbl">Renewable energy coverage</span><span class="metric-val">82%</span></div>
+    <div class="bar-bg"><div class="bar-fill" data-width="82"></div></div>
+  </div>
+  <div class="metric">
+    <div class="metric-head"><span class="metric-lbl">Carbon offset of residual emissions</span><span class="metric-val">100%</span></div>
+    <div class="bar-bg"><div class="bar-fill" data-width="100"></div></div>
+  </div>
+  <div class="metric">
+    <div class="metric-head"><span class="metric-lbl">Inference efficiency improvement (vs. launch)</span><span class="metric-val">38%</span></div>
+    <div class="bar-bg"><div class="bar-fill" data-width="38"></div></div>
+  </div>
+
+  <hr class="rule-line">
+
+  <h2>Community &amp; access</h2>
+  <p>Sophisticated creative intelligence has historically been available only to large brands with big agencies and budgets. We're changing that.</p>
+  <ul>
+    <li><strong>1% pledge:</strong> 1% of all revenue is donated to digital marketing literacy programmes in underserved communities across the Caribbean, West Africa, and South Asia — markets where our first customers operate.</li>
+    <li><strong>Founder programme:</strong> We offer 90-day free access to qualified early-stage founders from underrepresented backgrounds. Apply at <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a>.</li>
+    <li><strong>Open research:</strong> We will publish academic papers on our creative intelligence methodology to advance the broader field.</li>
+  </ul>
+
+  <hr class="rule-line">
+
+  <h2>Governance</h2>
+  <p>AdMagic is a privately held company. Our co-founders are personally accountable for living up to these commitments. We will publish our first annual CSR report in Q2 2027, covering 2026 in full.</p>
+  <p>Questions, concerns, or ideas? We genuinely want to hear from you — email <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a>.</p>
+
+</div>
+
+<footer>
+  <span class="f-copy">© 2026 AdMagic Inc. All rights reserved.</span>
+  <a class="f-email" href="mailto:anmol@admagic.cloud">anmol@admagic.cloud</a>
+</footer>
+
+<script>
+/* animate progress bars on load */
+window.addEventListener('load', function () {
+  var bars = document.querySelectorAll('.bar-fill');
+  bars.forEach(function (b) {
+    b.style.width = '0';
+    setTimeout(function () { b.style.width = b.dataset.width + '%'; }, 300);
+  });
+});
+</script>
+</body>
+</html>

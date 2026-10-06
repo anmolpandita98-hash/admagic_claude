@@ -26,8 +26,28 @@ body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--i
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:center;padding:20px 0;
+  display:flex;justify-content:center;align-items:center;padding:20px 0;
+  pointer-events:none;
 }
+nav > *{pointer-events:auto;}
+
+/* top-right corner links — separate from dock */
+.corner-links{
+  position:fixed;top:0;right:0;z-index:101;
+  display:flex;align-items:center;gap:2px;
+  padding:18px 24px;
+}
+.corner-link{
+  display:inline-flex;align-items:center;height:30px;padding:0 11px;
+  border-radius:7px;border:1px solid transparent;
+  color:rgba(255,255,255,.32);text-decoration:none;
+  font-family:'Lexend',-apple-system,sans-serif;
+  font-weight:300;font-size:11px;letter-spacing:.06em;white-space:nowrap;
+  transition:color .18s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+}
+.corner-link:hover{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.05);}
+.corner-sep{width:1px;height:14px;background:rgba(255,255,255,.12);margin:0 2px;}
+
 .dock{
   display:flex;align-items:center;gap:3px;height:46px;padding:5px;
   border-radius:14px;border:1px solid rgba(255,255,255,.11);
@@ -334,6 +354,15 @@ footer{padding:36px 80px;background:#181c14;border-top:1px solid rgba(255,255,25
 <!-- ORGANIC PARTICLE CANVAS (motes / pollen — Sylva-style) -->
 <canvas id="motes"></canvas>
 
+<!-- ── CORNER LINKS (top-right, outside dock) ── -->
+<div class="corner-links">
+  <a class="corner-link" href="privacy-terms.html" target="_blank" rel="noopener">Privacy &amp; Terms</a>
+  <div class="corner-sep"></div>
+  <a class="corner-link" href="csr.html" target="_blank" rel="noopener">CSR</a>
+  <div class="corner-sep"></div>
+  <a class="corner-link" href="mailto:anmol@admagic.cloud">Contact</a>
+</div>
+
 <!-- ── NAV ── -->
 <nav>
   <div class="dock">
@@ -508,8 +537,8 @@ footer{padding:36px 80px;background:#181c14;border-top:1px solid rgba(255,255,25
   </div>
   <p class="f-copy">© 2026 AdMagic Inc. · AI-powered creative intelligence.</p>
   <nav class="f-links">
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
+    <a href="privacy-terms.html" target="_blank" rel="noopener">Privacy &amp; Terms</a>
+    <a href="csr.html" target="_blank" rel="noopener">CSR</a>
     <a href="mailto:anmol@admagic.cloud">Contact</a>
   </nav>
 </footer>

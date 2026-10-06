@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy &amp; Terms — AdMagic</title>
+<style>
+@font-face{font-family:'Lexend';src:url('https://ublctyddhtbgaersvxxb.supabase.co/storage/v1/object/public/threeui-media/scene-images/embedded/1ec8f6ee2750554b4bc59ff0b507d316a82a7ba37e0e5bebc41d3bd9b9faad46.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+:root{--ink:#fff;--ink-soft:rgba(255,255,255,.65);--ink-faint:rgba(255,255,255,.38);--bg:#2a2d25;--bg-card:#30342a;--accent:#8fb840;--rule:rgba(255,255,255,.07);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);}
+body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+/* NAV */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid var(--rule);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink-soft);font-size:15px;font-weight:400;}
+.logo svg{width:22px;height:22px;fill:rgba(255,255,255,.4);}
+.logo:hover{color:var(--ink);}
+.back{font-size:12px;font-weight:300;color:var(--ink-faint);text-decoration:none;letter-spacing:.06em;padding:7px 16px;border:1px solid rgba(255,255,255,.1);border-radius:999px;transition:color .2s,border-color .2s;}
+.back:hover{color:var(--ink);border-color:rgba(255,255,255,.25);}
+
+/* HERO */
+.page-hero{padding:64px 48px 48px;border-bottom:1px solid var(--rule);background:linear-gradient(180deg,rgba(143,184,64,.04) 0%,transparent 100%);}
+.page-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 14px;font-size:11px;font-weight:400;color:rgba(255,255,255,.38);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+.page-title{font-size:clamp(36px,5vw,64px);font-weight:300;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px;}
+.page-sub{font-size:15px;font-weight:300;color:var(--ink-soft);line-height:1.7;max-width:560px;}
+.updated{font-size:11px;color:var(--ink-faint);margin-top:16px;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;padding:20px 48px 0;border-bottom:1px solid var(--rule);}
+.tab{padding:10px 20px 12px;font-size:13px;font-weight:300;color:var(--ink-faint);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:.03em;transition:color .2s,border-color .2s;background:none;border-left:none;border-right:none;border-top:none;}
+.tab.active{color:var(--ink);border-bottom-color:var(--accent);}
+.tab:hover{color:var(--ink-soft);}
+
+/* CONTENT */
+.content-wrap{max-width:800px;margin:0 auto;padding:56px 48px 100px;}
+.section{display:none;}.section.active{display:block;}
+
+h2{font-size:22px;font-weight:400;color:var(--ink);letter-spacing:-.02em;margin:48px 0 12px;}
+h2:first-child{margin-top:0;}
+h3{font-size:16px;font-weight:400;color:var(--ink);letter-spacing:-.01em;margin:32px 0 8px;}
+p{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.8;margin-bottom:14px;}
+ul{font-size:14px;font-weight:300;color:var(--ink-soft);line-height:1.8;margin:10px 0 14px;padding-left:22px;}
+ul li{margin-bottom:6px;}
+.rule{border:none;border-top:1px solid var(--rule);margin:40px 0;}
+.highlight{background:rgba(143,184,64,.08);border:1px solid rgba(143,184,64,.18);border-radius:10px;padding:18px 22px;margin:24px 0;}
+.highlight p{margin-bottom:0;color:rgba(255,255,255,.75);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--rule);padding:28px 48px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.f-copy{font-size:11px;color:rgba(255,255,255,.2);}
+.f-email{font-size:12px;color:rgba(255,255,255,.35);text-decoration:none;}
+.f-email:hover{color:rgba(255,255,255,.7);}
+
+@media(max-width:700px){.top-bar,.page-hero,.tabs,.content-wrap,footer{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">
+    <svg viewBox="0 0 22 24"><path d="M11 3L20 8.2V15.8L11 21L2 15.8V8.2Z"/><circle cx="11" cy="12" r="2.6" fill="rgba(255,255,255,.5)"/></svg>
+    AdMagic
+  </a>
+  <a class="back" href="javascript:window.close()">← Close</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-badge">Legal</div>
+  <h1 class="page-title">Privacy &amp; Terms</h1>
+  <p class="page-sub">We believe in plain language, not legalese. Here's exactly how AdMagic handles your data and what you're agreeing to when you use our platform.</p>
+  <p class="updated">Last updated: October 2026</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('privacy',this)">Privacy Policy</button>
+  <button class="tab" onclick="switchTab('terms',this)">Terms of Service</button>
+</div>
+
+<div class="content-wrap">
+
+  <!-- PRIVACY -->
+  <div class="section active" id="sec-privacy">
+    <div class="highlight"><p>Short version: We collect only what we need to run AdMagic, we never sell your data, and you can delete everything at any time.</p></div>
+
+    <h2>1. What we collect</h2>
+    <p>When you join our waitlist or create an AdMagic account, we collect:</p>
+    <ul>
+      <li>Your email address and name</li>
+      <li>Company name and role (optional, if you provide it)</li>
+      <li>Creative assets you upload for analysis (video files, static images)</li>
+      <li>Usage data — which features you use and how often</li>
+      <li>Technical data — browser type, device type, IP address (for security)</li>
+    </ul>
+
+    <h2>2. How we use your data</h2>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Deliver the AdMagic service and analyze your uploaded creative assets</li>
+      <li>Send you product updates, early access invitations, and onboarding emails</li>
+      <li>Improve our AI models and platform features</li>
+      <li>Detect and prevent fraud, abuse, or security incidents</li>
+    </ul>
+    <p>We will never use your uploaded creative assets to train general-purpose AI models without your explicit consent.</p>
+
+    <h2>3. Who we share data with</h2>
+    <p>We work with a small number of trusted service providers:</p>
+    <ul>
+      <li><strong>Loops.so</strong> — for email communications</li>
+      <li><strong>Vercel</strong> — for hosting and infrastructure</li>
+      <li><strong>Stripe</strong> — for payment processing (when billing is active)</li>
+      <li><strong>Analytics providers</strong> — for aggregate usage statistics</li>
+    </ul>
+    <p>We do not sell, rent, or trade your personal data to any third party for marketing purposes. Period.</p>
+
+    <h2>4. Data retention</h2>
+    <p>We retain your account data for as long as your account is active. Uploaded creative assets are retained for 30 days after processing unless you choose to save them to your account. You can request full deletion of your data at any time by emailing <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a>.</p>
+
+    <h2>5. Your rights</h2>
+    <p>Depending on where you are located, you may have the right to:</p>
+    <ul>
+      <li>Access the personal data we hold about you</li>
+      <li>Correct inaccurate data</li>
+      <li>Request deletion of your data ("right to be forgotten")</li>
+      <li>Object to or restrict how we process your data</li>
+      <li>Data portability — receive your data in a machine-readable format</li>
+    </ul>
+    <p>To exercise any of these rights, email us at <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a>.</p>
+
+    <h2>6. Cookies</h2>
+    <p>We use strictly necessary cookies to keep you logged in, and analytics cookies to understand how the product is used. We do not use advertising or tracking cookies. You can disable cookies in your browser settings at any time.</p>
+
+    <h2>7. Security</h2>
+    <p>We use industry-standard encryption in transit (TLS 1.3) and at rest. Access to production systems is restricted to authorised personnel only. In the event of a data breach that affects your personal data, we will notify you within 72 hours.</p>
+
+    <h2>8. Contact</h2>
+    <p>Questions about privacy? Email <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a> and we'll respond within 2 business days.</p>
+  </div>
+
+  <!-- TERMS -->
+  <div class="section" id="sec-terms">
+    <div class="highlight"><p>Short version: Use AdMagic for lawful purposes, don't abuse the platform, and we'll do our best to keep it reliable for you.</p></div>
+
+    <h2>1. Acceptance</h2>
+    <p>By accessing or using AdMagic ("the Service"), you agree to be bound by these Terms of Service ("Terms"). If you don't agree, please don't use the Service. These Terms apply to all visitors, waitlist members, beta users, and paying customers.</p>
+
+    <h2>2. The Service</h2>
+    <p>AdMagic provides AI-powered creative intelligence — analysing video and static ad assets to predict audience brain and emotional response. During the private beta period, features may change at any time without prior notice.</p>
+
+    <h2>3. Accounts &amp; eligibility</h2>
+    <ul>
+      <li>You must be at least 18 years old to use AdMagic</li>
+      <li>You are responsible for all activity under your account</li>
+      <li>You may not share account credentials or allow others to access your account</li>
+      <li>You are responsible for maintaining the security of your password</li>
+    </ul>
+
+    <h2>4. Acceptable use</h2>
+    <p>You may not use AdMagic to:</p>
+    <ul>
+      <li>Upload content that is illegal, harmful, defamatory, or infringes third-party rights</li>
+      <li>Attempt to reverse-engineer or extract our AI models or proprietary algorithms</li>
+      <li>Circumvent usage limits, access controls, or security measures</li>
+      <li>Use automated scrapers or bots to access the Service</li>
+      <li>Resell, sublicence, or redistribute the Service without written permission</li>
+    </ul>
+
+    <h2>5. Your content</h2>
+    <p>You retain full ownership of any creative assets you upload. By uploading content, you grant AdMagic a limited, non-exclusive licence to process that content solely for the purpose of delivering the analysis you requested. We do not claim ownership of your uploads.</p>
+
+    <h2>6. Intellectual property</h2>
+    <p>The AdMagic name, logo, platform, and all analysis outputs are owned by or licenced to AdMagic Inc. You may not copy, reproduce, or distribute any part of the Service without our written permission.</p>
+
+    <h2>7. Beta disclaimer</h2>
+    <p>The Service is provided "as is" during the beta period. We make no warranties — express or implied — about uptime, accuracy of analysis results, or fitness for a particular purpose. We are not liable for any direct or indirect losses arising from use of the Service during beta.</p>
+
+    <h2>8. Termination</h2>
+    <p>We may suspend or terminate your access at any time if you violate these Terms. You may delete your account at any time by emailing <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a>.</p>
+
+    <h2>9. Governing law</h2>
+    <p>These Terms are governed by the laws of the jurisdiction in which AdMagic Inc. is incorporated, without regard to conflict of law provisions.</p>
+
+    <h2>10. Changes to these Terms</h2>
+    <p>We may update these Terms from time to time. We'll notify you by email of material changes. Continued use of the Service after changes take effect constitutes your acceptance of the revised Terms.</p>
+
+    <h2>11. Contact</h2>
+    <p>Questions about these Terms? Email <a href="mailto:anmol@admagic.cloud" style="color:var(--accent);">anmol@admagic.cloud</a>.</p>
+  </div>
+
+</div>
+
+<footer>
+  <span class="f-copy">© 2026 AdMagic Inc. All rights reserved.</span>
+  <a class="f-email" href="mailto:anmol@admagic.cloud">anmol@admagic.cloud</a>
+</footer>
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
