@@ -105,8 +105,10 @@ body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--i
 .vid-cap{padding:12px 16px;background:rgba(10,14,8,.8);font-size:12px;color:rgba(255,255,255,.38);text-align:center;}
 
 /* ── SUSTAINABILITY VISUAL ── */
-.sustain-visual{border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#4a4d44;}
+.sustain-visual{border-radius:14px;overflow:hidden;position:relative;background:#4a4d44;height:500px;}
 .sustain-visual iframe{width:100%;height:100%;border:none;display:block;}
+.sustain-full{margin-top:40px;border-radius:16px;overflow:hidden;position:relative;background:#4a4d44;height:500px;}
+.sustain-full iframe{width:100%;height:100%;border:none;display:block;}
 .sustain-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 22px;background:linear-gradient(0deg,rgba(10,14,8,.85) 0%,transparent 100%);}
 .sustain-overlay p{font-size:13px;font-weight:300;color:rgba(255,255,255,.75);line-height:1.6;}
 
@@ -323,7 +325,7 @@ footer{border-top:1px solid var(--rule);padding:28px 48px;display:flex;align-ite
       <p class="init-sub">Our founder is pursuing a course at TMU (Toronto Metropolitan University) with an elective in Sustainable Entrepreneurship. Every AdMagic sale is a small act of growth — literally.</p>
     </div>
 
-    <div class="init-body flip">
+    <div class="init-body">
       <div class="init-text">
         <p>Every time a customer makes a purchase on AdMagic, a plant is watered and cared for in their name. Not a virtual badge — a real plant, tracked and tended as a small living commitment to the idea that business and nature don't have to be at odds.</p>
         <p>The TMU Sustainable Entrepreneurship elective grounds our product decisions in a framework that asks: <em style="font-style:normal;color:rgba(255,255,255,.8);">what does this cost the planet, and can we build a business model that actively gives back?</em></p>
@@ -336,14 +338,13 @@ footer{border-top:1px solid var(--rule);padding:28px 48px;display:flex;align-ite
 
         <p style="margin-top:20px;font-size:13px;color:rgba(255,255,255,.38);">We also offset 100% of our cloud compute emissions and report quarterly. Smaller model inference, greener data centres, real accountability.</p>
       </div>
+    </div>
 
-      <div>
-        <div class="sustain-visual">
-          <iframe src="csr-media/sylva-scene.html" title="Living green — sustainability animation" loading="lazy" sandbox="allow-scripts"></iframe>
-          <div class="sustain-overlay">
-            <p>A plant, in your name, for every AdMagic sale.</p>
-          </div>
-        </div>
+    <!-- Full-width living scene -->
+    <div class="sustain-full">
+      <iframe src="csr-media/sylva-scene.html" title="Living green — sustainability animation" loading="lazy"></iframe>
+      <div class="sustain-overlay">
+        <p>A plant, in your name, for every AdMagic sale.</p>
       </div>
     </div>
   </div>
