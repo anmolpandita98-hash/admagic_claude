@@ -711,7 +711,10 @@
   }
 </style>
 
-<style>html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;}</style>
+<style>
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+.hero { min-height: 100vh !important; height: 100vh !important; }
+</style>
 </head>
 <body>
 <main class="hero" id="hero">
@@ -1635,7 +1638,7 @@ window.__seek   = v => { clock = v; drawn = null; };
   var canvas   = document.getElementById('scene');
   var hero     = document.getElementById('hero');
   var stageEl  = document.getElementById('stage');
-  var NARROW   = window.matchMedia('(max-width: 900px)');
+  var NARROW   = window.matchMedia('(max-width: 500px)');
 
   /* ── where the two roots sit on the 1600 × 880 reference frame ───────
      Unchanged from the artwork build: the near root's box is the old
