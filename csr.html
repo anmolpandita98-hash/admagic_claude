@@ -105,8 +105,8 @@ body{font-family:'Lexend',-apple-system,sans-serif;font-weight:300;color:var(--i
 .vid-cap{padding:12px 16px;background:rgba(10,14,8,.8);font-size:12px;color:rgba(255,255,255,.38);text-align:center;}
 
 /* ── SUSTAINABILITY VISUAL ── */
-.sustain-visual{border-radius:14px;overflow:hidden;position:relative;}
-.sustain-visual img{width:100%;display:block;border-radius:14px;object-fit:cover;aspect-ratio:4/3;}
+.sustain-visual{border-radius:14px;overflow:hidden;position:relative;aspect-ratio:4/3;background:#4a4d44;}
+.sustain-visual iframe{width:100%;height:100%;border:none;display:block;border-radius:14px;}
 .sustain-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 22px;background:linear-gradient(0deg,rgba(10,14,8,.85) 0%,transparent 100%);}
 .sustain-overlay p{font-size:13px;font-weight:300;color:rgba(255,255,255,.75);line-height:1.6;}
 
@@ -339,7 +339,7 @@ footer{border-top:1px solid var(--rule);padding:28px 48px;display:flex;align-ite
 
       <div>
         <div class="sustain-visual">
-          <img src="csr-media/sustainability.png" alt="Living green — sustainability initiative" loading="lazy">
+          <iframe src="csr-media/sylva-scene.html" title="Living green — sustainability animation" loading="lazy" sandbox="allow-scripts"></iframe>
           <div class="sustain-overlay">
             <p>A plant, in your name, for every AdMagic sale.</p>
           </div>
