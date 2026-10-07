@@ -215,6 +215,19 @@ nav{display:contents;}
 .v-arrow:active{transform:translateY(-50%) scale(.94);}
 .v-prev{left:10px;}.v-next{right:10px;}
 
+/* SOUND TOGGLE */
+.v-sound{
+  position:absolute;bottom:12px;right:12px;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(10,14,8,.72);border:1px solid rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.7);
+  transition:background .2s,color .2s;backdrop-filter:blur(8px);
+  z-index:4;
+}
+.v-sound:hover{background:rgba(30,36,26,.9);color:#fff;}
+.v-sound svg{width:18px;height:18px;}
+
 .vc-footer{
   background:rgba(10,14,8,.9);padding:11px 16px;
   display:flex;align-items:center;justify-content:space-between;
@@ -429,15 +442,23 @@ footer{padding:36px 80px;background:#181c14;border-top:1px solid rgba(255,255,25
         <div class="vc-title" id="vc-title">AdMagic — Predict Consumer Behaviour</div>
       </div>
       <div class="video-stage">
-        <video class="slide-video active" id="v0" autoplay muted loop playsinline preload="auto">
+        <video class="slide-video active" id="v0" autoplay muted playsinline preload="auto">
           <source src="admagic_54sec_video.mp4" type="video/mp4">
         </video>
-        <video class="slide-video" id="v1" muted loop playsinline preload="auto">
+        <video class="slide-video" id="v1" muted playsinline preload="auto">
           <source src="admagic_predict_consumer.mp4" type="video/mp4">
         </video>
         <div class="vid-tag" id="vid-tag">Predict Consumer Behaviour</div>
         <button class="v-arrow v-prev" onclick="slide(-1)" aria-label="Previous">&#8249;</button>
         <button class="v-arrow v-next" onclick="slide(1)" aria-label="Next">&#8250;</button>
+        <!-- Sound toggle — starts muted (browsers require it for autoplay) -->
+        <button class="v-sound" id="v-sound" onclick="toggleSound()" aria-label="Toggle sound" title="Unmute">
+          <svg id="sound-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- muted icon -->
+            <path d="M3 7.5h3l4-3v11l-4-3H3z"/>
+            <line x1="14" y1="7" x2="18" y2="13"/><line x1="18" y1="7" x2="14" y2="13"/>
+          </svg>
+        </button>
       </div>
       <div class="vc-footer">
         <div class="sdots">
@@ -826,13 +847,14 @@ var LABELS = ['Predict Consumer Behaviour', 'VP & ICP — Consumer Behaviour'];
 var tagEl    = document.getElementById('vid-tag');
 var titleEl  = document.getElementById('vc-title');
 var cntEl    = document.getElementById('vc-cnt');
-var cur = 0, autoT;
+var cur = 0, isMuted = true;
 
 function goSlide(idx) {
   VIDS[cur].pause();
   VIDS[cur].classList.remove('active');
   DOTS[cur].classList.remove('on');
   cur = ((idx % VIDS.length) + VIDS.length) % VIDS.length;
+  VIDS[cur].muted = isMuted;
   VIDS[cur].classList.add('active');
   VIDS[cur].currentTime = 0;
   VIDS[cur].play().catch(function(){});
@@ -840,12 +862,27 @@ function goSlide(idx) {
   if (tagEl)   tagEl.textContent   = LABELS[cur];
   if (titleEl) titleEl.textContent = 'AdMagic — ' + LABELS[cur];
   if (cntEl)   cntEl.textContent   = (cur + 1) + ' / ' + VIDS.length;
-  resetAuto();
 }
 function slide(dir) { goSlide(cur + dir); }
-function resetAuto() { clearInterval(autoT); autoT = setInterval(function(){ slide(1); }, 13000); }
 
-if (VIDS[0]) { VIDS[0].play().catch(function(){}); resetAuto(); }
+/* Advance to next video when current one ends (loops back after last) */
+VIDS.forEach(function(v) {
+  v.addEventListener('ended', function() { slide(1); });
+});
+
+/* Sound toggle — browsers require muted for autoplay; user clicks to unmute */
+var soundBtn = document.getElementById('v-sound');
+var soundIcon = document.getElementById('sound-icon');
+var SVG_MUTED = '<path d="M3 7.5h3l4-3v11l-4-3H3z"/><line x1="14" y1="7" x2="18" y2="13"/><line x1="18" y1="7" x2="14" y2="13"/>';
+var SVG_SOUND = '<path d="M3 7.5h3l4-3v11l-4-3H3z"/><path d="M14 7.5a4 4 0 0 1 0 5"/><path d="M16.5 5a7 7 0 0 1 0 10"/>';
+function toggleSound() {
+  isMuted = !isMuted;
+  VIDS.forEach(function(v) { v.muted = isMuted; });
+  if (soundIcon) soundIcon.innerHTML = isMuted ? SVG_MUTED : SVG_SOUND;
+  if (soundBtn) soundBtn.title = isMuted ? 'Unmute' : 'Mute';
+}
+
+if (VIDS[0]) { VIDS[0].play().catch(function(){}); }
 document.addEventListener('keydown', function(e){ if(e.key==='ArrowLeft') slide(-1); if(e.key==='ArrowRight') slide(1); });
 
 /* ════════════════════════════════════════════════════════════════════════════
