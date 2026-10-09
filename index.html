@@ -960,184 +960,270 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 <!-- ═══════════════════════════════════════════════════════════════
      CLOUDEE MASCOT WIDGET
-     Cloud-shaped guide character that prompts waitlist sign-ups
      ═══════════════════════════════════════════════════════════════ -->
 <style>
-#cloudee-widget{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none;}
-#cloudee-bubble{background:#fff;border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:220px;box-shadow:0 4px 24px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);font-family:'Lexend',sans-serif;font-size:13px;font-weight:300;color:#1a1a2e;line-height:1.5;pointer-events:all;position:relative;transform:translateY(0);opacity:1;transition:opacity .35s,transform .35s;}
-#cloudee-bubble.hide{opacity:0;transform:translateY(8px);pointer-events:none;}
-#cloudee-bubble::after{content:'';position:absolute;bottom:-8px;right:30px;width:0;height:0;border-left:8px solid transparent;border-right:4px solid transparent;border-top:9px solid #fff;}
-#cloudee-dismiss{position:absolute;top:6px;right:8px;background:none;border:none;color:rgba(0,0,0,.3);cursor:pointer;font-size:14px;line-height:1;padding:2px 4px;}
+/* ── Widget shell ───────────────────────────────────────────── */
+#cloudee-widget{
+  position:fixed;
+  bottom:28px; right:28px;
+  z-index:9999;
+  display:flex; flex-direction:column; align-items:flex-end; gap:10px;
+  pointer-events:none;
+  /* JS will set translate for fly-to animations */
+  transition:transform .65s cubic-bezier(.34,1.56,.64,1);
+  will-change:transform;
+}
+/* ── Speech bubble ──────────────────────────────────────────── */
+#cloudee-bubble{
+  background:#fff;
+  border-radius:16px 16px 4px 16px;
+  padding:12px 16px 12px 14px;
+  max-width:220px;
+  box-shadow:0 4px 24px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);
+  font-family:'Lexend',sans-serif; font-size:13px; font-weight:300;
+  color:#1a1a2e; line-height:1.5;
+  pointer-events:all;
+  opacity:1; transform:translateY(0) scale(1);
+  transition:opacity .3s,transform .3s;
+}
+#cloudee-bubble.hide{opacity:0;transform:translateY(6px) scale(.96);pointer-events:none;}
+#cloudee-bubble::after{
+  content:''; position:absolute;
+  bottom:-9px; right:34px;
+  border:9px solid transparent;
+  border-top-color:#fff; border-bottom:none;
+}
+#cloudee-dismiss{
+  float:right; margin:-2px -4px 0 8px;
+  background:none; border:none;
+  color:rgba(0,0,0,.28); cursor:pointer;
+  font-size:13px; line-height:1; padding:2px 4px;
+}
 #cloudee-dismiss:hover{color:rgba(0,0,0,.6);}
-#cloudee-body{width:90px;height:78px;cursor:pointer;pointer-events:all;position:relative;filter:drop-shadow(0 6px 18px rgba(0,0,0,.18));}
-#cloudee-body:hover #cloudee-svg{transform:translateY(-4px);}
-#cloudee-svg{transition:transform .3s ease;}
-
-/* idle float animation */
-@keyframes cloudee-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-/* excited bounce */
-@keyframes cloudee-bounce{0%,100%{transform:translateY(0) scale(1);}25%{transform:translateY(-12px) scale(1.05);}75%{transform:translateY(-4px) scale(.97);}}
-/* thinking sway */
-@keyframes cloudee-sway{0%,100%{transform:rotate(0deg);}30%{transform:rotate(-5deg);}70%{transform:rotate(4deg);}}
-/* eye blink keyframe applied to left/right eye rects */
-@keyframes cloudee-blink{0%,90%,100%{transform:scaleY(1);}95%{transform:scaleY(0.05);}}
-/* pupil wander */
-@keyframes cloudee-wander-l{0%,100%{transform:translate(0,0);}33%{transform:translate(-2px,-1px);}66%{transform:translate(1px,2px);}}
-@keyframes cloudee-wander-r{0%,100%{transform:translate(0,0);}33%{transform:translate(2px,-1px);}66%{transform:translate(-1px,2px);}}
-
-#cloudee-svg.state-idle{animation:cloudee-float 3s ease-in-out infinite;}
-#cloudee-svg.state-excited{animation:cloudee-bounce .55s ease-in-out 3;}
-#cloudee-svg.state-thinking{animation:cloudee-sway 2s ease-in-out infinite;}
-#cloudee-svg.state-happy{animation:cloudee-bounce .55s ease-in-out 5;}
-
-.c-eye-l,.c-eye-r{transform-origin:center;animation:cloudee-blink 4s ease-in-out infinite;}
-.c-pupil-l{animation:cloudee-wander-l 5s ease-in-out infinite;}
-.c-pupil-r{animation:cloudee-wander-r 5s ease-in-out infinite;}
+/* ── Avatar body ────────────────────────────────────────────── */
+#cloudee-body{
+  width:100px; height:90px;
+  cursor:pointer; pointer-events:all;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.2));
+  position:relative;
+}
+/* ── SVG layer animations ───────────────────────────────────── */
+@keyframes c-float {0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes c-bounce{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.06)}70%{transform:translateY(-3px) scale(.97)}}
+@keyframes c-sway  {0%,100%{transform:rotate(0)}35%{transform:rotate(-6deg)}70%{transform:rotate(5deg)}}
+#cloudee-avatar.idle    {animation:c-float  3.2s ease-in-out infinite}
+#cloudee-avatar.excited {animation:c-bounce  .6s ease-in-out 3}
+#cloudee-avatar.thinking{animation:c-sway    2s  ease-in-out infinite}
+#cloudee-avatar.happy   {animation:c-bounce  .5s ease-in-out 6}
+/* ── Blink — uses transform-box so origin is local to each eye ─ */
+@keyframes c-blink{0%,88%,100%{transform:scaleY(1)}93%{transform:scaleY(.06)}}
+.c-eye{transform-box:fill-box;transform-origin:center;animation:c-blink 4.5s ease-in-out infinite;}
+.c-eye-r{animation-delay:0.15s}
+/* ── Pupil wander ───────────────────────────────────────────── */
+@keyframes c-wl{0%,100%{transform:translate(0,0)}40%{transform:translate(-2px,-1.5px)}75%{transform:translate(1.5px,2px)}}
+@keyframes c-wr{0%,100%{transform:translate(0,0)}40%{transform:translate(2px,-1.5px)}75%{transform:translate(-1px,2px)}}
+.c-pl{transform-box:fill-box;animation:c-wl 5s ease-in-out infinite}
+.c-pr{transform-box:fill-box;animation:c-wr 5s ease-in-out infinite;animation-delay:.8s}
+/* ── Smile transition ───────────────────────────────────────── */
+#c-smile{transition:opacity .4s;opacity:0}
 </style>
 
 <div id="cloudee-widget">
-  <div id="cloudee-bubble">
+  <div id="cloudee-bubble" class="hide">
     <button id="cloudee-dismiss" aria-label="Dismiss" onclick="cloudeeHide()">✕</button>
-    <span id="cloudee-msg">👋 Hey! Join 2,847+ marketers — drop your email above!</span>
+    <span id="cloudee-msg"></span>
   </div>
-  <div id="cloudee-body" onclick="cloudeeClick()" title="Cloudee — your AdMagic guide">
-    <svg id="cloudee-svg" class="state-idle" viewBox="0 0 100 88" xmlns="http://www.w3.org/2000/svg" aria-label="Cloudee mascot">
-      <!-- cloud body: main sphere + 4 puff nodes matching cloudee.avatar.json -->
-      <!-- back puffs (drawn first so they appear behind) -->
-      <ellipse cx="29" cy="50" rx="22" ry="20" fill="#f5d6c1"/><!-- node 1: left puff -->
-      <ellipse cx="25" cy="40" rx="29" ry="23" fill="#f5d6c1"/><!-- node 2: upper-left -->
-      <!-- main body sphere -->
-      <ellipse cx="50" cy="48" rx="38" ry="36" fill="#f5d6c1"/>
-      <!-- front puffs -->
-      <ellipse cx="74" cy="40" rx="26" ry="25" fill="#f5d6c1"/><!-- node 3: upper-right -->
-      <ellipse cx="68" cy="54" rx="25" ry="24" fill="#f5d6c1"/><!-- node 4: lower-right -->
-      <!-- soft shadow / base -->
-      <ellipse cx="50" cy="82" rx="28" ry="5" fill="rgba(0,0,0,.07)"/>
-      <!-- left eye container -->
-      <g class="c-eye-l" transform="translate(36,44)">
-        <rect x="-5.5" y="-6" width="11" height="12" rx="5.5" fill="#111316"/>
-        <g class="c-pupil-l"><circle cx="0" cy="0" r="2.2" fill="#fff" opacity=".55"/></g>
+  <div id="cloudee-body" onclick="cloudeeClick()" title="Click me — I'll take you to the waitlist!">
+    <!-- SVG wrapper gets the animation class; inner paths stay still -->
+    <svg id="cloudee-avatar" class="idle" viewBox="0 0 110 96"
+         xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" aria-hidden="true">
+
+      <!-- ░ Cloud shape: 5 overlapping ellipses, drawn back-to-front ░ -->
+      <!-- node 2: upper-left puff -->
+      <ellipse cx="26" cy="42" rx="30" ry="25" fill="#f5d6c1"/>
+      <!-- node 1: lower-left puff -->
+      <ellipse cx="30" cy="58" rx="23" ry="21" fill="#f5d6c1"/>
+      <!-- main body -->
+      <ellipse cx="55" cy="54" rx="40" ry="37" fill="#f5d6c1"/>
+      <!-- node 3: upper-right puff -->
+      <ellipse cx="80" cy="44" rx="28" ry="27" fill="#f5d6c1"/>
+      <!-- node 4: lower-right puff -->
+      <ellipse cx="76" cy="62" rx="26" ry="25" fill="#f5d6c1"/>
+
+      <!-- subtle base shadow -->
+      <ellipse cx="55" cy="90" rx="30" ry="5" fill="rgba(0,0,0,.07)"/>
+
+      <!-- ░ Left eye — outer g positions, inner g animates so CSS transform never clobbers SVG translate ░ -->
+      <g transform="translate(40,50)">
+        <g class="c-eye c-eye-l">
+          <rect x="-6" y="-7" width="12" height="14" rx="6" fill="#111316"/>
+          <g class="c-pl"><circle cx="0" cy="-1" r="2.6" fill="#fff" opacity=".5"/></g>
+        </g>
       </g>
-      <!-- right eye container -->
-      <g class="c-eye-r" transform="translate(62,44)">
-        <rect x="-5.5" y="-6" width="11" height="12" rx="5.5" fill="#111316"/>
-        <g class="c-pupil-r"><circle cx="0" cy="0" r="2.2" fill="#fff" opacity=".55"/></g>
+
+      <!-- ░ Right eye ░ -->
+      <g transform="translate(68,50)">
+        <g class="c-eye c-eye-r">
+          <rect x="-6" y="-7" width="12" height="14" rx="6" fill="#111316"/>
+          <g class="c-pr"><circle cx="0" cy="-1" r="2.6" fill="#fff" opacity=".5"/></g>
+        </g>
       </g>
-      <!-- subtle smile — hidden in neutral, shown in happy state via JS class -->
-      <path id="cloudee-smile" d="M39,56 Q50,63 61,56" stroke="#a06040" stroke-width="2" fill="none" stroke-linecap="round" opacity="0" style="transition:opacity .4s;"/>
+
+      <!-- ░ Smile (shown when happy/excited) ░ -->
+      <path id="c-smile" d="M43,63 Q55,72 67,63"
+            stroke="#b06840" stroke-width="2.5" fill="none"
+            stroke-linecap="round"/>
     </svg>
   </div>
 </div>
 
 <script>
 (function(){
-  var widget = document.getElementById('cloudee-widget');
-  var bubble = document.getElementById('cloudee-bubble');
-  var msgEl  = document.getElementById('cloudee-msg');
-  var svg    = document.getElementById('cloudee-svg');
-  var smile  = document.getElementById('cloudee-smile');
-  var dismissed = false;
-  var joined = false;
+  var widget  = document.getElementById('cloudee-widget');
+  var bubble  = document.getElementById('cloudee-bubble');
+  var msgEl   = document.getElementById('cloudee-msg');
+  var avatar  = document.getElementById('cloudee-avatar');
+  var smile   = document.getElementById('c-smile');
+  var dismissed = false, joined = false, flying = false;
 
   var msgs = [
-    '👋 Hey! Drop your email above — early access is almost full!',
-    '🚀 Join 2,847+ marketers getting early access to AdMagic.',
-    '✨ Free to join. No credit card needed. Just your email!',
-    '📬 AI-powered ad creative that actually converts. Want in?'
+    '👋 Hey! Drop your email — early access is almost full!',
+    '🚀 Join 2,847+ marketers on the AdMagic waitlist.',
+    '✨ Free to join. No credit card needed.',
+    '📬 AI that reads how your audience actually feels. Want in?'
   ];
   var msgIdx = 0;
 
-  function setState(state){
-    svg.className.baseVal = 'state-' + state;
-    if(state === 'happy' || state === 'excited'){
-      smile.style.opacity = '1';
-    } else {
-      smile.style.opacity = '0';
-    }
+  /* ── State helpers ───────────────────────────── */
+  function setState(s){
+    avatar.className = s;
+    smile.style.opacity = (s === 'happy' || s === 'excited') ? '1' : '0';
   }
-
   function showBubble(text){
     msgEl.textContent = text;
     bubble.classList.remove('hide');
   }
-  function hideBubble(){
-    bubble.classList.add('hide');
-  }
+  function hideBubble(){ bubble.classList.add('hide'); }
 
+  /* ── Dismiss ─────────────────────────────────── */
   window.cloudeeHide = function(){
     dismissed = true;
     hideBubble();
-    setTimeout(function(){ widget.style.display = 'none'; }, 400);
+    widget.style.opacity = '0';
+    widget.style.transition = 'opacity .4s, transform .65s cubic-bezier(.34,1.56,.64,1)';
+    setTimeout(function(){ widget.style.display = 'none'; }, 420);
   };
 
+  /* ── Fly to email field, then return ─────────── */
+  function flyToEmail(onArrival){
+    var heroEl = document.getElementById('hero-form-el') || document.getElementById('hero-email');
+    if(!heroEl || flying) return;
+    flying = true;
+
+    /* Make sure the element is in view first */
+    heroEl.scrollIntoView({behavior:'smooth', block:'center'});
+
+    setTimeout(function(){
+      var rect   = heroEl.getBoundingClientRect();
+      var wRect  = widget.getBoundingClientRect();
+
+      /* Vector from widget bottom-right to beside the form */
+      var tx = (rect.left + rect.width / 2) - (wRect.left + wRect.width / 2);
+      var ty = (rect.top  + rect.height/ 2) - (wRect.top  + wRect.height/ 2);
+
+      widget.style.transform = 'translate(' + Math.round(tx) + 'px,' + Math.round(ty) + 'px)';
+      setState('excited');
+
+      setTimeout(function(){
+        if(onArrival) onArrival();
+      }, 500);
+
+      /* Fly back home after 3 s */
+      setTimeout(function(){
+        widget.style.transform = 'translate(0,0)';
+        setState('idle');
+        flying = false;
+      }, 3200);
+    }, 620); /* wait for smooth scroll to settle */
+  }
+
+  /* ── Click handler ───────────────────────────── */
   window.cloudeeClick = function(){
     if(dismissed || joined) return;
-    dismissed = false;
-    bubble.classList.remove('hide');
-    msgIdx = (msgIdx + 1) % msgs.length;
-    showBubble(msgs[msgIdx]);
-    setState('excited');
-    setTimeout(function(){ setState('idle'); }, 1800);
-    // scroll to hero email
-    var heroEl = document.getElementById('hero-email');
-    if(heroEl){ heroEl.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(function(){ heroEl.focus(); }, 600); }
+    showBubble('✍️ Pop your email in right here!');
+    flyToEmail(function(){
+      var heroEmail = document.getElementById('hero-email');
+      if(heroEmail) heroEmail.focus();
+    });
   };
 
-  // Rotate messages every 8 seconds
+  /* ── Scroll: nudge mascot opposite to scroll dir ─ */
+  var lastY = 0, nudgeTimeout = null;
+  window.addEventListener('scroll', function(){
+    if(dismissed || flying) return;
+    var dy = window.scrollY - lastY;
+    lastY  = window.scrollY;
+    var nudge = Math.max(-18, Math.min(18, dy * 0.6));
+    widget.style.transition = 'transform .15s ease-out';
+    widget.style.transform  = 'translateY(' + nudge + 'px)';
+    clearTimeout(nudgeTimeout);
+    nudgeTimeout = setTimeout(function(){
+      widget.style.transition = 'transform .65s cubic-bezier(.34,1.56,.64,1)';
+      widget.style.transform  = 'translate(0,0)';
+    }, 160);
+
+    /* Re-show bubble periodically on scroll */
+    if(!joined && bubble.classList.contains('hide')){
+      msgIdx = (msgIdx + 1) % msgs.length;
+      showBubble(msgs[msgIdx]);
+      setTimeout(hideBubble, 5000);
+    }
+  }, {passive:true});
+
+  /* ── Email field focus → thinking ───────────── */
+  var heroEmail = document.getElementById('hero-email');
+  if(heroEmail){
+    heroEmail.addEventListener('focus', function(){
+      if(dismissed || joined) return;
+      setState('thinking');
+      showBubble('🤔 Almost there — hit Enter to join!');
+    });
+    heroEmail.addEventListener('blur', function(){
+      if(dismissed || joined) return;
+      setState('idle'); showBubble(msgs[msgIdx]);
+    });
+  }
+
+  /* ── Detect successful signup ────────────────── */
+  function onJoined(){
+    if(joined) return;
+    joined = true;
+    setState('happy');
+    showBubble('🎉 You\'re on the list! Talk soon.');
+    setTimeout(hideBubble, 5000);
+  }
+  ['hero-ok','wl-ok'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) new MutationObserver(function(){
+      if(el.classList.contains('on')) onJoined();
+    }).observe(el, {attributes:true, attributeFilter:['class']});
+  });
+
+  /* ── Rotate messages ─────────────────────────── */
   setInterval(function(){
     if(dismissed || joined || bubble.classList.contains('hide')) return;
     msgIdx = (msgIdx + 1) % msgs.length;
     msgEl.textContent = msgs[msgIdx];
   }, 8000);
 
-  // React to hero-email focus → thinking state
-  var heroEmail = document.getElementById('hero-email');
-  if(heroEmail){
-    heroEmail.addEventListener('focus', function(){
-      if(dismissed || joined) return;
-      setState('thinking');
-      showBubble('🤔 Almost there... type your email and hit Enter!');
-    });
-    heroEmail.addEventListener('blur', function(){
-      if(dismissed || joined) return;
-      setState('idle');
-      showBubble(msgs[msgIdx]);
-    });
-  }
-
-  // Detect waitlist join via MutationObserver on success elements
-  function onJoined(){
-    if(joined) return;
-    joined = true;
-    setState('happy');
-    showBubble('🎉 You\'re on the list! We\'ll be in touch soon.');
-    setTimeout(function(){ hideBubble(); }, 5000);
-  }
-  var heroOk = document.getElementById('hero-ok');
-  var wlOk   = document.getElementById('wl-ok');
-  if(heroOk){
-    new MutationObserver(function(){ if(heroOk.classList.contains('on')) onJoined(); }).observe(heroOk, {attributes:true, attributeFilter:['class']});
-  }
-  if(wlOk){
-    new MutationObserver(function(){ if(wlOk.classList.contains('on')) onJoined(); }).observe(wlOk, {attributes:true, attributeFilter:['class']});
-  }
-
-  // After 12s if not dismissed, briefly hide bubble to not annoy
+  /* ── Initial reveal with delay ───────────────── */
   setTimeout(function(){
-    if(!dismissed && !joined){ hideBubble(); }
-  }, 12000);
-  // Re-show bubble on scroll (once per 30s)
-  var lastReshow = 0;
-  window.addEventListener('scroll', function(){
-    if(dismissed || joined) return;
-    var now = Date.now();
-    if(now - lastReshow < 30000) return;
-    lastReshow = now;
-    msgIdx = (msgIdx + 1) % msgs.length;
-    showBubble(msgs[msgIdx]);
+    showBubble(msgs[0]);
     setState('idle');
-    setTimeout(function(){ hideBubble(); }, 6000);
-  }, {passive:true});
+  }, 1800);
+  setTimeout(function(){
+    if(!dismissed && !joined) hideBubble();
+  }, 10000);
 })();
 </script>
 </body>
