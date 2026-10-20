@@ -1,0 +1,98 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "scenes": [
+    {
+      "id": "hook-wall",
+      "name": "Hook Wall",
+      "transcript": "Customers see thousands of ads every day, but most of those ads get completely ignored. We're here to change that,",
+      "startMs": 0,
+      "endMs": 7700,
+      "from": 0,
+      "durationInFrames": 240,
+      "componentName": "HookWall",
+      "assets": ["eclipse-banner.png", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "design-before.jpg", "design-after.png", "competitor-ad-research.png"],
+      "visualDescription": "Tilted 3D perspective grid of real AdMagic creative cards floating on a light purple radial gradient, slow drift. Word-by-word gradient kinetic type reveals 'We're here to change that,' center screen.",
+      "soundEffects": ["Popups.mp3 (card settle)", "Pop.mp3 (per kinetic word)"]
+    },
+    {
+      "id": "brand-intro",
+      "name": "Brand Intro",
+      "transcript": "introducing AdMagic — predict and improve advertising impact with AI trained on decades of neuroscience data.",
+      "startMs": 8200,
+      "endMs": 15580,
+      "from": 0,
+      "durationInFrames": 240,
+      "componentName": "BrandIntro",
+      "assets": [],
+      "visualDescription": "AdMagic wordmark (white 'Ad' + green 'Magic' + sparkle) scale-reveals center screen on the purple field, subhead line types in underneath.",
+      "soundEffects": ["Notification.mp3 (logo chime)"]
+    },
+    {
+      "id": "predict",
+      "name": "Predict",
+      "transcript": "First, predict how consumers respond to your ads in seconds, get predictions on attention, engagement, memory, and more.",
+      "startMs": 16320,
+      "endMs": 23960,
+      "from": 0,
+      "durationInFrames": 240,
+      "componentName": "Predict",
+      "assets": ["eclipse-banner.png", "heatmap-reference.png"],
+      "visualDescription": "'Upload files' white card holding eclipse-banner.png, curved connector line to 'AdMagic AI Predictions' node, branching to a Heatmap node and a red-yellow-green Neural Score gauge sweeping to 58.",
+      "soundEffects": ["transitions.mp3 (connector draw)", "Click.mp3 (gauge settle)"]
+    },
+    {
+      "id": "insights-generate",
+      "name": "Insights Generate",
+      "transcript": "Then, get guided insights into what works and what doesn't to help you make them more compelling in a few clicks. Finally, generate visual recommendations that automatically maximize attention, engagement, and memorability.",
+      "startMs": 24600,
+      "endMs": 37820,
+      "from": 0,
+      "durationInFrames": 400,
+      "componentName": "InsightsGenerate",
+      "assets": ["design-before.jpg", "design-after.png"],
+      "visualDescription": "Dark prompt card types a live edit instruction, arrow feeds into design-before.jpg then design-after.png, each stamped with a score badge (58 -> 84, +26 pill), small version-history thumbnails stack on the side.",
+      "soundEffects": ["Typing.mp3 (prompt typing)", "Click.mp3 (new version)", "Correct.mp3 (score tick)"]
+    },
+    {
+      "id": "the-loop",
+      "name": "The Loop",
+      "transcript": "Using this creative AI loop,",
+      "startMs": 38520,
+      "endMs": 40600,
+      "from": 0,
+      "durationInFrames": 90,
+      "componentName": "TheLoop",
+      "assets": ["design-before.jpg", "design-after.png"],
+      "visualDescription": "Circular diagram, 3 icon nodes (brain / lightbulb / sparkle) orbiting the AdMagic mark; design-before.jpg flows in left as 'Asset', design-after.png flows out right as 'Optimized Asset' with a green checkmark.",
+      "soundEffects": ["energy.MP3 (orbital whoosh)", "Correct.mp3 (checkmark)"]
+    },
+    {
+      "id": "capability-stat",
+      "name": "Capability Stat",
+      "transcript": "100+ brands, agencies, and marketers are already on the waitlist (rewritten from reference's unrelated 30%/95% stats, using real AdMagic data)",
+      "startMs": 41040,
+      "endMs": 48300,
+      "from": 0,
+      "durationInFrames": 240,
+      "componentName": "CapabilityStat",
+      "assets": [],
+      "visualDescription": "Billboard stat card, light background, giant gradient '100+', subtitle 'already on the AdMagic waitlist', three pill chips fan in: D2C Brand Owners / Agencies / Marketers & Founders.",
+      "soundEffects": ["riser.mp3 (number land)", "Pop.mp3 (per chip)"]
+    },
+    {
+      "id": "closing-wall",
+      "name": "Closing Wall",
+      "transcript": "Join over 500 brands across the globe and reduce wasted ad spend with confidence. Start improving your ads today. (rewritten CTA, no fabricated brand count)",
+      "startMs": 49300,
+      "endMs": 57100,
+      "from": 0,
+      "durationInFrames": 240,
+      "componentName": "ClosingWall",
+      "assets": ["eclipse-banner.png", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "design-before.jpg", "design-after.png", "competitor-ad-research.png"],
+      "visualDescription": "Same tilted card wall from Hook Wall returns, blurs, centered pill button 'Start Your Trial' fades up.",
+      "soundEffects": ["Impact.mp3 (button pop)"]
+    }
+  ]
+}

@@ -1,0 +1,769 @@
+{
+  "source": "C:\\Users\\sunil\\Claude Marketing Dashboard\\flick-output\\input\\source.wav",
+  "language": "en",
+  "text": "Customers see thousands of ads every day, but most of those ads get completely ignored. We're here to change that, introducing Neuron's AI, predict and improve advertising impact with AI trained on decades of neuroscience data. First, predict how consumers respond to your ads in seconds, get predictions on attention, engagement, memory, and more. Then, get guided insights into what works and what doesn't to help you make them more compelling in a few clicks. Finally, generate visual recommendations that automatically maximize attention, engagement, and memorability. Using this creative AI loop, our clients report a 30% uplift in brand impact, as well as a 95% higher confidence in launch success. Join over 500 brands across the globe and reduce wasted ad spend with confidence. Start improving your ads today. Bye.",
+  "segments": [
+    {
+      "startMs": 0,
+      "endMs": 3000,
+      "text": "Customers see thousands of ads every day,"
+    },
+    {
+      "startMs": 3300,
+      "endMs": 5560,
+      "text": "but most of those ads get completely ignored."
+    },
+    {
+      "startMs": 6200,
+      "endMs": 7700,
+      "text": "We're here to change that,"
+    },
+    {
+      "startMs": 8200,
+      "endMs": 9920,
+      "text": "introducing Neuron's AI,"
+    },
+    {
+      "startMs": 10600,
+      "endMs": 12600,
+      "text": "predict and improve advertising impact"
+    },
+    {
+      "startMs": 12600,
+      "endMs": 15580,
+      "text": "with AI trained on decades of neuroscience data."
+    },
+    {
+      "startMs": 16320,
+      "endMs": 19840,
+      "text": "First, predict how consumers respond to your ads in seconds,"
+    },
+    {
+      "startMs": 20300,
+      "endMs": 23960,
+      "text": "get predictions on attention, engagement, memory, and more."
+    },
+    {
+      "startMs": 24600,
+      "endMs": 28220,
+      "text": "Then, get guided insights into what works and what doesn't"
+    },
+    {
+      "startMs": 28220,
+      "endMs": 30800,
+      "text": "to help you make them more compelling in a few clicks."
+    },
+    {
+      "startMs": 31340,
+      "endMs": 33560,
+      "text": "Finally, generate visual recommendations"
+    },
+    {
+      "startMs": 33560,
+      "endMs": 35800,
+      "text": "that automatically maximize attention,"
+    },
+    {
+      "startMs": 36440,
+      "endMs": 37820,
+      "text": "engagement, and memorability."
+    },
+    {
+      "startMs": 38520,
+      "endMs": 40600,
+      "text": "Using this creative AI loop,"
+    },
+    {
+      "startMs": 41040,
+      "endMs": 44620,
+      "text": "our clients report a 30% uplift in brand impact,"
+    },
+    {
+      "startMs": 44920,
+      "endMs": 48300,
+      "text": "as well as a 95% higher confidence in launch success."
+    },
+    {
+      "startMs": 49300,
+      "endMs": 51860,
+      "text": "Join over 500 brands across the globe"
+    },
+    {
+      "startMs": 51860,
+      "endMs": 54600,
+      "text": "and reduce wasted ad spend with confidence."
+    },
+    {
+      "startMs": 55060,
+      "endMs": 57000,
+      "text": "Start improving your ads today."
+    },
+    {
+      "startMs": 57000,
+      "endMs": 57100,
+      "text": "Bye."
+    }
+  ],
+  "words": [
+    {
+      "startMs": 0,
+      "endMs": 1060,
+      "text": "Customers"
+    },
+    {
+      "startMs": 1060,
+      "endMs": 1240,
+      "text": "see"
+    },
+    {
+      "startMs": 1240,
+      "endMs": 1760,
+      "text": "thousands"
+    },
+    {
+      "startMs": 1760,
+      "endMs": 2060,
+      "text": "of"
+    },
+    {
+      "startMs": 2060,
+      "endMs": 2240,
+      "text": "ads"
+    },
+    {
+      "startMs": 2240,
+      "endMs": 2700,
+      "text": "every"
+    },
+    {
+      "startMs": 2700,
+      "endMs": 3000,
+      "text": "day,"
+    },
+    {
+      "startMs": 3300,
+      "endMs": 3760,
+      "text": "but"
+    },
+    {
+      "startMs": 3760,
+      "endMs": 3980,
+      "text": "most"
+    },
+    {
+      "startMs": 3980,
+      "endMs": 4080,
+      "text": "of"
+    },
+    {
+      "startMs": 4080,
+      "endMs": 4260,
+      "text": "those"
+    },
+    {
+      "startMs": 4260,
+      "endMs": 4480,
+      "text": "ads"
+    },
+    {
+      "startMs": 4480,
+      "endMs": 4620,
+      "text": "get"
+    },
+    {
+      "startMs": 4620,
+      "endMs": 5120,
+      "text": "completely"
+    },
+    {
+      "startMs": 5120,
+      "endMs": 5560,
+      "text": "ignored."
+    },
+    {
+      "startMs": 6200,
+      "endMs": 6680,
+      "text": "We're"
+    },
+    {
+      "startMs": 6680,
+      "endMs": 6860,
+      "text": "here"
+    },
+    {
+      "startMs": 6860,
+      "endMs": 7120,
+      "text": "to"
+    },
+    {
+      "startMs": 7120,
+      "endMs": 7420,
+      "text": "change"
+    },
+    {
+      "startMs": 7420,
+      "endMs": 7700,
+      "text": "that,"
+    },
+    {
+      "startMs": 8200,
+      "endMs": 8680,
+      "text": "introducing"
+    },
+    {
+      "startMs": 8680,
+      "endMs": 9640,
+      "text": "Neuron's"
+    },
+    {
+      "startMs": 9640,
+      "endMs": 9920,
+      "text": "AI,"
+    },
+    {
+      "startMs": 10600,
+      "endMs": 10780,
+      "text": "predict"
+    },
+    {
+      "startMs": 10780,
+      "endMs": 11100,
+      "text": "and"
+    },
+    {
+      "startMs": 11100,
+      "endMs": 11460,
+      "text": "improve"
+    },
+    {
+      "startMs": 11460,
+      "endMs": 12040,
+      "text": "advertising"
+    },
+    {
+      "startMs": 12040,
+      "endMs": 12600,
+      "text": "impact"
+    },
+    {
+      "startMs": 12600,
+      "endMs": 12960,
+      "text": "with"
+    },
+    {
+      "startMs": 12960,
+      "endMs": 13260,
+      "text": "AI"
+    },
+    {
+      "startMs": 13260,
+      "endMs": 13700,
+      "text": "trained"
+    },
+    {
+      "startMs": 13700,
+      "endMs": 13880,
+      "text": "on"
+    },
+    {
+      "startMs": 13880,
+      "endMs": 14280,
+      "text": "decades"
+    },
+    {
+      "startMs": 14280,
+      "endMs": 14640,
+      "text": "of"
+    },
+    {
+      "startMs": 14640,
+      "endMs": 15020,
+      "text": "neuroscience"
+    },
+    {
+      "startMs": 15020,
+      "endMs": 15580,
+      "text": "data."
+    },
+    {
+      "startMs": 16320,
+      "endMs": 16820,
+      "text": "First,"
+    },
+    {
+      "startMs": 17260,
+      "endMs": 17540,
+      "text": "predict"
+    },
+    {
+      "startMs": 17540,
+      "endMs": 17760,
+      "text": "how"
+    },
+    {
+      "startMs": 17760,
+      "endMs": 18160,
+      "text": "consumers"
+    },
+    {
+      "startMs": 18160,
+      "endMs": 18580,
+      "text": "respond"
+    },
+    {
+      "startMs": 18580,
+      "endMs": 18840,
+      "text": "to"
+    },
+    {
+      "startMs": 18840,
+      "endMs": 18960,
+      "text": "your"
+    },
+    {
+      "startMs": 18960,
+      "endMs": 19200,
+      "text": "ads"
+    },
+    {
+      "startMs": 19200,
+      "endMs": 19460,
+      "text": "in"
+    },
+    {
+      "startMs": 19460,
+      "endMs": 19840,
+      "text": "seconds,"
+    },
+    {
+      "startMs": 20300,
+      "endMs": 20500,
+      "text": "get"
+    },
+    {
+      "startMs": 20500,
+      "endMs": 20920,
+      "text": "predictions"
+    },
+    {
+      "startMs": 20920,
+      "endMs": 21260,
+      "text": "on"
+    },
+    {
+      "startMs": 21260,
+      "endMs": 21580,
+      "text": "attention,"
+    },
+    {
+      "startMs": 22140,
+      "endMs": 22540,
+      "text": "engagement,"
+    },
+    {
+      "startMs": 23000,
+      "endMs": 23200,
+      "text": "memory,"
+    },
+    {
+      "startMs": 23620,
+      "endMs": 23700,
+      "text": "and"
+    },
+    {
+      "startMs": 23700,
+      "endMs": 23960,
+      "text": "more."
+    },
+    {
+      "startMs": 24600,
+      "endMs": 24960,
+      "text": "Then,"
+    },
+    {
+      "startMs": 25280,
+      "endMs": 25540,
+      "text": "get"
+    },
+    {
+      "startMs": 25540,
+      "endMs": 25900,
+      "text": "guided"
+    },
+    {
+      "startMs": 25900,
+      "endMs": 26360,
+      "text": "insights"
+    },
+    {
+      "startMs": 26360,
+      "endMs": 26740,
+      "text": "into"
+    },
+    {
+      "startMs": 26740,
+      "endMs": 27000,
+      "text": "what"
+    },
+    {
+      "startMs": 27000,
+      "endMs": 27280,
+      "text": "works"
+    },
+    {
+      "startMs": 27280,
+      "endMs": 27580,
+      "text": "and"
+    },
+    {
+      "startMs": 27580,
+      "endMs": 27760,
+      "text": "what"
+    },
+    {
+      "startMs": 27760,
+      "endMs": 28220,
+      "text": "doesn't"
+    },
+    {
+      "startMs": 28220,
+      "endMs": 28480,
+      "text": "to"
+    },
+    {
+      "startMs": 28480,
+      "endMs": 28640,
+      "text": "help"
+    },
+    {
+      "startMs": 28640,
+      "endMs": 28800,
+      "text": "you"
+    },
+    {
+      "startMs": 28800,
+      "endMs": 28960,
+      "text": "make"
+    },
+    {
+      "startMs": 28960,
+      "endMs": 29120,
+      "text": "them"
+    },
+    {
+      "startMs": 29120,
+      "endMs": 29340,
+      "text": "more"
+    },
+    {
+      "startMs": 29340,
+      "endMs": 29780,
+      "text": "compelling"
+    },
+    {
+      "startMs": 29780,
+      "endMs": 30120,
+      "text": "in"
+    },
+    {
+      "startMs": 30120,
+      "endMs": 30200,
+      "text": "a"
+    },
+    {
+      "startMs": 30200,
+      "endMs": 30400,
+      "text": "few"
+    },
+    {
+      "startMs": 30400,
+      "endMs": 30800,
+      "text": "clicks."
+    },
+    {
+      "startMs": 31340,
+      "endMs": 31860,
+      "text": "Finally,"
+    },
+    {
+      "startMs": 32280,
+      "endMs": 32540,
+      "text": "generate"
+    },
+    {
+      "startMs": 32540,
+      "endMs": 32960,
+      "text": "visual"
+    },
+    {
+      "startMs": 32960,
+      "endMs": 33560,
+      "text": "recommendations"
+    },
+    {
+      "startMs": 33560,
+      "endMs": 34020,
+      "text": "that"
+    },
+    {
+      "startMs": 34020,
+      "endMs": 34600,
+      "text": "automatically"
+    },
+    {
+      "startMs": 34600,
+      "endMs": 35260,
+      "text": "maximize"
+    },
+    {
+      "startMs": 35260,
+      "endMs": 35800,
+      "text": "attention,"
+    },
+    {
+      "startMs": 36440,
+      "endMs": 36780,
+      "text": "engagement,"
+    },
+    {
+      "startMs": 37100,
+      "endMs": 37180,
+      "text": "and"
+    },
+    {
+      "startMs": 37180,
+      "endMs": 37820,
+      "text": "memorability."
+    },
+    {
+      "startMs": 38520,
+      "endMs": 39200,
+      "text": "Using"
+    },
+    {
+      "startMs": 39200,
+      "endMs": 39400,
+      "text": "this"
+    },
+    {
+      "startMs": 39400,
+      "endMs": 39880,
+      "text": "creative"
+    },
+    {
+      "startMs": 39880,
+      "endMs": 40220,
+      "text": "AI"
+    },
+    {
+      "startMs": 40220,
+      "endMs": 40600,
+      "text": "loop,"
+    },
+    {
+      "startMs": 41040,
+      "endMs": 41280,
+      "text": "our"
+    },
+    {
+      "startMs": 41280,
+      "endMs": 41640,
+      "text": "clients"
+    },
+    {
+      "startMs": 41640,
+      "endMs": 42020,
+      "text": "report"
+    },
+    {
+      "startMs": 42020,
+      "endMs": 42300,
+      "text": "a"
+    },
+    {
+      "startMs": 42300,
+      "endMs": 42640,
+      "text": "30"
+    },
+    {
+      "startMs": 42640,
+      "endMs": 43040,
+      "text": "%"
+    },
+    {
+      "startMs": 43040,
+      "endMs": 43480,
+      "text": "uplift"
+    },
+    {
+      "startMs": 43480,
+      "endMs": 43820,
+      "text": "in"
+    },
+    {
+      "startMs": 43820,
+      "endMs": 44060,
+      "text": "brand"
+    },
+    {
+      "startMs": 44060,
+      "endMs": 44620,
+      "text": "impact,"
+    },
+    {
+      "startMs": 44920,
+      "endMs": 45120,
+      "text": "as"
+    },
+    {
+      "startMs": 45120,
+      "endMs": 45260,
+      "text": "well"
+    },
+    {
+      "startMs": 45260,
+      "endMs": 45440,
+      "text": "as"
+    },
+    {
+      "startMs": 45440,
+      "endMs": 45520,
+      "text": "a"
+    },
+    {
+      "startMs": 45520,
+      "endMs": 45860,
+      "text": "95"
+    },
+    {
+      "startMs": 45860,
+      "endMs": 46460,
+      "text": "%"
+    },
+    {
+      "startMs": 46460,
+      "endMs": 46840,
+      "text": "higher"
+    },
+    {
+      "startMs": 46840,
+      "endMs": 47340,
+      "text": "confidence"
+    },
+    {
+      "startMs": 47340,
+      "endMs": 47660,
+      "text": "in"
+    },
+    {
+      "startMs": 47660,
+      "endMs": 47880,
+      "text": "launch"
+    },
+    {
+      "startMs": 47880,
+      "endMs": 48300,
+      "text": "success."
+    },
+    {
+      "startMs": 49300,
+      "endMs": 49640,
+      "text": "Join"
+    },
+    {
+      "startMs": 49640,
+      "endMs": 49960,
+      "text": "over"
+    },
+    {
+      "startMs": 49960,
+      "endMs": 50600,
+      "text": "500"
+    },
+    {
+      "startMs": 50600,
+      "endMs": 50940,
+      "text": "brands"
+    },
+    {
+      "startMs": 50940,
+      "endMs": 51360,
+      "text": "across"
+    },
+    {
+      "startMs": 51360,
+      "endMs": 51600,
+      "text": "the"
+    },
+    {
+      "startMs": 51600,
+      "endMs": 51860,
+      "text": "globe"
+    },
+    {
+      "startMs": 51860,
+      "endMs": 52460,
+      "text": "and"
+    },
+    {
+      "startMs": 52460,
+      "endMs": 52780,
+      "text": "reduce"
+    },
+    {
+      "startMs": 52780,
+      "endMs": 53340,
+      "text": "wasted"
+    },
+    {
+      "startMs": 53340,
+      "endMs": 53600,
+      "text": "ad"
+    },
+    {
+      "startMs": 53600,
+      "endMs": 53840,
+      "text": "spend"
+    },
+    {
+      "startMs": 53840,
+      "endMs": 54160,
+      "text": "with"
+    },
+    {
+      "startMs": 54160,
+      "endMs": 54600,
+      "text": "confidence."
+    },
+    {
+      "startMs": 55060,
+      "endMs": 55740,
+      "text": "Start"
+    },
+    {
+      "startMs": 55740,
+      "endMs": 56140,
+      "text": "improving"
+    },
+    {
+      "startMs": 56140,
+      "endMs": 56400,
+      "text": "your"
+    },
+    {
+      "startMs": 56400,
+      "endMs": 56600,
+      "text": "ads"
+    },
+    {
+      "startMs": 56600,
+      "endMs": 57000,
+      "text": "today."
+    },
+    {
+      "startMs": 57000,
+      "endMs": 57100,
+      "text": "Bye."
+    }
+  ]
+}
